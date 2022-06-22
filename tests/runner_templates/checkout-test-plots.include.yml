@@ -1,0 +1,15 @@
+    - name: Cache test blocks and plots
+      uses: actions/cache@v2
+      id: test-blocks-plots
+      with:
+        path: |
+          ${{ github.workspace }}/.chives/blocks
+          ${{ github.workspace }}/.chives/test-plots
+        key: 0.29.0
+
+    - name: Checkout test blocks and plots
+      if: steps.test-blocks-plots.outputs.cache-hit != 'true'
+      run: |
+        wget -qO- https://github.com/HiveProject2021/test-cache/archive/refs/tags/0.29.0.tar.gz | tar xzf -
+        mkdir ${{ github.workspace }}/.chives
+        mv ${{ github.workspace }}/test-cache-0.29.0/* ${{ github.workspace }}/.chives
