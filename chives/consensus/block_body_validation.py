@@ -5,10 +5,10 @@ from typing import Awaitable, Callable, Dict, List, Optional, Set, Tuple, Union
 from chiabip158 import PyBIP158
 
 from chives.consensus.block_record import BlockRecord
-from chives.consensus.block_rewards import calculate_base_masternode_reward, calculate_base_community_reward, calculate_base_farmer_reward, calculate_pool_reward
+from chives.consensus.block_rewards import calculate_base_community_reward, calculate_base_farmer_reward, calculate_pool_reward
 from chives.consensus.block_root_validation import validate_block_merkle_roots
 from chives.consensus.blockchain_interface import BlockchainInterface
-from chives.consensus.coinbase import create_masternode_coin, create_community_coin, create_farmer_coin, create_pool_coin
+from chives.consensus.coinbase import create_community_coin, create_farmer_coin, create_pool_coin
 from chives.consensus.constants import ConsensusConstants
 from chives.consensus.cost_calculator import NPCResult
 from chives.consensus.find_fork_point import find_fork_point_in_chain
@@ -120,17 +120,10 @@ async def validate_block_body(
             calculate_base_community_reward(prev_transaction_block.height),
             constants.GENESIS_CHALLENGE,
         )
-        masternode_coin = create_masternode_coin(
-            prev_transaction_block_height,
-            constants.GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH,
-            calculate_base_masternode_reward(prev_transaction_block.height),
-            constants.GENESIS_CHALLENGE,
-        )
         # Adds the previous block
         expected_reward_coins.add(pool_coin)
         expected_reward_coins.add(farmer_coin)
         expected_reward_coins.add(community_coin)
-        expected_reward_coins.add(masternode_coin)
 
         # For the second block in the chain, don't go back further
         if prev_transaction_block.height > 0:
@@ -160,14 +153,6 @@ async def validate_block_body(
                         constants.GENESIS_CHALLENGE,
                     )
                 )      
-                expected_reward_coins.add(
-                    create_masternode_coin(
-                        curr_b.height,
-                        constants.GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH,
-                        calculate_base_masternode_reward(curr_b.height),
-                        constants.GENESIS_CHALLENGE,
-                    )
-                )
                 curr_b = blocks.block_record(curr_b.prev_hash)
 
     if set(block.transactions_info.reward_claims_incorporated) != expected_reward_coins:
@@ -474,9 +459,6 @@ async def validate_block_body(
     if fees + calculate_base_community_reward(height) > constants.MAX_COIN_AMOUNT:
         return Err.COIN_AMOUNT_EXCEEDS_MAXIMUM, None
     
-    # 18. Check that the fee amount + farmer reward < maximum coin amount
-    if fees + calculate_base_masternode_reward(height) > constants.MAX_COIN_AMOUNT:
-        return Err.COIN_AMOUNT_EXCEEDS_MAXIMUM, None
 
     # 19. Check that the computed fees are equal to the fees in the block header
     if block.transactions_info.fees != fees:

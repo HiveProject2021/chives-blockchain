@@ -155,7 +155,6 @@ def skip_foliage_block_data(buf: memoryview) -> memoryview:
     buf = skip_optional(buf, skip_g2_element)  # pool_signature
     buf = skip_bytes32(buf)  # farmer_reward_puzzle_hash
     buf = skip_bytes32(buf)  # community_reward_puzzle_hash
-    buf = skip_bytes32(buf)  # masternode_reward_puzzle_hash
     return skip_bytes32(buf)  # extension_data
 
 

@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from blspy import G1Element, PrivateKey
 
-from chives.consensus.block_rewards import calculate_base_masternode_reward, calculate_base_community_reward, calculate_base_farmer_reward, calculate_pool_reward
+from chives.consensus.block_rewards import calculate_base_community_reward, calculate_base_farmer_reward, calculate_pool_reward
 from chives.pools.pool_wallet import PoolWallet
 from chives.pools.pool_wallet_info import FARMING_TO_POOL, PoolState, PoolWalletInfo, create_pool_state
 from chives.protocols.protocol_message_types import ProtocolMessageTypes
@@ -1790,7 +1790,7 @@ class WalletRpcApi:
             # Chives Network Code
             # Do not need to calculate the Community Rewards Amount To Wallet Card
             # 只添加了一行代码,余下的代码只是做了缩进
-            if( uint64(calculate_base_community_reward(height)) != uint64(record.amount) and uint64(calculate_base_masternode_reward(height)) != uint64(record.amount) ):
+            if( uint64(calculate_base_community_reward(height)) != uint64(record.amount) ):
                 if record.type == TransactionType.FEE_REWARD:
                     fee_amount += record.amount - calculate_base_farmer_reward(height)
                     farmer_reward_amount += calculate_base_farmer_reward(height)
@@ -1804,7 +1804,6 @@ class WalletRpcApi:
             "pool_reward_amount": pool_reward_amount,
             "farmer_reward_amount": farmer_reward_amount,
             "community_reward_amount": 0,
-            "masternode_reward_amount": 0,
             "fee_amount": fee_amount,
             "last_height_farmed": last_height_farmed,
         }

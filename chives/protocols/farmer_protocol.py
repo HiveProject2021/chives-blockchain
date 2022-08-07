@@ -38,7 +38,6 @@ class DeclareProofOfSpace(Streamable):
     reward_chain_sp_signature: G2Element
     farmer_puzzle_hash: bytes32
     community_puzzle_hash: bytes32
-    masternode_puzzle_hash: bytes32
     pool_target: Optional[PoolTarget]
     pool_signature: Optional[G2Element]
 

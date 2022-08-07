@@ -375,7 +375,6 @@ class FarmerAPI:
                         agg_sig_rc_sp,
                         self.farmer.farmer_target,
                         self.farmer.community_target,
-                        self.farmer.masternode_target,
                         pool_target,
                         pool_target_signature,
                     )

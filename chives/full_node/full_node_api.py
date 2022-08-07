@@ -846,11 +846,9 @@ class FullNodeAPI:
                 )
                 farmer_ph = self.full_node.constants.GENESIS_PRE_FARM_FARMER_PUZZLE_HASH
                 community_ph = self.full_node.constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
-                masternode_ph = self.full_node.constants.GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH
             else:
                 farmer_ph = request.farmer_puzzle_hash
                 community_ph = self.full_node.constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
-                masternode_ph = self.full_node.constants.GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH
                 if request.proof_of_space.pool_contract_puzzle_hash is not None:
                     pool_target = PoolTarget(request.proof_of_space.pool_contract_puzzle_hash, uint32(0))
                 else:
@@ -906,7 +904,6 @@ class FullNodeAPI:
                 cc_challenge_hash,
                 farmer_ph,
                 community_ph,
-                masternode_ph,
                 pool_target,
                 get_plot_sig,
                 get_pool_sig,
