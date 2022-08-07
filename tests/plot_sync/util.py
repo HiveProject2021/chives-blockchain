@@ -8,9 +8,9 @@ from chives.plot_sync.sender import Sender
 from chives.protocols.harvester_protocol import PlotSyncIdentifier
 from chives.server.start_service import Service
 from chives.server.ws_connection import Message, NodeType
+from chives.simulator.time_out_assert import time_out_assert
 from chives.types.blockchain_format.sized_bytes import bytes32
 from chives.util.ints import uint64
-from tests.time_out_assert import time_out_assert
 
 
 @dataclass
@@ -38,7 +38,7 @@ async def start_harvester_service(harvester_service: Service) -> Harvester:
     harvester: Harvester = harvester_service._node
     harvester.plot_manager.last_refresh_time = time.time()
     await harvester_service.start()
-    harvester.plot_manager.stop_refreshing()  # type: ignore[no-untyped-call]  # TODO, Add typing in PlotManager
+    harvester.plot_manager.stop_refreshing()
 
     assert harvester.plot_sync_sender._sync_id == 0
     assert harvester.plot_sync_sender._next_message_id == 0

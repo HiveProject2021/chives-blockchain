@@ -7,11 +7,11 @@ interface CommonOptions {
   canSetBufferSize: boolean;
 }
 
-// interface BladeBitOptions extends CommonOptions {
-//   haveBladebitWarmStart: boolean;
-//   haveBladebitDisableNUMA: boolean;
-//   haveBladebitOutputDir: boolean;
-// }
+interface BladeBitOptions extends CommonOptions {
+  haveBladebitWarmStart: boolean;
+  haveBladebitDisableNUMA: boolean;
+  haveBladebitOutputDir: boolean;
+}
 
 interface MadMaxOptions extends CommonOptions {
   haveMadmaxNumBucketsPhase3: boolean;
@@ -19,7 +19,7 @@ interface MadMaxOptions extends CommonOptions {
   haveMadmaxTempToggle: boolean;
 }
 
-export type PlotterOptions = CommonOptions & MadMaxOptions; // BladeBitOptions &
+export type PlotterOptions = CommonOptions & BladeBitOptions & MadMaxOptions;
 
 interface CommonDefaults {
   plotterName: string,
@@ -31,10 +31,10 @@ interface CommonDefaults {
   delay?: number;
 }
 
-// interface BladeBitDefaults extends CommonDefaults {
-//   bladebitWarmStart?: boolean;
-//   bladebitDisableNUMA?: boolean;
-// }
+interface BladeBitDefaults extends CommonDefaults {
+  bladebitWarmStart?: boolean;
+  bladebitDisableNUMA?: boolean;
+}
 
 interface MadMaxDefaults extends CommonDefaults {
   madmaxNumBucketsPhase3?: number;
@@ -43,13 +43,13 @@ interface MadMaxDefaults extends CommonDefaults {
   madmaxTempToggle?: boolean;
 }
 
-export type PlotterDefaults = CommonDefaults & MadMaxDefaults; // & BladeBitDefaults 
+export type PlotterDefaults = CommonDefaults & BladeBitDefaults & MadMaxDefaults;
 
 type PlotterInstallInfo = {
   version?: string;
   installed: boolean;
   canInstall?: boolean;
-  // bladebitMemoryWarning?: string;
+  bladebitMemoryWarning?: string;
 };
 
 type Plotter = {

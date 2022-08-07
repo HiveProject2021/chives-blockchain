@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/HiveProject2021/chives-blockchain/tree/main/tests#readme
 #
 name: Ubuntu blockchain Test
 
@@ -78,7 +78,7 @@ jobs:
     - name: Checkout test blocks and plots
       if: steps.test-blocks-plots.outputs.cache-hit != 'true'
       run: |
-        wget -qO- https://github.com/Chia-Network/test-cache/archive/refs/tags/0.29.0.tar.gz | tar xzf -
+        wget -qO- https://github.com/HiveProject2021/test-cache/archive/refs/tags/0.29.0.tar.gz | tar xzf -
         mkdir ${{ github.workspace }}/.chives
         mv ${{ github.workspace }}/test-cache-0.29.0/* ${{ github.workspace }}/.chives
 
@@ -114,5 +114,5 @@ jobs:
 # Omitted resource usage check
 
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/HiveProject2021/chives-blockchain/tree/main/tests#readme
 #

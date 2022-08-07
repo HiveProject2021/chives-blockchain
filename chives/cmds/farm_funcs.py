@@ -17,14 +17,14 @@ from chives.util.network import is_localhost
 SECONDS_PER_BLOCK = (24 * 3600) / 4608
 
 
-async def get_harvesters(farmer_rpc_port: Optional[int]) -> Optional[Dict[str, Any]]:
+async def get_harvesters_summary(farmer_rpc_port: Optional[int]) -> Optional[Dict[str, Any]]:
     try:
         config = load_config(DEFAULT_ROOT_PATH, "config.yaml")
         self_hostname = config["self_hostname"]
         if farmer_rpc_port is None:
             farmer_rpc_port = config["farmer"]["rpc_port"]
         farmer_client = await FarmerRpcClient.create(self_hostname, uint16(farmer_rpc_port), DEFAULT_ROOT_PATH, config)
-        plots = await farmer_client.get_harvesters()
+        plots = await farmer_client.get_harvesters_summary()
     except Exception as e:
         if isinstance(e, aiohttp.ClientConnectorError):
             print(f"Connection error. Check if farmer is running at {farmer_rpc_port}")

@@ -5,7 +5,7 @@ enum ServiceName {
   HARVESTER = 'chives_harvester',
   SIMULATOR = 'chives_full_node_simulator',
   DAEMON = 'daemon',
-  PLOTTER = 'chives_plotter',
+  PLOTTER = 'chia_plotter',
   TIMELORD = 'chives_timelord',
   INTRODUCER = 'chives_introducer',
   EVENTS = 'wallet_ui',

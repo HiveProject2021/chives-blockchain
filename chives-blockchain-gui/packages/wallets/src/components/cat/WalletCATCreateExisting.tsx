@@ -72,7 +72,7 @@ export default function WalletCATCreateExisting() {
       <Flex flexDirection="column" gap={3}>
         <Back variant="h5">
           {asteroid 
-            ? <Trans>Create custom CAT Wallet</Trans>
+            ? <Trans>Create custom Token Wallet</Trans>
             : <Trans>Create Chives Asset Token Wallet from Existing TAIL</Trans>}
           
         </Back>

@@ -1,4 +1,5 @@
-import { WalletType, type Wallet } from '@chives/api';
+import { WalletType } from '@chives/api';
+import type { Wallet } from '@chives/api';
 
 export default function getWalletPrimaryTitle(wallet: Wallet): string {
   switch (wallet.type) {

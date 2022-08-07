@@ -102,8 +102,8 @@ export default class Daemon extends Service {
     f, // farmerPublicKey
     p, // poolPublicKey
     c, // poolContractAddress
-    // m, // bladebitDisableNUMA,
-    // w, // bladebitWarmStart,
+    m, // bladebitDisableNUMA,
+    w, // bladebitWarmStart,
     v, // madmaxNumBucketsPhase3,
     G, // madmaxTempToggle,
     K, // madmaxThreadMultiplier,
@@ -143,13 +143,13 @@ export default class Daemon extends Service {
       args.c = c;
     }
   
-    // if (m) { // bladebitDisableNUMA
-    //   args.m = m;
-    // }
+    if (m) { // bladebitDisableNUMA
+      args.m = m;
+    }
   
-    // if (w) { // bladebitWarmStart
-    //   args.w = w;
-    // }
+    if (w) { // bladebitWarmStart
+      args.w = w;
+    }
   
     if (v) { // madmaxNumBucketsPhase3
       args.v = v;

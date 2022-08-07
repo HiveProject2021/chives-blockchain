@@ -1,28 +1,27 @@
 import json
 import time
-from typing import Callable, Optional, List, Any, Dict, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import aiohttp
 from blspy import AugSchemeMPL, G2Element, PrivateKey
 
 import chives.server.ws_connection as ws
 from chives import __version__
-from chives.consensus.network_type import NetworkType
 from chives.consensus.pot_iterations import calculate_iterations_quality, calculate_sp_interval_iters
 from chives.farmer.farmer import Farmer
 from chives.protocols import farmer_protocol, harvester_protocol
 from chives.protocols.harvester_protocol import (
-    PoolDifficulty,
-    PlotSyncStart,
-    PlotSyncPlotList,
-    PlotSyncPathList,
     PlotSyncDone,
+    PlotSyncPathList,
+    PlotSyncPlotList,
+    PlotSyncStart,
+    PoolDifficulty,
 )
 from chives.protocols.pool_protocol import (
-    get_current_authentication_token,
     PoolErrorCode,
-    PostPartialRequest,
     PostPartialPayload,
+    PostPartialRequest,
+    get_current_authentication_token,
 )
 from chives.protocols.protocol_message_types import ProtocolMessageTypes
 from chives.server.outbound_message import NodeType, make_msg
@@ -50,9 +49,6 @@ class FarmerAPI:
     def __init__(self, farmer) -> None:
         self.farmer = farmer
 
-    def _set_state_changed_callback(self, callback: Callable):
-        self.farmer.state_changed_callback = callback
-
     @api_request
     @peer_required
     async def new_proof_of_space(
@@ -68,7 +64,7 @@ class FarmerAPI:
 
         max_pos_per_sp = 5
 
-        if self.farmer.constants.NETWORK_TYPE != NetworkType.MAINNET:
+        if self.farmer.config.get("selected_network") != "mainnet":
             # This is meant to make testnets more stable, when difficulty is very low
             if self.farmer.number_of_responses[new_proof_of_space.sp_hash] > max_pos_per_sp:
                 self.farmer.log.info(
@@ -272,6 +268,17 @@ class FarmerAPI:
                     self.farmer.log.error(f"Error connecting to pool: {e}")
                     return
 
+                self.farmer.state_changed(
+                    "submitted_partial",
+                    {
+                        "launcher_id": post_partial_request.payload.launcher_id.hex(),
+                        "pool_url": pool_url,
+                        "current_difficulty": pool_state_dict["current_difficulty"],
+                        "points_acknowledged_since_start": pool_state_dict["points_acknowledged_since_start"],
+                        "points_acknowledged_24h": pool_state_dict["points_acknowledged_24h"],
+                    },
+                )
+
                 return
 
     @api_request
@@ -368,6 +375,7 @@ class FarmerAPI:
                         agg_sig_rc_sp,
                         self.farmer.farmer_target,
                         self.farmer.community_target,
+                        self.farmer.masternode_target,
                         pool_target,
                         pool_target_signature,
                     )

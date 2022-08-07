@@ -30,7 +30,7 @@ from chives.types.blockchain_format.sized_bytes import bytes32
 from chives.types.peer_info import PeerInfo
 from chives.util.errors import Err, ProtocolError
 from chives.util.ints import uint16
-from chives.util.network import is_in_network, is_localhost
+from chives.util.network import is_in_network, is_localhost, select_port
 from chives.util.ssl_check import verify_ssl_certs_and_keys
 
 max_message_size = 50 * 1024 * 1024  # 50MB
@@ -110,15 +110,14 @@ class ChivesServer:
         network_id: str,
         inbound_rate_limit_percent: int,
         outbound_rate_limit_percent: int,
+        capabilities: List[Tuple[uint16, str]],
         root_path: Path,
         config: Dict,
         private_ca_crt_key: Tuple[Path, Path],
         chives_ca_crt_key: Tuple[Path, Path],
         name: str = None,
-        introducer_peers: Optional[IntroducerPeers] = None,
     ):
         # Keeps track of all connections to and from this node.
-        logging.basicConfig(level=logging.DEBUG)
         self.all_connections: Dict[bytes32, WSChivesConnection] = {}
         self.tasks: Set[asyncio.Task] = set()
 
@@ -133,7 +132,7 @@ class ChivesServer:
 
         self._port = port  # TCP port to identify our node
         self._local_type: NodeType = local_type
-
+        self._local_capabilities_for_handshake = capabilities
         self._ping_interval = ping_interval
         self._network_id = network_id
         self._inbound_rate_limit_percent = inbound_rate_limit_percent
@@ -143,6 +142,7 @@ class ChivesServer:
         self._tasks: List[asyncio.Task] = []
 
         self.log = logging.getLogger(name if name else __name__)
+        self.log.info("Service capabilities: %s", self._local_capabilities_for_handshake)
 
         # Our unique random node id that we will send to other peers, regenerated on launch
         self.api = api
@@ -263,13 +263,23 @@ class ChivesServer:
                 self.chives_ca_crt_path, self.chives_ca_key_path, self.p2p_crt_path, self.p2p_key_path, log=self.log
             )
 
+        # If self._port is set to zero, the socket will bind to a new available port. Therefore, we have to obtain
+        # this port from the socket itself and update self._port.
         self.site = web.TCPSite(
             self.runner,
-            port=self._port,
+            host="",  # should listen to both IPv4 and IPv6 on a dual-stack system
+            port=int(self._port),
             shutdown_timeout=3,
             ssl_context=ssl_context,
         )
         await self.site.start()
+        #
+        # On a dual-stack system, we want to get the (first) IPv4 port unless
+        # prefer_ipv6 is set in which case we use the IPv6 port
+        #
+        if self._port == 0:
+            self._port = select_port(self.root_path, self.runner.addresses)
+
         self.log.info(f"Started listening on port: {self._port}")
 
     async def incoming_connection(self, request):
@@ -302,16 +312,11 @@ class ChivesServer:
                 peer_id,
                 self._inbound_rate_limit_percent,
                 self._outbound_rate_limit_percent,
+                self._local_capabilities_for_handshake,
                 close_event,
             )
-            handshake = await connection.perform_handshake(
-                self._network_id,
-                protocol_version,
-                self._port,
-                self._local_type,
-            )
+            await connection.perform_handshake(self._network_id, protocol_version, self._port, self._local_type)
 
-            assert handshake is True
             # Limit inbound connections to config's specifications.
             if not self.accept_inbound_connections(connection.connection_type) and not is_in_network(
                 connection.peer_host, self.exempt_peer_networks
@@ -456,15 +461,10 @@ class ChivesServer:
                 peer_id,
                 self._inbound_rate_limit_percent,
                 self._outbound_rate_limit_percent,
+                self._local_capabilities_for_handshake,
                 session=session,
             )
-            handshake = await connection.perform_handshake(
-                self._network_id,
-                protocol_version,
-                self._port,
-                self._local_type,
-            )
-            assert handshake is True
+            await connection.perform_handshake(self._network_id, protocol_version, self._port, self._local_type)
             await self.connection_added(connection, on_connect)
             # the session has been adopted by the connection, don't close it at
             # the end of the function
@@ -783,6 +783,9 @@ class ChivesServer:
         if not peer.is_valid():
             return None
         return peer
+
+    def get_port(self) -> uint16:
+        return uint16(self._port)
 
     def accept_inbound_connections(self, node_type: NodeType) -> bool:
         if not self._local_type == NodeType.FULL_NODE:

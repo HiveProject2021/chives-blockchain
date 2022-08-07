@@ -85,7 +85,6 @@ def challenges_cmd(farmer_rpc_port: Optional[int], limit: int) -> None:
     asyncio.run(challenges(farmer_rpc_port, limit))
 
 
-
 @farm_cmd.command("uploadfarmerdata", short_help="Upload the farm summary and challenges data to community.chivescoin.org, and you can query the data in this site.")
 @click.option(
     "-p",

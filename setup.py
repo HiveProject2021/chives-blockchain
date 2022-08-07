@@ -2,24 +2,23 @@ from setuptools import setup
 
 dependencies = [
     "aiofiles==0.7.0",  # Async IO for files
-    "blspy==1.0.9",  # Signature library
-    "chiavdf==1.0.5",  # timelord and vdf verification
+    "blspy==1.0.13",  # Signature library
+    "chiavdf==1.0.6",  # timelord and vdf verification
     "chiabip158==1.1",  # bip158-style wallet filters
-    "chiapos==1.0.9",  # proof of space
+    "chiapos==1.0.10",  # proof of space
     "clvm==0.9.7",
-    "clvm_tools==0.4.4",  # Currying, Program.to, other conveniences
-    "chia_rs==0.1.1",
-    "clvm-tools-rs==0.1.7",  # Rust implementation of clvm_tools
+    "clvm_tools==0.4.5",  # Currying, Program.to, other conveniences
+    "chia_rs==0.1.5",
+    "clvm-tools-rs==0.1.19",  # Rust implementation of clvm_tools' compiler
     "aiohttp==3.8.1",  # HTTP server for full node rpc
     "aiosqlite==0.17.0",  # asyncio wrapper for sqlite, to store blocks
     "bitstring==3.1.9",  # Binary data management library
-    "colorama==0.4.4",  # Colorizes terminal output
+    "colorama==0.4.5",  # Colorizes terminal output
     "colorlog==6.6.0",  # Adds color to logs
     "concurrent-log-handler==0.9.19",  # Concurrently log and rotate logs
     "cryptography==36.0.2",  # Python cryptography library for TLS - keyring conflict
-    "fasteners==0.16.3",  # For interprocess file locking, expected to be replaced by filelock
-    "filelock==3.4.2",  # For reading and writing config multiprocess and multithread safely  (non-reentrant locks)
-    "keyring==23.0.1",  # Store keys in MacOS Keychain, Windows Credential Locker
+    "filelock==3.7.1",  # For reading and writing config multiprocess and multithread safely  (non-reentrant locks)
+    "keyring==23.6.0",  # Store keys in MacOS Keychain, Windows Credential Locker
     "keyrings.cryptfile==1.3.4",  # Secure storage for keys on Linux (Will be replaced)
     #  "keyrings.cryptfile==1.3.8",  # Secure storage for keys on Linux (Will be replaced)
     #  See https://github.com/frispete/keyrings.cryptfile/issues/15
@@ -28,12 +27,12 @@ dependencies = [
     "sortedcontainers==2.4.0",  # For maintaining sorted mempools
     # TODO: when moving to click 8 remove the pinning of black noted below
     "click==7.1.2",  # For the CLI
-    "dnspythonchia==2.2.0",  # Query DNS seeds
-    "watchdog==2.1.7",  # Filesystem event watching - watches keyring.yaml
+    "dnspython==2.2.0",  # Query DNS seeds
+    "watchdog==2.1.9",  # Filesystem event watching - watches keyring.yaml
     "dnslib==0.9.17",  # dns lib
-    "typing-extensions==4.0.1",  # typing backports like Protocol and TypedDict
+    "typing-extensions==4.3.0",  # typing backports like Protocol and TypedDict
     "zstd==1.5.0.4",
-    "packaging==21.0",
+    "packaging==21.3",
 ]
 
 upnp_dependencies = [
@@ -44,6 +43,8 @@ dev_dependencies = [
     "build",
     "coverage",
     "pre-commit",
+    "py3createtorrent",
+    "pylint",
     "pytest",
     "pytest-asyncio>=0.18.1",  # require attribute 'fixture'
     "pytest-monitor; sys_platform == 'linux'",
@@ -56,7 +57,7 @@ dev_dependencies = [
     "black==21.12b0",
     "aiohttp_cors",  # For blackd
     "ipython",  # For asyncio debugging
-    "pyinstaller==4.9",
+    "pyinstaller==5.0",
     "types-aiofiles",
     "types-click",
     "types-cryptography",
@@ -109,6 +110,7 @@ kwargs = dict(
         "chives.wallet.rl_wallet",
         "chives.wallet.cat_wallet",
         "chives.wallet.did_wallet",
+        "chives.wallet.nft_wallet",
         "chives.wallet.settings",
         "chives.wallet.trading",
         "chives.wallet.util",
@@ -118,6 +120,7 @@ kwargs = dict(
     entry_points={
         "console_scripts": [
             "chives = chives.cmds.chives:main",
+            "chives_daemon = chives.daemon.server:main",
             "chives_wallet = chives.server.start_wallet:main",
             "chives_full_node = chives.server.start_full_node:main",
             "chives_harvester = chives.server.start_harvester:main",
@@ -140,6 +143,10 @@ kwargs = dict(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     zip_safe=False,
+    project_urls={
+        "Source": "https://github.com/HiveProject2021/chives-blockchain/",
+        "Changelog": "https://github.com/HiveProject2021/chives-blockchain/blob/main/CHANGELOG.md",
+    },
 )
 
 

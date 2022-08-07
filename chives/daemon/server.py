@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, TextIO, Tuple, cast
 
 from chives import __version__
-from chives.cmds.init_funcs import check_keys, chives_init
+from chives.cmds.init_funcs import check_keys, chives_init, chives_full_version_str
 from chives.cmds.passphrase_funcs import default_passphrase, using_default_passphrase
 from chives.daemon.keychain_server import KeychainServer, keychain_commands
 from chives.daemon.windows_signal import kill
@@ -25,16 +25,14 @@ from chives.server.server import ssl_context_for_root, ssl_context_for_server
 from chives.ssl.create_ssl import get_mozilla_ca_crt
 from chives.util.chives_logging import initialize_logging
 from chives.util.config import load_config
+from chives.util.errors import KeychainRequiresMigration, KeychainCurrentPassphraseIsInvalid
 from chives.util.json_util import dict_to_json_str
 from chives.util.keychain import (
     Keychain,
-    KeyringCurrentPassphraseIsInvalid,
-    KeyringRequiresMigration,
     passphrase_requirements,
-    supports_keyring_passphrase,
     supports_os_passphrase_storage,
 )
-from chives.util.path import mkdir
+from chives.util.lock import Lockfile, LockfileError
 from chives.util.service_groups import validate_service
 from chives.util.setproctitle import setproctitle
 from chives.util.ws_message import WsRpcMessage, create_payload, format_response
@@ -48,16 +46,10 @@ except ModuleNotFoundError:
     print("Error: Make sure to run . ./activate from the project folder before starting Chives.")
     quit()
 
-try:
-    import fcntl
-
-    has_fcntl = True
-except ImportError:
-    has_fcntl = False
 
 log = logging.getLogger(__name__)
 
-service_plotter = "chives_plotter"
+service_plotter = "chia_plotter"
 
 
 async def fetch(url: str):
@@ -142,6 +134,7 @@ class WebSocketServer:
         self.plots_queue: List[Dict] = []
         self.connections: Dict[str, List[WebSocketResponse]] = dict()  # service_name : [WebSocket]
         self.remote_address_map: Dict[WebSocketResponse, str] = dict()  # socket: service_name
+        self.ping_job: Optional[asyncio.Task] = None
         self.net_config = load_config(root_path, "config.yaml")
         self.self_hostname = self.net_config["self_hostname"]
         self.daemon_port = self.net_config["daemon_port"]
@@ -205,14 +198,15 @@ class WebSocketServer:
                 self.log.error(f"Error while canceling task.{e} {task}")
 
     async def stop(self) -> Dict[str, Any]:
-        jobs = []
-        for service_name in self.services.keys():
-            jobs.append(kill_service(self.root_path, self.services, service_name))
-        if jobs:
-            await asyncio.wait(jobs)
+        self.cancel_task_safe(self.ping_job)
+        service_names = list(self.services.keys())
+        stop_service_jobs = [kill_service(self.root_path, self.services, s_n) for s_n in service_names]
+        if stop_service_jobs:
+            await asyncio.wait(stop_service_jobs)
         self.services.clear()
         asyncio.create_task(self.exit())
-        return {"success": True}
+        log.info(f"Daemon Server stopping, Services stopped: {service_names}")
+        return {"success": True, "services_stopped": service_names}
 
     async def incoming_connection(self, request):
         ws: WebSocketResponse = web.WebSocketResponse(max_msg_size=self.daemon_max_message_size, heartbeat=30)
@@ -220,7 +214,7 @@ class WebSocketServer:
 
         while True:
             msg = await ws.receive()
-            self.log.debug(f"Received message: {msg}")
+            self.log.debug("Received message: %s", msg)
             if msg.type == WSMsgType.TEXT:
                 try:
                     decoded = json.loads(msg.data)
@@ -242,7 +236,6 @@ class WebSocketServer:
                             self.log.error(f"Unexpected exception trying to send to websocket: {e} {tb}")
                             self.remove_connection(socket)
                             await socket.close()
-                            break
             else:
                 service_name = "Unknown"
                 if ws in self.remote_address_map:
@@ -269,6 +262,28 @@ class WebSocketServer:
                 else:
                     after_removal.append(connection)
             self.connections[service_name] = after_removal
+
+    async def ping_task(self) -> None:
+        restart = True
+        await asyncio.sleep(30)
+        for remote_address, service_name in self.remote_address_map.items():
+            if service_name in self.connections:
+                sockets = self.connections[service_name]
+                for socket in sockets:
+                    try:
+                        self.log.debug(f"About to ping: {service_name}")
+                        await socket.ping()
+                    except asyncio.CancelledError:
+                        self.log.warning("Ping task received Cancel")
+                        restart = False
+                        break
+                    except Exception:
+                        self.log.exception("Ping error")
+                        self.log.error("Ping failed, connection closed.")
+                        self.remove_connection(socket)
+                        await socket.close()
+        if restart is True:
+            self.ping_job = asyncio.create_task(self.ping_task())
 
     async def handle_message(
         self, websocket: WebSocketResponse, message: WsRpcMessage
@@ -298,7 +313,7 @@ class WebSocketServer:
         if len(data) == 0 and command in commands_with_data:
             response = {"success": False, "error": f'{command} requires "data"'}
         # Keychain commands should be handled by KeychainServer
-        elif command in keychain_commands and supports_keyring_passphrase():
+        elif command in keychain_commands:
             response = await self.keychain_server.handle_command(command, data)
         elif command == "ping":
             response = await ping()
@@ -351,7 +366,6 @@ class WebSocketServer:
         return response
 
     async def keyring_status(self) -> Dict[str, Any]:
-        passphrase_support_enabled: bool = supports_keyring_passphrase()
         can_save_passphrase: bool = supports_os_passphrase_storage()
         user_passphrase_is_set: bool = Keychain.has_master_passphrase() and not using_default_passphrase()
         locked: bool = Keychain.is_keyring_locked()
@@ -363,7 +377,6 @@ class WebSocketServer:
         response: Dict[str, Any] = {
             "success": True,
             "is_keyring_locked": locked,
-            "passphrase_support_enabled": passphrase_support_enabled,
             "can_save_passphrase": can_save_passphrase,
             "user_passphrase_is_set": user_passphrase_is_set,
             "needs_migration": needs_migration,
@@ -517,9 +530,9 @@ class WebSocketServer:
                 passphrase_hint=passphrase_hint,
                 save_passphrase=save_passphrase,
             )
-        except KeyringRequiresMigration:
+        except KeychainRequiresMigration:
             error = "keyring requires migration"
-        except KeyringCurrentPassphraseIsInvalid:
+        except KeychainCurrentPassphraseIsInvalid:
             error = "current passphrase is invalid"
         except Exception as e:
             tb = traceback.format_exc()
@@ -546,7 +559,7 @@ class WebSocketServer:
 
         try:
             Keychain.remove_master_passphrase(current_passphrase)
-        except KeyringCurrentPassphraseIsInvalid:
+        except KeychainCurrentPassphraseIsInvalid:
             error = "current passphrase is invalid"
         except Exception as e:
             tb = traceback.format_exc()
@@ -613,7 +626,7 @@ class WebSocketServer:
 
         response = create_payload("keyring_status_changed", keyring_status, "daemon", destination)
 
-        for websocket in websockets:
+        for websocket in websockets.copy():
             try:
                 await websocket.send_str(response)
             except Exception as e:
@@ -672,7 +685,7 @@ class WebSocketServer:
 
         response = create_payload("state_changed", message, service, "wallet_ui")
 
-        for websocket in websockets:
+        for websocket in websockets.copy():
             try:
                 await websocket.send_str(response)
             except Exception as e:
@@ -691,8 +704,8 @@ class WebSocketServer:
 
         if plotter == "chiapos":
             final_words = ["Renamed final file"]
-        # elif plotter == "bladebit":
-        #     final_words = ["Finished plotting in"]
+        elif plotter == "bladebit":
+            final_words = ["Finished plotting in"]
         elif plotter == "madmax":
             temp_dir = config["temp_dir"]
             final_dir = config["final_dir"]
@@ -782,19 +795,19 @@ class WebSocketServer:
 
         return command_args
 
-    # def _bladebit_plotting_command_args(self, request: Any, ignoreCount: bool) -> List[str]:
-    #     w = request.get("w", False)  # Warm start
-    #     m = request.get("m", False)  # Disable NUMA
+    def _bladebit_plotting_command_args(self, request: Any, ignoreCount: bool) -> List[str]:
+        w = request.get("w", False)  # Warm start
+        m = request.get("m", False)  # Disable NUMA
 
-    #     command_args: List[str] = []
+        command_args: List[str] = []
 
-    #     if w is True:
-    #         command_args.append("-w")
+        if w is True:
+            command_args.append("-w")
 
-    #     if m is True:
-    #         command_args.append("-m")
+        if m is True:
+            command_args.append("-m")
 
-    #     return command_args
+        return command_args
 
     def _madmax_plotting_command_args(self, request: Any, ignoreCount: bool, index: int) -> List[str]:
         k = request["k"]  # Plot size
@@ -832,8 +845,8 @@ class WebSocketServer:
             command_args.extend(self._chiapos_plotting_command_args(request, ignoreCount))
         elif plotter == "madmax":
             command_args.extend(self._madmax_plotting_command_args(request, ignoreCount, index))
-        # elif plotter == "bladebit":
-        #     command_args.extend(self._bladebit_plotting_command_args(request, ignoreCount))
+        elif plotter == "bladebit":
+            command_args.extend(self._bladebit_plotting_command_args(request, ignoreCount))
 
         return command_args
 
@@ -868,7 +881,10 @@ class WebSocketServer:
         exclude_final_dir: bool = job["exclude_final_dir"]
         log.info(f"Post-processing plotter job with ID {id}")  # lgtm [py/clear-text-logging-sensitive-data]
         if not exclude_final_dir:
-            add_plot_directory(self.root_path, final_dir)
+            try:
+                add_plot_directory(self.root_path, final_dir)
+            except ValueError as e:
+                log.warning(f"_post_process_plotting_job: {e}")
 
     async def _start_plotting(self, id: str, loop: asyncio.AbstractEventLoop, queue: str = "default"):
         current_process = None
@@ -1147,6 +1163,8 @@ class WebSocketServer:
             }
         else:
             self.remote_address_map[websocket] = service
+            if self.ping_job is None:
+                self.ping_job = asyncio.create_task(self.ping_task())
         self.log.info(f"registered for service {service}")
         log.info(f"{response}")
         return response
@@ -1157,15 +1175,15 @@ def daemon_launch_lock_path(root_path: Path) -> Path:
     A path to a file that is lock when a daemon is launching but not yet started.
     This prevents multiple instances from launching.
     """
-    return root_path / "run" / "start-daemon.launching"
+    return service_launch_lock_path(root_path, "daemon")
 
 
 def service_launch_lock_path(root_path: Path, service: str) -> Path:
     """
-    A path to a file that is lock when a service is running.
+    A path that is locked when a service is running.
     """
     service_name = service.replace(" ", "-").replace("/", "-")
-    return root_path / "run" / f"{service_name}.lock"
+    return root_path / "run" / service_name
 
 
 def pid_path_for_service(root_path: Path, service: str, id: str = "") -> Path:
@@ -1188,16 +1206,12 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
     # Swap service name with name of executable
     service_array[0] = service_executable
     startupinfo = None
-    if os.name == "nt":
-        startupinfo = subprocess.STARTUPINFO()  # type: ignore
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
-
-    # Windows-specific.
-    # If the current process group is used, CTRL_C_EVENT will kill the parent and everyone in the group!
-    try:
-        creationflags: int = subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore
-    except AttributeError:  # Not on Windows.
-        creationflags = 0
+    creationflags = 0
+    if sys.platform == "win32" or sys.platform == "cygwin":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        # If the current process group is used, CTRL_C_EVENT will kill the parent and everyone in the group!
+        creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
 
     plotter_path = plotter_log_path(root_path, id)
 
@@ -1205,7 +1219,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
         if plotter_path.exists():
             plotter_path.unlink()
     else:
-        mkdir(plotter_path.parent)
+        plotter_path.parent.mkdir(parents=True, exist_ok=True)
     outfile = open(plotter_path.resolve(), "w")
     log.info(f"Service array: {service_array}")  # lgtm [py/clear-text-logging-sensitive-data]
     process = subprocess.Popen(
@@ -1219,7 +1233,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
 
     pid_path = pid_path_for_service(root_path, service_name, id)
     try:
-        mkdir(pid_path.parent)
+        pid_path.parent.mkdir(parents=True, exist_ok=True)
         with open(pid_path, "w") as f:
             f.write(f"{process.pid}\n")
     except Exception:
@@ -1245,15 +1259,10 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     service_executable = executable_for_service(service_array[0])
     service_array[0] = service_executable
 
-    if service_command == "chives_full_node_simulator":
-        # Set the -D/--connect_to_daemon flag to signify that the child should connect
-        # to the daemon to access the keychain
-        service_array.append("-D")
-
     startupinfo = None
-    if os.name == "nt":
-        startupinfo = subprocess.STARTUPINFO()  # type: ignore
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
+    if sys.platform == "win32" or sys.platform == "cygwin":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
     # CREATE_NEW_PROCESS_GROUP allows graceful shutdown on windows, by CTRL_BREAK_EVENT signal
     if sys.platform == "win32" or sys.platform == "cygwin":
@@ -1266,7 +1275,7 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     )
     pid_path = pid_path_for_service(root_path, service_command)
     try:
-        mkdir(pid_path.parent)
+        pid_path.parent.mkdir(parents=True, exist_ok=True)
         with open(pid_path, "w") as f:
             f.write(f"{process.pid}\n")
     except Exception:
@@ -1326,29 +1335,6 @@ def is_running(services: Dict[str, subprocess.Popen], service_name: str) -> bool
     return process is not None and process.poll() is None
 
 
-def singleton(lockfile: Path, text: str = "semaphore") -> Optional[TextIO]:
-    """
-    Open a lockfile exclusively.
-    """
-
-    if not lockfile.parent.exists():
-        mkdir(lockfile.parent)
-
-    try:
-        if has_fcntl:
-            f = open(lockfile, "w")
-            fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        else:
-            if lockfile.exists():
-                lockfile.unlink()
-            fd = os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
-            f = open(fd, "w")
-        f.write(text)
-    except IOError:
-        return None
-    return f
-
-
 async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:
     # When wait_for_unlock is true, we want to skip the check_keys() call in chives_init
     # since it might be necessary to wait for the GUI to unlock the keyring first.
@@ -1356,7 +1342,6 @@ async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> in
     config = load_config(root_path, "config.yaml")
     setproctitle("chives_daemon")
     initialize_logging("daemon", config["logging"], root_path)
-    lockfile = singleton(daemon_launch_lock_path(root_path))
     crt_path = root_path / config["daemon_ssl"]["private_crt"]
     key_path = root_path / config["daemon_ssl"]["private_key"]
     ca_crt_path = root_path / config["private_ssl_ca"]["crt"]
@@ -1373,27 +1358,29 @@ async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> in
     )
     sys.stdout.write("\n" + json_msg + "\n")
     sys.stdout.flush()
-    if lockfile is None:
+    try:
+        with Lockfile.create(daemon_launch_lock_path(root_path), timeout=1):
+            log.info(f"chives-blockchain version: {chives_full_version_str()}")
+
+            shutdown_event = asyncio.Event()
+
+            ws_server = WebSocketServer(
+                root_path,
+                ca_crt_path,
+                ca_key_path,
+                crt_path,
+                key_path,
+                shutdown_event,
+                run_check_keys_on_unlock=wait_for_unlock,
+            )
+            await ws_server.start()
+            await shutdown_event.wait()
+            log.info("Daemon WebSocketServer closed")
+            # sys.stdout.close()
+            return 0
+    except LockfileError:
         print("daemon: already launching")
         return 2
-
-    shutdown_event = asyncio.Event()
-
-    # TODO: clean this up, ensuring lockfile isn't removed until the listen port is open
-    ws_server = WebSocketServer(
-        root_path,
-        ca_crt_path,
-        ca_key_path,
-        crt_path,
-        key_path,
-        shutdown_event,
-        run_check_keys_on_unlock=wait_for_unlock,
-    )
-    await ws_server.start()
-    await shutdown_event.wait()
-    log.info("Daemon WebSocketServer closed")
-    # sys.stdout.close()
-    return 0
 
 
 def run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:
@@ -1401,13 +1388,13 @@ def run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:
     return result
 
 
-def main(argv) -> int:
+def main() -> int:
     from chives.util.default_root import DEFAULT_ROOT_PATH
     from chives.util.keychain import Keychain
 
-    wait_for_unlock = "--wait-for-unlock" in argv and Keychain.is_keyring_locked()
+    wait_for_unlock = "--wait-for-unlock" in sys.argv[1:] and Keychain.is_keyring_locked()
     return run_daemon(DEFAULT_ROOT_PATH, wait_for_unlock)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

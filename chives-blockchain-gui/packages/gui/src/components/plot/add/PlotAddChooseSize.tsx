@@ -14,7 +14,7 @@ import {
 import { plotSizeOptions } from '../../../constants/plotSizes';
 import Plotter from '../../../types/Plotter';
 
-const MIN_MAINNET_K_SIZE = 29;
+const MIN_MAINNET_K_SIZE = 32;
 
 const StyledFormHelperText = styled(FormHelperText)`
   color: ${StateColor.WARNING};
@@ -56,7 +56,7 @@ export default function PlotAddChooseSize(props: Props) {
     if (canUse) {
       setValue('overrideK', true);
     } else {
-      setValue('plotSize', 29);
+      setValue('plotSize', 32);
     }
   }
 

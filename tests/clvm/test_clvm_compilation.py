@@ -1,4 +1,6 @@
+from os import remove
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from clvm_tools.clvmc import compile_clvm
@@ -8,7 +10,7 @@ from chives.types.blockchain_format.program import Program, SerializedProgram
 wallet_program_files = set(
     [
         "chives/wallet/puzzles/calculate_synthetic_public_key.clvm",
-        "chives/wallet/puzzles/cat.clvm",
+        "chives/wallet/puzzles/cat_v2.clvm",
         "chives/wallet/puzzles/chialisp_deserialisation.clvm",
         "chives/wallet/puzzles/rom_bootstrap_generator.clvm",
         "chives/wallet/puzzles/generator_for_single_coin.clvm",
@@ -40,6 +42,13 @@ wallet_program_files = set(
         "chives/wallet/puzzles/delegated_tail.clvm",
         "chives/wallet/puzzles/settlement_payments.clvm",
         "chives/wallet/puzzles/genesis_by_coin_id.clvm",
+        "chives/wallet/puzzles/singleton_top_layer_v1_1.clvm",
+        "chives/wallet/puzzles/nft_metadata_updater_default.clvm",
+        "chives/wallet/puzzles/nft_metadata_updater_updateable.clvm",
+        "chives/wallet/puzzles/nft_state_layer.clvm",
+        "chives/wallet/puzzles/nft_ownership_layer.clvm",
+        "chives/wallet/puzzles/nft_ownership_transfer_program_one_way_claim_with_royalties.clvm",
+        "chives/wallet/puzzles/decompress_block_spends.clvm",
     ]
 )
 
@@ -154,10 +163,20 @@ class TestClvmCompilation(TestCase):
             self.assertEqual(
                 s.get_tree_hash().hex(),
                 existing_sha,
-                msg=f"Checked-in shatree hash file does not match shatree hash of loaded SerializedProgram: {prog_path}",  # noqa
+                msg=f"Checked-in shatree hash file does not match hash of loaded SerializedProgram: {prog_path}",
             )
             self.assertEqual(
                 p.get_tree_hash().hex(),
                 existing_sha,
                 msg=f"Checked-in shatree hash file does not match shatree hash of loaded Program: {prog_path}",
             )
+
+    def test_017_encoding_bug_fixed(self):
+        with NamedTemporaryFile(delete=False) as tf:
+            tf.write(b"10000000")
+        hexname = tf.name + ".hex"
+        compile_clvm(tf.name, hexname, [])
+        with open(hexname) as f:
+            self.assertEqual(f.read().strip(), "8400989680")
+        remove(tf.name)
+        remove(hexname)

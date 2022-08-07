@@ -10,6 +10,126 @@ for setuptools_scm/PEP 440 reasons.
 
 ### What's Changed
 
+## 1.5.0 Chives blockchain 2022-7-26
+
+### Added
+
+- Added derivation index information to the Wallet UI to show the current derivation index height
+- Added section in Settings to allow the user to manually update the derivation index height in order to ensure the wallet finds all the coins
+- Added a tooltip for users to understand why their CAT balance has changed as new CAT2 tokens get re-issued
+- There is now a `blockchain_wallet_v2_r1_*.sqlite` DB that will be created, which will sync from 0 to look for CAT2 tokens. This preserves a copy of your previous wallet DB so that you are able to look up previous transactions by using an older wallet client
+- Extended `min_coin` to RPC calls, and CLI for coin selection
+- Show DID in the offer preview for NFTs
+- Added wallet RPCs (`get_derivation_index`, `update_derivation_index`) to enable the GUI, and CLI to report what the current derivation index is for scanning wallet addresses, and also allows a user to move that index forward to broaden the set of addresses to scan for coins
+
+### Changed
+
+- Changed the DID Wallet to use the new coin selection algorithm that the Standard Wallet, and the Token Wallet already use
+- Changed returning the result of send_transaction to happen after the transaction has been added to the queue, rather than it just being added to the mempool.
+- Increased the priority of wallet transactions vs full node broadcasted transactions, so we don't have to wait in line as a wallet user
+- Deprecated the `-st, --series-total` and `-sn, --series-number` RPC and CLI NFT minting options in favor of `-ec, --edition-count` and `-en, --edition-number` to align with NFT industry terms
+- When creating a DID profile, a DID-linked NFT wallet is automatically created
+- Update `chives wallet take_offer` to show NFT royalties that will be paid out when an offer is taken
+- Added a parameter to indicate how many additional puzzle hashes `create_more_puzzle_hashes` should create
+
+### Fixed
+
+- Fixed [CVE-2022-36447] where in tokens previously minted on the Chives blockchain using the `CAT1` standard can be inflated in arbitrary amounts by any holder of the token. Total amount of the token can be increased as high as the malicious actor pleases. This is true for every `CAT1` on the Chives blockchain, regardless of issuance rules. This attack is auditable on-chain, so maliciously altered coins can potentially be "marked" by off-chain observers as malicious.
+- Fixed issue that prevented websockets from being attempted if an earlier websocket failed
+- Fixed issue where `test_smallest_coin_over_amount` did not work properly when all coins were smaller than the amount
+- Fixed a performance issue with knapsack that caused it to keep searching for more coins than could actually be selected. Performance with 200k coins:
+  - Old: 60 seconds
+  - New: 0.78 seconds
+- Fixed offer compression backwards compatibility
+- Fixed royalty percentage check for NFT0 NFTs, and made the check for an offer containing an NFT more generalized
+- Fixed timing with asyncio context switching that could prevent networking layer from responding to ping
+
+## 1.4.0 Chives blockchain 2022-6-29
+
+### Added
+
+- Added support for NFTs!!! :party:
+- Added `chives wallet nft` command (see <https://docs.chivescoin.org/docs/13cli/did_cli>)
+- Added `chives wallet did` command (see <https://docs.chivescoin.org/docs/12rpcs/nft_rpcs>)
+- Added RPCs for DID (see <https://docs.chivescoin.org/docs/12rpcs/did_rpcs>)
+- Added RPCs for NFT (see <https://docs.chivescoin.org/docs/12rpcs/nft_rpcs>)
+- Enable stricter mempool rule when dealing with multiple extra arguments
+- Added a retry when loading pool info from a pool at 2 minute intervals
+- Added CLI options `--sort-by-height` and –sort-by-relevance` to `chives wallet get_transactions`
+- Harvester: Introduce `recursive_plot_scan`
+- Add libgmp-dev to Bladebit installation - thanks to @TheLastCicada
+- Add support for multiple of the same CAT in aggregate offers - Thanks to @roseiliend
+
+### Changed
+
+- New coin selection algorithm based on bitcoin knapsack. Previously chives selected the largest coin
+- Updated chiapos to 1.0.10
+- Updated chiavdf to 1.0.6
+- Updated blspy to 1.0.13
+- Updated setproctitle to 1.2.3
+- Updated PyYAML to 6.0
+- Updated pyinstaller to 5.0
+- Bump clvm_tools_rs version to 0.1.9 for clvm stepper and add a test
+- Modest speedup of syncing by batching coin lookups
+- Cmds: Use the new `plot_count` of `get_pool_state` in `plotnft show`
+- Set mempool size back to the original size at launch
+- Plotting|tests|setup: Improve `PlotManager` cache
+- Wallet: Drop unused `WalletStateManager.get_derivation_index`
+- Harvester: Tweak `get_plots` RPC
+- Remove explicit multidict version from setup.py
+- Simplify install.sh ubuntu version tracking
+- Optimize BLS verification when public key is repeated
+- Use Install.ps1 in build_windows.ps1
+- Updated warning about `CHIVES_ROOT` being set when running init
+- Cmds: Adjust stop daemon output
+- Remove unused functions on MerkleSet
+- Optimize `hash_coin_list()`
+- Update CONTRIBUTING.md
+- Remove outdated 3.8 upgrade comment
+- Hint refactor
+- Replace MerkleSet with the rust implementation
+- Simplify SizedBytes and StructStream
+- Allow services to set a non-default max request body size limit
+- Reduce the redundant computations of coin_ids in block_body_validation
+- Uses the new `from_bytes_unchecked` method in blspy, to improve perfo…
+- Remove the cache from CoinStore
+- Keep daemon websocket alive during keyring unlock
+- Support searching derived addresses on testnet.
+- Optimize code to not perform useless subgroup checks
+- Restore missing hints being stored as None (instead of 0-length bytes)
+- Coin simplification
+- Harvester: Use a set instead of a list to speed up availability checks
+- Improved performance of debug log output
+- Update plotters installation to include an `apt update` - thanks to @TheLastCicada
+- Early return from `_set_spent function` - Thanks @neurosis69
+- Remove redundant condition in `get_coin_records` - Thanks @neurosis69
+- Write python version error to stderr - thanks to @LuaKT
+
+### Fixed
+
+- Fixed issues with harvesters not reconnecting properly - fixes #11466
+- Return not synced if there are no connections - fixes #12090
+- Fix issues with wallet resending transactions on various mempool and node errors - fixes #10873
+- Fix some issues with `plotnft show` (#11897)
+- Handle ephemeral ports and dual stack (ipv4 & ipv6)
+- Fix issues when wallet syncing and rolling back too far in the past
+- Fixes issues with the Farmer Reward dialog incorrectly reporting there is no private key (#11036)
+- Fix race condition, blockchain can change between two calls to get_peak
+- Wallet: Fix `CATLineageStore` creation in `create_new_cat_wallet`
+- Fix incorrect return in "rollback_to_block"
+- Wallet: Some rollback fixes
+- Fix issue with missing coins
+- Fix Newer block issue
+- Fix jsonify bool
+- Fix wallet introducers for testnet
+- Correct wallet CLI sent/received indication
+- Correct "Older block not found" error message
+- Print MempoolInclusionStatus as string
+- Optimize Program.curry()
+- Improve detection of disconnected websocket between services
+- Correct install.sh usage short options list
+- Make sure we set the sync to height correctly when we roll back
+
 ## 1.3.5 Chives blockchain 2022-5-11
 
 ### Added
@@ -132,7 +252,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 
 ### Added
 
-- Added checks to ensure wallet address prefixes are either `xcc` or `txcc`.
+- Added checks to ensure wallet address prefixes are either `xcc` or `txch`.
 - Added a better TLS1.3 check to handle cases where python is using a non-openssl TLS library.
 
 ### Changed
@@ -142,16 +262,16 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 
 ## 1.3.0 Chives blockchain 2022-3-07
 
-### Added:
+### Added
 
-- Token Wallet support - add wallets for your favorite CATs.
+- CAT wallet support - add wallets for your favorite CATs.
 - Offers - make, take, and share your offers.
 - Integrated lite wallet sync - to get you synced up faster while your full node syncs.
 - Wallet mode - Access just the wallet features to make and receive transactions.
 - Farmer mode - All your farming tools, and full node, while getting all the benefits of the upgraded wallet features.
 - New v2 DB - improved compression for smaller footprint (the v2 DB is created alongside the v1 DB. Please be sure to have enough disk space before executing the DB upgrade command).
 - Key derivation tool via CLI - lets you derive wallet addresses, child keys, and also search your keys for arbitrary wallet addresses/keys.
-- Lite wallet data migration - Token Wallets you set up and your offer history will be carried over.
+- Lite wallet data migration - CAT wallets you set up and your offer history will be carried over.
 - The farmer will report version info in User-Agent field for pool protocol (Thanks @FazendaPool).
 - Added new RPC, get_version, to the daemon to return the version of Chives (Thanks @dkackman).
 - Added new config.yaml setting, reserved_cores, to specify how many cores Chives will not use when launching process pools. Using 0 will allow Chives to use all cores for process pools. Set the default to 0 to allow Chives to use all cores. This can result in faster syncing and better performance overall especially on lower-end CPUs like the Raspberry Pi4.
@@ -162,7 +282,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - Added *multiprocessing_start_method:* entry in config.yaml that allows setting the python *start method* for multiprocessing (default is *spawn* on Windows & MacOS, *fork* on Unix).
 - Added option to "Cancel transaction" accepted offers that are stuck in "pending".
 
-### Changed:
+### Changed
 
 - Lite wallet client sync updated to only require 3 peers instead of 5.
 - Only CATs from the default CAT list will be automatically added, all other unknown CATs will need to be manually added (thanks to @ojura, this behavior can be toggled in config.yaml).
@@ -191,7 +311,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
   - It should not be expected that wallet info, such as payout address, should not reflect what their desired values until everything has completed syncing.
   - The payout instructions may not be editable via the GUI until syncing has completed.
 
-### Fixed:
+### Fixed
 
 - Offer history limit has been fixed to show all offers now instead of limiting to just 49 offers.
 - Fixed issues with using madmax CLI options -w, -G, -2, -t and -d (Issue 9163) (thanks @randomisresistance and @lasers8oclockday1).
@@ -216,7 +336,7 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 - Memory leak in the full node sync store where peak hashes were stored without being pruned.
 - Fixed a timelord issue which could cause a few blocks to not be infused on chain if a certain proof of space signs conflicting blocks.
 
-### Known Issues:
+### Known Issues
 
 - When you are adding plots and you choose the option to “create a Plot NFT”, you will get an error message “Initial_target_state” and the plots will not get created.
   - Workaround: Create the Plot NFT first in the “Pool” tab, and then add your plots and choose the created plot NFT in the drop down.
@@ -231,11 +351,10 @@ There is a known issue where harvesters will not reconnect to the farmer automat
 
 ## 1.2.11 Chives blockchain 2021-11-4
 
-Farmers rejoice: today's release integrates two plotters in broad use in the Chives community: Bladebit, created by @harold-b, and Madmax, created by @madMAx43v3r. Both of these plotters bring significant improvements in plotting time. More plotting info [here](https://github.com/HiveProject2021/chives-blockchain/wiki/Alternative--Plotters).
-This release also includes several important performance improvements as a result of last weekends "Dust Storm", with two goals in mind: make sure everyone can farm at all times, and improve how many transactions per second each node can accept, especially for low-end hardware. Please know that these optimizations are only the first wave in a series of many over the next few releases to help address this going forward. While the changes we have implemented in this update may not necessarily solve for _every_ possible congestion scenario, they should go a long way towards helping low-end systems perform closer to expectations if this happens again.
-
 ### Added
 
+- Farmers rejoice: today's release integrates two plotters in broad use in the Chives community: Bladebit, created by @harold-b, and Madmax, created by @madMAx43v3r. Both of these plotters bring significant improvements in plotting time. More plotting info [here](https://github.com/HiveProject2021/chives-blockchain/wiki/Alternative--Plotters).
+- This release also includes several important performance improvements as a result of last weekends "Dust Storm", with two goals in mind: make sure everyone can farm at all times, and improve how many transactions per second each node can accept, especially for low-end hardware. Please know that these optimizations are only the first wave in a series of many over the next few releases to help address this going forward. While the changes we have implemented in this update may not necessarily solve for *every* possible congestion scenario, they should go a long way towards helping low-end systems perform closer to expectations if this happens again.
 - Performance improvements for nodes to support higher transaction volumes, especially for low powered devices like RaspBerry Pi. Full details at [#9050](https://github.com/HiveProject2021/chives-blockchain/pull/9050).
   - Improved multi-core usage through process pools.
   - Prioritized block validation.
@@ -747,7 +866,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Temp space sizes needed for k = 33 and higher were accidentally under-reported. The values we have placed into the GUI may be conservative in being too large and appreciate feedback from the community on the new optimal temp space needed and RAM choices.
 - The GUI plotting progress bar was reaching 100% too early. Thanks to @davidbb for the PR.
 - Help -> About was blank.
-- Our estimate for k=32 was about 0.4GiB too low in some cases.
+- Our estimate for k=29 was about 0.4GiB too low in some cases.
 - Building the GUI in especially ARM64 Linux was painful enough to be considered broken.
 
 ## 1.0.4 Chives Blockchain 2021-04-12
@@ -948,7 +1067,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Version 1.0 of our BLS signature library is included. We brought Relic, gmp and MPIR up to their most recent releases. We again thank the Dash team for their fixes and improvements.
 - We now hand build Apple Silicon native binary wheels for all chives-blockchain dependencies and host them at [https://pypi.chia.net/simple](https://pypi.chia.net/simple). We are likely to hand build a MacOS ARM64 dmg available and certainly will for 1.0. You can install natively on M1 now with the `git clone` developer method today. Just make sure Python 3.9 is installed. `python3 --version` works.
 - The GUI now shows you which network you are connected to on the Full Node page. It will also wait patiently for the green flag to drop on a network launch.
-- In the GUI you can only plot k=32 or larger with the single exception of k=25 for testing. You will have to confirm choosing k=25 however. Thanks to @jespino for help on this and limiting the cli as well.
+- In the GUI you can only plot k=29 or larger with the single exception of k=25 for testing. You will have to confirm choosing k=25 however. Thanks to @jespino for help on this and limiting the cli as well.
 - The restore smart wallets from backup prompt has been improved to better get the intent across and that it can be skipped.
 - At the top of the plotting wizard we have added text pointing out that you can plot without being in sync or on the internet.
 - Wallet no longer automatically creates a new hierarchical deterministic wallet receive address on each start. You can and still should choose a new one with the `NEW ADDRESS` button for each new transaction for privacy.
@@ -995,7 +1114,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ## Changed
 
-- Testnets and mainnet now set their minimum `k` size and enforce it. RC5 testnet will reject plots of size less than k=32.
+- Testnets and mainnet now set their minimum `k` size and enforce it. RC5 testnet will reject plots of size less than k=29.
 - Sub slots now require 16 blocks instead of 12.
 - Thanks to @xdustinface of Dash, the BlS Signature library has been updated to 0.9 with clean ups and some speed ups. This changed how the G2 infinity element was handled and we now manage it inside of chives-blockchain, etc., instead of in blspy.
 - We have updated the display of peer nodes and moved adding a peer to it's own pop up in the GUI.
@@ -1121,7 +1240,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Added
 
-- The Beta 27 chain is a hard fork. All TXCC from previous releases has been reset on this chain. Your keys and plots of k=32 or larger continue to work just fine on this new chain.
+- The Beta 27 chain is a hard fork. All TXCC from previous releases has been reset on this chain. Your keys and plots of k=29 or larger continue to work just fine on this new chain.
 - We now use the rust version of clvm, clvm_rs, in preference to validate transactions. We have additionally published binary wheels or clvm_rs for all four platforms and all three supported python versions. The rust version is approximately 50 times faster than the python version used to validate on chain transactions in previous versions.
 - We have moved to compressed quadratic forms for VDFs. Using compressed representation of quadratic forms reduces their serialized size from 130 to 100 bytes (for forms with 1024-bit discriminant). This shrinks the size of VDF outputs and VDF proofs, and it's a breaking change as the compressed representation is not compatible with the older uncompressed (a, b) representation. Compressed forms are also used in calls to chiavdf and in timelord's communication with VDF clients. The form compression algorithm is based on ["Trustless Groups of Unknown Order with Hyperelliptic Curves"](https://eprint.iacr.org/2020/196) by Samuel Dobson, Steven D. Galbraith and Benjamin Smith.
 - Last Attempted Proof on the Farm tab of the GUI now shows hours:minutes:seconds instead of just hours:minutes. This makes it much easier to see that your farmer is responding to recent challenges at a glance.
@@ -1224,7 +1343,7 @@ all fields that referred to sub blocks are changed to blocks.
 - `chives show -c` now displays in MiB and the GUI has been changed to MiB to match.
 - `chives configure` now accepts the shorter `-upnp` and `-log-level` arguments also.
 - `chives plots check` now defaults to `-n 30` instead of `-n 1` - HT @eFishCent.
-- `chives plots create` now enforces a minimum of k=22. As a reminder, anything less than k=32 is just for testing and be careful extrapolating performance of a k less than 30 to a k=32 or larger.
+- `chives plots create` now enforces a minimum of k=22. As a reminder, anything less than k=29 is just for testing and be careful extrapolating performance of a k less than 30 to a k=29 or larger.
 - We have updated development dependencies for setuptools, yarl, idna, multidict, and chardet.
 - Updated some copyright dates to 2021.
 
@@ -1265,7 +1384,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Added
 
-- The cli now warns if you attempt to create a plot smaller than k=32.
+- The cli now warns if you attempt to create a plot smaller than k=29.
 - `chives configure` now lets you enable or disable uPnP.
 - If a peer gives a bad weight proof it will now be disconnected.
 
@@ -1315,7 +1434,7 @@ all fields that referred to sub blocks are changed to blocks.
 - Total transaction throughput is still targeted at 2.1x Bitcoin's throughput per hour but you will get more confirmations on a transaction much faster. This release has the errata that it doesn't limit transaction block size correctly.
 - For testing purposes this chain is quickly halving block rewards. By the time you're reading this and using the chain, farmers and pools will be receiving less than 1 TXCC for each block won as if it were 15-20 years from now. Block rewards are given in two components, 7/8's to the pool key and 1/8 to the farmer. The farmer also receives any transaction fees from the block.
 - You can now plot in parallel using the GUI. A known limitation is that you can't yet specify that you want 4 sets of two parallel plots. Each parallel plot added starts immediately parallel. We will continue to improve this.
-- The GUI now warns if you attempt to create a plot smaller than k=32.
+- The GUI now warns if you attempt to create a plot smaller than k=29.
 - Added Chinese language localization (zh-cn). A big thank you to @goomario for their pull request!
 - You can now specify which private key to use for `chives plots create`. After obtaining the fingerprint from `chives keys show`, try `chives plots create -a FINGERPRINT`. Thanks to @eFishCent for this pull request!
 - We use a faster hash to prime function for chiavdf from the current release of gmp-6.2.1 which we have upgraded chiavdf and blspy to support.
@@ -1433,7 +1552,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 - The development tool WalletTool was refactored out.
 - Update to clvm 0.5.3.
-- As k=30 and k=31 are now ruled out for mainnet, the GUI defaults to a plot size of k=32.
+- As k=30 and k=31 are now ruled out for mainnet, the GUI defaults to a plot size of k=29.
 
 ### Fixed
 
@@ -1498,10 +1617,10 @@ all fields that referred to sub blocks are changed to blocks.
 ### Changed
 
 - This is a new blockchain as we changed how the default puzzle hashes are generated and previous coins would not be easy to spend. Plots made with Beta 8 and newer continue to work, but all previous test chives are left on the old chain and do not migrate over. Configuration data like plot directories automatically migrate in your `~/.chives` directory.
-- Proof of Space now requires significantly less temp space to generate a new plot. A k=32 that used to require 524GiB now requires only 313GiB - generally a 40% decrease across all k sizes.
+- Proof of Space now requires significantly less temp space to generate a new plot. A k=29 that used to require 524GiB now requires only 313GiB - generally a 40% decrease across all k sizes.
 - When plotting, instead of 1 monolithic temp file, there are now 8 files - one for each of the 7 tables and one for sorting plot data. These files are deleted as the `-2` or `-d` final file is written so the final file can fit within the footprint of the temporary files on the same filesystem.
 - We've made various additional CPU optimizations to the Proof of Space plotter that reduces plotting time by an additional 13%. These changes will also reduce CPU utilization in harvesting.
-- We have ruled out k=30 for mainnet minimum plot size. k=31 may still make mainnet. k=32 and larger will be viable on mainnet.
+- We have ruled out k=30 for mainnet minimum plot size. k=31 may still make mainnet. k=29 and larger will be viable on mainnet.
 - We moved to react-styleguidist to develop reusable components in isolation and better document the UI. Thanks to @embiem for this pull request.
 - Coloured coins have been updated to simplify them, remove 'a', and stop using an 'auditor'.
 - clvm has been significantly changed to support the new coloured coins implementation.
@@ -1852,7 +1971,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Known issues
 
-- Plots of k>=32 are not working for farming, and some broken plots can cause a memory leak. A [workaround is available](https://github.com/HiveProject2021/chives-blockchain/wiki/Beta-1.4-k=32-or-larger-work-around).
+- Plots of k>=32 are not working for farming, and some broken plots can cause a memory leak. A [workaround is available](https://github.com/HiveProject2021/chives-blockchain/wiki/Beta-1.4-k=29-or-larger-work-around).
 - If you are running a simulation, blockchain tips are not saved in the database and this is a regression. If you stop a node it can go back in time and cause an odd state. This doesn't practically effect testnet participation as, on restart, node will just sync up a few blocks to the then current tips.
 - uPnP support on Windows may be broken. However, Windows nodes will be able to connect to other nodes and, once connected, participate fully in the network.
 - Coins are not currently reserved as part of trade offers and thus could potentially be spent before the offer is accepted resulting in a failed offer transaction.
@@ -1904,7 +2023,7 @@ relic. We will make a patch available for these systems shortly.
 ### Added
 
 - There is now full transaction support on the Chives blockchain. In this initial Beta 1.0 release, all transaction types are supported though the wallets and UIs currently only directly support basic transactions like coinbase rewards and sending coins while paying fees. UI support for our [smart transactions](https://github.com/HiveProject2021/wallets/blob/main/README.md) will be available in the UIs shortly.
-- Wallet and Node GUI’s are available on Windows, Mac, and desktop Linux platforms. We now use an Electron UI that is a full light client wallet that can also serve as a node UI. Our Windows Electron Wallet can run standalone by connecting to other nodes on the network or another node you run. WSL 2 on Windows can run everything except the Wallet but you can run the Wallet on the native Windows side of the same machine. Also the WSL 2 install process is 3 times faster and _much_ easier. Windows native node/farmer/plotting functionality are coming soon.
+- Wallet and Node GUI’s are available on Windows, Mac, and desktop Linux platforms. We now use an Electron UI that is a full light client wallet that can also serve as a node UI. Our Windows Electron Wallet can run standalone by connecting to other nodes on the network or another node you run. WSL 2 on Windows can run everything except the Wallet but you can run the Wallet on the native Windows side of the same machine. Also the WSL 2 install process is 3 times faster and *much* easier. Windows native node/farmer/plotting functionality are coming soon.
 - Install is significantly easier with less dependencies on all supported platforms.
 - If you’re a farmer you can use the Wallet to keep track of your earnings. Either use the same keys.yaml on the same machine or copy the keys.yaml to another machine where you want to track of and spend your coins.
 - We have continued to make improvements to the speed of VDF squaring, creating a VDF proof, and verifying a VDF proof.

@@ -26,7 +26,7 @@ from chives.util.config import (
 )
 from chives.util.db_version import set_db_version
 from chives.util.keychain import Keychain
-from chives.util.path import mkdir, path_from_root
+from chives.util.path import path_from_root
 from chives.util.ssl_check import (
     DEFAULT_PERMISSIONS_CERT_FILE,
     DEFAULT_PERMISSIONS_KEY_FILE,
@@ -165,7 +165,7 @@ def check_keys(new_root: Path, keychain: Optional[Keychain] = None) -> None:
 def copy_files_rec(old_path: Path, new_path: Path):
     if old_path.is_file():
         print(f"{new_path}")
-        mkdir(new_path.parent)
+        new_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(old_path, new_path)
     elif old_path.is_dir():
         for old_path_child in old_path.iterdir():
@@ -430,12 +430,9 @@ def chives_init(
     protected Keychain. When launching the daemon from the GUI, we want the GUI to
     handle unlocking the keychain.
     """
-    if os.environ.get("CHIVES_ROOT", None) is not None:
-        print(
-            f"warning, your CHIVES_ROOT is set to {os.environ['CHIVES_ROOT']}. "
-            f"Please unset the environment variable and run chives init again\n"
-            f"or manually migrate config.yaml"
-        )
+    chives_root = os.environ.get("CHIVES_ROOT", None)
+    if chives_root is not None:
+        print(f"CHIVES_ROOT is set to {chives_root}")
 
     print(f"Chives directory {root_path}")
     if root_path.is_dir() and Path(root_path / "config" / "config.yaml").exists():
@@ -502,7 +499,7 @@ def chives_init(
             db_path_replaced = new_db_path.replace("CHALLENGE", config["selected_network"])
             db_path = path_from_root(root_path, db_path_replaced)
 
-            mkdir(db_path.parent)
+            db_path.parent.mkdir(parents=True, exist_ok=True)
             with sqlite3.connect(db_path) as connection:
                 set_db_version(connection, 1)
 
@@ -512,10 +509,14 @@ def chives_init(
         config = load_config(root_path, "config.yaml")["full_node"]
         db_path_replaced = config["database_path"].replace("CHALLENGE", config["selected_network"])
         db_path = path_from_root(root_path, db_path_replaced)
-        mkdir(db_path.parent)
-
-        with sqlite3.connect(db_path) as connection:
-            set_db_version(connection, 2)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            # create new v2 db file
+            with sqlite3.connect(db_path) as connection:
+                set_db_version(connection, 2)
+        except sqlite3.OperationalError:
+            # db already exists, so we're good
+            pass
 
     print("")
     print("To see your keys, run 'chives keys show --show-mnemonic-seed'")

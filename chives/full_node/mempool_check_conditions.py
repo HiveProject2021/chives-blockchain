@@ -1,8 +1,7 @@
 import logging
 from typing import Dict, Optional
-from chia_rs import MEMPOOL_MODE, COND_CANON_INTS, NO_NEG_DIV, STRICT_ARGS_COUNT
+from chia_rs import MEMPOOL_MODE, COND_CANON_INTS, NO_NEG_DIV
 
-from chives.consensus.default_constants import DEFAULT_CONSTANTS
 from chives.consensus.cost_calculator import NPCResult
 from chives.types.spend_bundle_conditions import SpendBundleConditions
 from chives.full_node.generator import create_generator_args, setup_generator_args
@@ -25,7 +24,7 @@ def unwrap(x: Optional[uint32]) -> uint32:
 
 
 def get_name_puzzle_conditions(
-    generator: BlockGenerator, max_cost: int, *, cost_per_byte: int, mempool_mode: bool, height: Optional[uint32] = None
+    generator: BlockGenerator, max_cost: int, *, cost_per_byte: int, mempool_mode: bool
 ) -> NPCResult:
     block_program, block_program_args = setup_generator_args(generator)
     size_cost = len(bytes(generator.program)) * cost_per_byte
@@ -33,24 +32,17 @@ def get_name_puzzle_conditions(
     if max_cost < 0:
         return NPCResult(uint16(Err.INVALID_BLOCK_COST.value), None, uint64(0))
 
-    # in mempool mode, the height doesn't matter, because it's always strict.
-    # But otherwise, height must be specified to know which rules to apply
-    assert mempool_mode or height is not None
-
     # mempool mode also has these rules apply
     assert (MEMPOOL_MODE & COND_CANON_INTS) != 0
     assert (MEMPOOL_MODE & NO_NEG_DIV) != 0
 
     if mempool_mode:
-        # Don't apply the strict args count rule yet
-        flags = MEMPOOL_MODE & (~STRICT_ARGS_COUNT)
-    elif unwrap(height) >= DEFAULT_CONSTANTS.SOFT_FORK_HEIGHT:
+        flags = MEMPOOL_MODE
+    else:
         # conditions must use integers in canonical encoding (i.e. no redundant
         # leading zeros)
         # the division operator may not be used with negative operands
         flags = COND_CANON_INTS | NO_NEG_DIV
-    else:
-        flags = 0
 
     try:
         err, result = GENERATOR_MOD.run_as_generator(max_cost, flags, block_program, block_program_args)
@@ -59,8 +51,8 @@ def get_name_puzzle_conditions(
             return NPCResult(uint16(err), None, uint64(0))
         else:
             return NPCResult(None, result, uint64(result.cost + size_cost))
-    except BaseException as e:
-        log.debug(f"get_name_puzzle_condition failed: {e}")
+    except BaseException:
+        log.exception("get_name_puzzle_condition failed")
         return NPCResult(uint16(Err.GENERATOR_RUNTIME_ERROR.value), None, uint64(0))
 
 
@@ -95,7 +87,7 @@ def mempool_check_time_locks(
         return Err.ASSERT_SECONDS_ABSOLUTE_FAILED
 
     for spend in bundle_conds.spends:
-        unspent = removal_coin_records[spend.coin_id]
+        unspent = removal_coin_records[bytes32(spend.coin_id)]
         if spend.height_relative is not None:
             if prev_transaction_block_height < unspent.confirmed_block_index + spend.height_relative:
                 return Err.ASSERT_HEIGHT_RELATIVE_FAILED

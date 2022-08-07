@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru_RU\n"
 "Project-Id-Version: chives-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-04-20 18:12\n"
+"PO-Revision-Date: 2022-05-26 17:36\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -167,7 +167,7 @@ msgstr "Количество"
 
 #: src/components/Settings/SettingsApp.tsx:76
 msgid "Appearance"
-msgstr ""
+msgstr "Внешний вид"
 
 #: src/components/plot/PlotAction.tsx:29
 #: src/components/plot/queue/PlotQueueActions.tsx:47
@@ -499,7 +499,7 @@ msgstr "Подключен"
 #~ msgid "Contribute on GitHub"
 #~ msgstr "Contribute on GitHub"
 
-#: src/components/CopyToClipboard/CopyToClipboard.tsx:37
+#: src/components/CopyToClipboard/CopyToClipboard.tsx:41
 msgid "Copied"
 msgstr "Скопировано"
 
@@ -510,7 +510,7 @@ msgstr "Скопировано"
 #~ msgid "Copy"
 #~ msgstr "Copy"
 
-#: src/components/CopyToClipboard/CopyToClipboard.tsx:39
+#: src/components/CopyToClipboard/CopyToClipboard.tsx:43
 msgid "Copy to Clipboard"
 msgstr "Скопировать в буфер обмена"
 
@@ -659,7 +659,7 @@ msgstr "ОПАСНО: удалить закрытый ключ навсегда"
 
 #: src/components/Settings/SettingsApp.tsx:83
 msgid "Dark"
-msgstr ""
+msgstr "Тёмный"
 
 #: src/components/_wallet_old/WalletHistory.tsx:46
 #: src/components/farm/FarmLastAttemptedProof.tsx:31
@@ -734,7 +734,7 @@ msgstr "Удаление ключа приведет к безвозвратно
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:51
 msgid "Disable"
-msgstr ""
+msgstr "Отключить"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:266
 #~ msgid "Disable NUMA"
@@ -742,7 +742,7 @@ msgstr ""
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:50
 msgid "Disable Passphrase Protection"
-msgstr ""
+msgstr "Отключить защиту паролем"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:114
 #~ msgid "Disable bifield plotting when your temporary directory is on fast storage like SSD or you need lower per process RAM requirements. Plotting with bitfield enabled has about 20% less overall writes."
@@ -752,7 +752,7 @@ msgstr ""
 #~ msgid "Disable bitfield plotting"
 #~ msgstr "Disable bitfield plotting"
 
-#: src/components/Back/Back.tsx:40
+#: src/components/Back/Back.tsx:35
 #: src/components/FormBackButton/FormBackButton.tsx:27
 msgid "Discard"
 msgstr "Oтказаться"
@@ -832,7 +832,7 @@ msgstr "Ошибка"
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:78
 msgid "Error:"
-msgstr ""
+msgstr "Ошибка:"
 
 #: src/components/_wallet_old/standard/WalletStandard.tsx:450
 #~ msgid "Error: Cannot send chives to coloured address. Please enter a chives address."
@@ -866,7 +866,7 @@ msgstr ""
 
 #: src/components/LayoutMain/LayoutFooter.tsx:50
 msgid "FAQ"
-msgstr ""
+msgstr "ЧаВо"
 
 #: src/components/plot/PlotsFailed.tsx:34
 #~ msgid "Failed to open (invalid plots)"
@@ -1206,7 +1206,7 @@ msgstr "Некорректное значение"
 
 #: src/components/Settings/SettingsApp.tsx:90
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 #: src/components/farm/FarmLastAttemptedProof.tsx:45
 #~ msgid "Last Attempted Proof"
@@ -1236,7 +1236,7 @@ msgstr ""
 
 #: src/components/Settings/SettingsApp.tsx:80
 msgid "Light"
-msgstr ""
+msgstr "Светлый"
 
 #: src/components/pool/PoolOverview.tsx:173
 #~ msgid "List view"
@@ -1256,7 +1256,7 @@ msgstr ""
 
 #: src/screens/SelectKey/SelectKey.tsx:116
 msgid "Loading list of the keys"
-msgstr ""
+msgstr "Загрузка списка ключей"
 
 #: src/components/_wallet_old/Wallets.tsx:117
 #~ msgid "Loading list of wallets"
@@ -1270,19 +1270,18 @@ msgstr ""
 #~ msgid "Local Harvester Plots"
 #~ msgstr "Local Harvester Plots"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:111
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:131
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:128
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:150
 msgid "Log Out"
-msgstr ""
+msgstr "Выйти"
 
 #: src/components/app/AppRouter.tsx:68
 #~ msgid "Logging in"
 #~ msgstr "Logging in"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:110
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:130
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:146
 msgid "Logout"
-msgstr ""
+msgstr "Выйти"
 
 #: src/components/wallet/create/WalletCreate.jsx:124
 #~ msgid "MainWalletList.colouredCoin"
@@ -1342,7 +1341,7 @@ msgstr ""
 
 #: src/hooks/useKeyringMigrationPrompt.tsx:16
 msgid "Migrate"
-msgstr ""
+msgstr "Мигрировать"
 
 #: src/components/settings/Settings.tsx:182
 #~ msgid "Migrate Keyring"
@@ -1354,7 +1353,7 @@ msgstr ""
 
 #: src/hooks/useKeyringMigrationPrompt.tsx:15
 msgid "Migration required"
-msgstr ""
+msgstr "Требуется миграция"
 
 #: src/components/settings/Settings.tsx:123
 #~ msgid "Migration required to support passphrase protection"
@@ -1370,7 +1369,7 @@ msgstr ""
 
 #: src/components/Settings/SettingsApp.tsx:62
 msgid "Mode"
-msgstr ""
+msgstr "Режим"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:118
 #~ msgid "More memory slightly increases speed"
@@ -1411,7 +1410,7 @@ msgstr ""
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:38
 msgid "New passphrase is the same as your current passphrase"
-msgstr ""
+msgstr "Новый пароль совпадает с вашим текущим паролем"
 
 #: src/components/_wallet_old/WalletAdd.tsx:95
 #: src/components/_wallet_old/WalletImport.tsx:162
@@ -1493,8 +1492,8 @@ msgstr "Нет подключения"
 #~ msgstr "Not found Plots"
 
 #: src/components/farm/FarmManageFarmingRewards.tsx:164
-#~ msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the reward for pooling plots."
-#~ msgstr "Note that this does not change your pooling payout addresses. This only affects old format plots, and the reward for pooling plots."
+#~ msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCC reward for pooling plots."
+#~ msgstr "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCC reward for pooling plots."
 
 #: src/components/LayoutDashboard/LayoutDashboard.tsx:115
 #~ msgid "Notifications"
@@ -1519,7 +1518,7 @@ msgstr "Нет подключения"
 
 #: src/components/ConfirmDialog/ConfirmDialog.tsx:106
 msgid "OK"
-msgstr ""
+msgstr "ОК"
 
 #: src/components/trading/ViewOffer.jsx:67
 #~ msgid "Offer"
@@ -1991,7 +1990,7 @@ msgstr "Приватный ключ с публичным отпечатком {
 #: src/screens/SelectKey/SelectKeyDetailDialog.tsx:28
 #: src/screens/SelectKey/SelectKeyDetailDialog.tsx:40
 msgid "Private key {fingerprint}"
-msgstr ""
+msgstr "Закрытый ключ {fingerprint}"
 
 #: src/screens/SelectKey/SelectKeyDeleteKeyDialog.tsx:51
 #: src/screens/SelectKey/SelectKeyDetailDialog.tsx:51
@@ -2111,7 +2110,7 @@ msgstr "Открытый ключ:"
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:91
 msgid "Reload Application"
-msgstr ""
+msgstr "Перезагрузить приложение"
 
 #: src/components/settings/RemovePassphrasePrompt.tsx:100
 #: src/components/settings/RemovePassphrasePrompt.tsx:147
@@ -2133,7 +2132,7 @@ msgstr ""
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:87
 msgid "Report an Issue"
-msgstr ""
+msgstr "Сообщить о проблеме"
 
 #: src/electron/main.tsx:404
 #~ msgid "Report an Issue..."
@@ -2239,7 +2238,7 @@ msgstr "Выбор ключа"
 
 #: src/components/Dropdown/Dropdown.tsx:85
 msgid "Select..."
-msgstr ""
+msgstr "Выбрать..."
 
 #: src/components/plot/add/PlotAddSelectFinalDirectory.tsx:72
 #: src/components/plot/add/PlotAddSelectTemporaryDirectory.tsx:90
@@ -2275,7 +2274,7 @@ msgstr ""
 #: src/components/LayoutMain/LayoutFooter.tsx:53
 #: src/components/Settings/SettingsApp.tsx:108
 msgid "Send Feedback"
-msgstr ""
+msgstr "Оставить отзыв"
 
 #: src/components/_wallet_old/rateLimited/WalletRateLimited.jsx:460
 #~ msgid "Send this info packet to your Rate Limited Wallet user who must use it to complete setup of their wallet:"
@@ -2293,12 +2292,12 @@ msgstr ""
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:48
 msgid "Setting a passphrase is strongly recommended to protect your keys. Are you sure you want to skip setting a passphrase?"
-msgstr ""
+msgstr "Установка пароля для защиты ваших ключей настоятельно рекомендуется. Вы уверены, что хотите отключить защиту паролем?"
 
 #: src/components/Settings/Settings.tsx:48
 #: src/components/Settings/Settings.tsx:58
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 #: src/components/AdvancedOptions/AdvancedOptions.tsx:74
 msgid "Show Advanced Options"
@@ -2319,7 +2318,7 @@ msgstr "Войти в систему"
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:47
 msgid "Skip"
-msgstr ""
+msgstr "Пропустить"
 
 #: src/components/app/AppKeyringMigrator.tsx:57
 #~ msgid "Skip Keyring Migration"
@@ -2327,7 +2326,7 @@ msgstr ""
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:46
 msgid "Skip Passphrase Protection"
-msgstr ""
+msgstr "Пропустить защиту паролем"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:129
 #~ msgid "Skips adding [final dir] to harvester for farming"
@@ -2343,7 +2342,7 @@ msgstr ""
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:73
 msgid "Something went wrong"
-msgstr "Something went wrong"
+msgstr "Что-то пошло не так"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:138
 #~ msgid "Specify a value of 0 to use all available threads"
@@ -2548,7 +2547,7 @@ msgstr "Something went wrong"
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:30
 msgid "The provided passphrase and confirmation do not match"
-msgstr ""
+msgstr "Пароли не совпадают"
 
 #: src/components/block/Block.jsx:291
 #~ msgid "The seed used to create the plot. This depends on the pool pk and plot pk."
@@ -2747,15 +2746,15 @@ msgstr ""
 
 #: src/utils/getTransactionResult.ts:15
 msgid "Transaction has not been sent to node yet"
-msgstr ""
+msgstr "Транзакция пока еще не была отправлена узлу"
 
 #: src/utils/getTransactionResult.ts:33
 msgid "Transaction has sent to a full node and is pending inclusion into the mempool. {0}"
-msgstr ""
+msgstr "Транзакция отправлена на полный узел и ожидает включения в мемпул. {0}"
 
 #: src/utils/getTransactionResult.ts:24
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
-msgstr ""
+msgstr "Транзакция была успешно отправлена на полный узел и включена в мемпул."
 
 #: src/components/block/Block.jsx:298
 #~ msgid "Transactions Filter Hash"
@@ -2763,7 +2762,7 @@ msgstr ""
 
 #: src/screens/SelectKey/SelectKey.tsx:123
 msgid "Try Again"
-msgstr ""
+msgstr "Попробовать снова"
 
 #: src/components/_wallet_old/WalletHistory.tsx:25
 #~ msgid "Type"
@@ -2775,7 +2774,7 @@ msgstr ""
 
 #: src/screens/SelectKey/SelectKey.tsx:127
 msgid "Unable to load the list of the keys"
-msgstr ""
+msgstr "Не удается загрузить список ключей"
 
 #: src/components/plotNFT/PlotNFTCard.tsx:147
 #: src/components/pool/PoolOverview.tsx:63
@@ -2798,7 +2797,7 @@ msgstr "Неизвестный"
 #~ msgid "Unlock Keyring"
 #~ msgstr "Unlock Keyring"
 
-#: src/components/Back/Back.tsx:39
+#: src/components/Back/Back.tsx:34
 #: src/components/FormBackButton/FormBackButton.tsx:26
 msgid "Unsaved Changes"
 msgstr "Несохранённые изменения"
@@ -2814,7 +2813,7 @@ msgstr "Несохранённые изменения"
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:52
 msgid "Using a passphrase is strongly recommended to protect your keys. Are you sure you want to disable passphrase protection?"
-msgstr ""
+msgstr "Настоятельно рекомендуется использовать пароль для защиты ваших ключей. Вы уверены, что хотите отключить защиту паролем?"
 
 #: src/components/fullNode/card/FullNodeCardVDFSubSlotIterations.tsx:14
 #~ msgid "VDF Sub Slot Iterations"
@@ -2881,10 +2880,10 @@ msgstr "Значение вероятно завышено"
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:84
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:98
 #: src/components/Settings/SettingsApp.tsx:69
 msgid "Wallet"
-msgstr ""
+msgstr "Кошелёк"
 
 #: src/components/_wallet_old/standard/WalletStandard.tsx:649
 #: src/components/pool/PoolOverview.tsx:182
@@ -3023,7 +3022,7 @@ msgstr "Добро пожаловать в Chives. Пожалуйста, вой�
 #~ msgid "You do not need to be synched or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 #~ msgstr "You do not need to be synced or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 
-#: src/components/Back/Back.tsx:43
+#: src/components/Back/Back.tsx:38
 #: src/components/FormBackButton/FormBackButton.tsx:30
 msgid "You have made changes. Do you want to discard them?"
 msgstr "У вас есть несохраненные изменения. Хотите сохранить их?"
@@ -3094,7 +3093,7 @@ msgstr "У вас есть несохраненные изменения. Хот
 
 #: src/hooks/useKeyringMigrationPrompt.tsx:20
 msgid "Your keys have not been migrated to a new keyring. You will be unable to create new keys or delete existing keys until migration completes. Would you like to migrate your keys now?"
-msgstr ""
+msgstr "Ваши ключи не были перенесены в новую систему ключей. Вы не сможете создавать новые ключи или удалять существующие ключи до тех пор, пока не завершится миграция. Хотите перенести ваши ключи сейчас?"
 
 #: src/components/app/AppKeyringMigrator.tsx:106
 #~ msgid "Your keys need to be migrated to a new keyring that is optionally secured by a master passphrase."
@@ -3173,7 +3172,7 @@ msgstr ""
 
 #: src/components/Amount/Amount.tsx:96
 msgid "{0, plural, one {mojo} other {mojos}}"
-msgstr ""
+msgstr "{0, plural, one {mojo} other {mojos}}"
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"

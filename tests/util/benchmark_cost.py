@@ -9,7 +9,7 @@ from chives.types.blockchain_format.program import Program, INFINITE_COST
 from chives.types.condition_opcodes import ConditionOpcode
 from chives.types.condition_with_args import ConditionWithArgs
 from chives.util.ints import uint32
-from tests.wallet_tools import WalletTool
+from chives.simulator.wallet_tools import WalletTool
 from chives.wallet.derive_keys import master_sk_to_wallet_sk
 from chives.wallet.puzzles.p2_delegated_puzzle import puzzle_for_pk
 

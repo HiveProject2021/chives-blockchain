@@ -1,8 +1,8 @@
 import Fingerprint from './Fingerprint';
 
 type PlotAdd = {
-  // bladebitDisableNUMA?: boolean;
-  // bladebitWarmStart?: boolean;
+  bladebitDisableNUMA?: boolean;
+  bladebitWarmStart?: boolean;
   c: string;
   delay: number;
   disableBitfieldPlotting?: boolean;

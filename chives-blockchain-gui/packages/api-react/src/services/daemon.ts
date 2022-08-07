@@ -148,7 +148,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
             version,
             installed,
             canInstall,
-            // bladebitMemoryWarning,
+            bladebitMemoryWarning,
           } = plotters[plotterName];
 
           availablePlotters[plotterName] = {
@@ -159,7 +159,7 @@ export const daemonApi = apiWithTag.injectEndpoints({
             installInfo: {
               installed,
               canInstall,
-              // bladebitMemoryWarning,
+              bladebitMemoryWarning,
             },
           };
         });
@@ -182,8 +182,8 @@ export const daemonApi = apiWithTag.injectEndpoints({
     }),
     startPlotting: build.mutation<boolean, PlotAdd>({
       query: ({ 
-        // bladebitDisableNUMA,
-        // bladebitWarmStart,
+        bladebitDisableNUMA,
+        bladebitWarmStart,
         c,
         delay,
         disableBitfieldPlotting,
@@ -229,8 +229,8 @@ export const daemonApi = apiWithTag.injectEndpoints({
           farmerPublicKey,
           poolPublicKey,
           c,
-          // bladebitDisableNUMA,
-          // bladebitWarmStart,
+          bladebitDisableNUMA,
+          bladebitWarmStart,
           madmaxNumBucketsPhase3,
           madmaxTempToggle,
           madmaxThreadMultiplier,

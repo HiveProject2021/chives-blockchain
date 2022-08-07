@@ -1,17 +1,20 @@
-name: Trigger Dev Docker Build
+name: 📦🚀 Trigger Dev Docker Build
 
 on:
-  workflow_dispatch:
-  # pull_request:
+  push:
+    branches:
+      - 'long_lived/**'
+      - 'release/**'
+  pull_request:
 
 concurrency:
   # SHA is added to the end if on `main` to let all main workflows run
-  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref == 'refs/heads/main' && github.sha || '' }}
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
   cancel-in-progress: true
 
 jobs:
   trigger:
-    name: Trigger building a new dev tag for the chia-docker image
+    name: Trigger building a new dev tag for the chives-docker image
     runs-on: ubuntu-latest
     steps:
       - name: Test for secrets access

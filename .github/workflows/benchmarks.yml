@@ -1,19 +1,20 @@
-name: Benchmarks
+name: ⚡️ Benchmarks
 
 on:
-  workflow_dispatch:
-#   push:
-#     branches:
-#       - main
-#     tags:
-#       - '**'
-#   pull_request:
-#     branches:
-#       - '**'
+  push:
+    branches:
+      - 'long_lived/**'
+      - main
+      - 'release/**'
+    tags:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 concurrency:
   # SHA is added to the end if on `main` to let all main workflows run
-  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref == 'refs/heads/main' && github.sha || '' }}
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
   cancel-in-progress: true
 
 jobs:
@@ -28,10 +29,11 @@ jobs:
         python-version: [ 3.9 ]
     env:
       CHIVES_ROOT: ${{ github.workspace }}/.chives/mainnet
+      BLOCKS_AND_PLOTS_VERSION: 0.29.0
 
     steps:
       - name: Clean workspace
-        uses: Chia-Network/actions/clean-workspace@main
+        uses: Chives-Network/actions/clean-workspace@main
 
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -39,7 +41,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Python environment
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -59,18 +61,18 @@ jobs:
       - name: Checkout test blocks and plots
         uses: actions/checkout@v3
         with:
-          repository: 'Chia-Network/test-cache'
+          repository: 'Chives-Network/test-cache'
           path: '.chives'
-          ref: '0.29.0'
+          ref: ${{ env.BLOCKS_AND_PLOTS_VERSION }}
           fetch-depth: 1
 
-      - name: Run install script
-        env:
-          INSTALL_PYTHON_VERSION: ${{ matrix.python-version }}
-        run: |
-          sh install.sh -d
+      - uses: ./.github/actions/install
+        with:
+          python-version: ${{ matrix.python-version }}
+          development: true
+
+      - uses: chives-network/actions/activate-venv@main
 
       - name: pytest
         run: |
-          . ./activate
-          ./venv/bin/py.test -n 0 -m benchmark tests
+          pytest -n 0 --capture no -m benchmark tests

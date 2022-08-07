@@ -75,28 +75,27 @@ binaries = [
     (
         f"{ROOT}/madmax/chia_plot",
         "madmax"
+    ),
+    (
+        f"{ROOT}/madmax/chia_plot_k34",
+        "madmax"
     )
-#    ,
-#    (
-#        f"{ROOT}/madmax/chia_plot_k34",
-#        "madmax"
-#    )
 ]
 
-# if not THIS_IS_MAC:
-#    binaries.extend([
-#        (
-#            f"{ROOT}/bladebit/bladebit",
-#            "bladebit"
-#        )
-#    ])
+if not THIS_IS_MAC:
+    binaries.extend([
+        (
+            f"{ROOT}/bladebit/bladebit",
+            "bladebit"
+        )
+    ])
 
 if THIS_IS_WINDOWS:
     hiddenimports.extend(["win32timezone", "win32cred", "pywintypes", "win32ctypes.pywin32"])
 
 # this probably isn't necessary
 if THIS_IS_WINDOWS:
-    entry_points.extend(["aiohttp", "chia.util.bip39"])
+    entry_points.extend(["aiohttp", "chives.util.bip39"])
 
 if THIS_IS_WINDOWS:
     chives_mod = importlib.import_module("chives")
@@ -119,14 +118,14 @@ if THIS_IS_WINDOWS:
             f"{ROOT}\\madmax\\chia_plot.exe",
             "madmax"
         ),
-#        (
-#            f"{ROOT}\\madmax\\chia_plot_k34.exe",
-#            "madmax"
-#        ),
-#        (
-#            f"{ROOT}\\bladebit\\bladebit.exe",
-#            "bladebit"
-#        ),
+        (
+            f"{ROOT}\\madmax\\chia_plot_k34.exe",
+            "madmax"
+        ),
+        (
+            f"{ROOT}\\bladebit\\bladebit.exe",
+            "bladebit"
+        ),
     ]
 
 

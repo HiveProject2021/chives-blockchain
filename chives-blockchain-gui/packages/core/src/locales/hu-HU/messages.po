@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu_HU\n"
 "Project-Id-Version: chives-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-04-21 12:59\n"
+"PO-Revision-Date: 2022-05-26 15:57\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -499,7 +499,7 @@ msgstr "Csatlakozva"
 #~ msgid "Contribute on GitHub"
 #~ msgstr "Contribute on GitHub"
 
-#: src/components/CopyToClipboard/CopyToClipboard.tsx:37
+#: src/components/CopyToClipboard/CopyToClipboard.tsx:41
 msgid "Copied"
 msgstr "Másolva"
 
@@ -510,7 +510,7 @@ msgstr "Másolva"
 #~ msgid "Copy"
 #~ msgstr "Copy"
 
-#: src/components/CopyToClipboard/CopyToClipboard.tsx:39
+#: src/components/CopyToClipboard/CopyToClipboard.tsx:43
 msgid "Copy to Clipboard"
 msgstr "Másolás a vágólapra"
 
@@ -752,7 +752,7 @@ msgstr "Jelszavas védelem kikapcsolása"
 #~ msgid "Disable bitfield plotting"
 #~ msgstr "Disable bitfield plotting"
 
-#: src/components/Back/Back.tsx:40
+#: src/components/Back/Back.tsx:35
 #: src/components/FormBackButton/FormBackButton.tsx:27
 msgid "Discard"
 msgstr "Elvetés"
@@ -832,7 +832,7 @@ msgstr "Hiba"
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:78
 msgid "Error:"
-msgstr ""
+msgstr "Hiba:"
 
 #: src/components/_wallet_old/standard/WalletStandard.tsx:450
 #~ msgid "Error: Cannot send chives to coloured address. Please enter a chives address."
@@ -1256,7 +1256,7 @@ msgstr "Világos"
 
 #: src/screens/SelectKey/SelectKey.tsx:116
 msgid "Loading list of the keys"
-msgstr ""
+msgstr "A kulcsok listájának betöltése"
 
 #: src/components/_wallet_old/Wallets.tsx:117
 #~ msgid "Loading list of wallets"
@@ -1270,8 +1270,8 @@ msgstr ""
 #~ msgid "Local Harvester Plots"
 #~ msgstr "Local Harvester Plots"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:111
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:131
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:128
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:150
 msgid "Log Out"
 msgstr "Kijelentkezés"
 
@@ -1279,8 +1279,7 @@ msgstr "Kijelentkezés"
 #~ msgid "Logging in"
 #~ msgstr "Logging in"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:110
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:130
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:146
 msgid "Logout"
 msgstr "Kijelentkezés"
 
@@ -1493,8 +1492,8 @@ msgstr "Nincs csatlakozva"
 #~ msgstr "Not found Plots"
 
 #: src/components/farm/FarmManageFarmingRewards.tsx:164
-#~ msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the reward for pooling plots."
-#~ msgstr "Note that this does not change your pooling payout addresses. This only affects old format plots, and the reward for pooling plots."
+#~ msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCC reward for pooling plots."
+#~ msgstr "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCC reward for pooling plots."
 
 #: src/components/LayoutDashboard/LayoutDashboard.tsx:115
 #~ msgid "Notifications"
@@ -2111,7 +2110,7 @@ msgstr "Nyilvános kulcsok"
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:91
 msgid "Reload Application"
-msgstr ""
+msgstr "Alkalmazás újratöltése"
 
 #: src/components/settings/RemovePassphrasePrompt.tsx:100
 #: src/components/settings/RemovePassphrasePrompt.tsx:147
@@ -2133,7 +2132,7 @@ msgstr ""
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:87
 msgid "Report an Issue"
-msgstr ""
+msgstr "Hibabejelentés"
 
 #: src/electron/main.tsx:404
 #~ msgid "Report an Issue..."
@@ -2343,7 +2342,7 @@ msgstr "Jelszavas védelem kikapcsolása"
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:73
 msgid "Something went wrong"
-msgstr "Something went wrong"
+msgstr "Valami rosszul sült el"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:138
 #~ msgid "Specify a value of 0 to use all available threads"
@@ -2747,15 +2746,15 @@ msgstr "Az új jelszó és a megerősítése nem egyeznek meg"
 
 #: src/utils/getTransactionResult.ts:15
 msgid "Transaction has not been sent to node yet"
-msgstr ""
+msgstr "A tranzakciót még nem küldték el a nodenak"
 
 #: src/utils/getTransactionResult.ts:33
 msgid "Transaction has sent to a full node and is pending inclusion into the mempool. {0}"
-msgstr ""
+msgstr "A tranzakciót egy teljesnodera küldték el, és a mempoolba való felvételre vár. {0}"
 
 #: src/utils/getTransactionResult.ts:24
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
-msgstr ""
+msgstr "A tranzakciót sikeresen elküldték egy teljes nodera és felvették a mempoolba."
 
 #: src/components/block/Block.jsx:298
 #~ msgid "Transactions Filter Hash"
@@ -2798,7 +2797,7 @@ msgstr "Ismeretlen"
 #~ msgid "Unlock Keyring"
 #~ msgstr "Unlock Keyring"
 
-#: src/components/Back/Back.tsx:39
+#: src/components/Back/Back.tsx:34
 #: src/components/FormBackButton/FormBackButton.tsx:26
 msgid "Unsaved Changes"
 msgstr "Nem mentett módosítások"
@@ -2881,7 +2880,7 @@ msgstr "Az érték túl magasnak tűnik"
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:84
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:98
 #: src/components/Settings/SettingsApp.tsx:69
 msgid "Wallet"
 msgstr "Tárca"
@@ -2958,11 +2957,11 @@ msgstr "Figyelem: Ezt a kulcsot egy olyan tárcához használják, amihez pozit�
 
 #: src/screens/SelectKey/SelectKeyItem.tsx:99
 msgid "Warning: This key is used for your farming rewards address. By deleting this key you may lose access to any future farming rewards"
-msgstr ""
+msgstr "Figyelem: Ezt a kulcsot a farmolási jutalmak címére használják. Ha törlöd ezt a kulcsot, elveszítheted a hozzáférést a jövőbeni farming jutalmaidhoz"
 
 #: src/screens/SelectKey/SelectKeyItem.tsx:108
 msgid "Warning: This key is used for your pool rewards address. By deleting this key you may lose access to any future pool rewards"
-msgstr ""
+msgstr "Figyelem: Ezt a kulcsot a pool jutalmazási címéhez használják. Ha törli ezt a kulcsot, elveszítheti a hozzáférést a jövőbeni pool jutalmakhoz"
 
 #: src/components/block/Block.jsx:194
 #~ msgid "Weight"
@@ -3023,10 +3022,10 @@ msgstr "Üdvözöljük a Chives-ban. Kérem jelentkezzen be egy létező kulccsa
 #~ msgid "You do not need to be synched or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 #~ msgstr "You do not need to be synced or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 
-#: src/components/Back/Back.tsx:43
+#: src/components/Back/Back.tsx:38
 #: src/components/FormBackButton/FormBackButton.tsx:30
 msgid "You have made changes. Do you want to discard them?"
-msgstr ""
+msgstr "Változtatásokat hajtott végre. El akarja vetni őket?"
 
 #: src/components/farm/card/FarmCardExpectedTimeToWin.tsx:34
 #~ msgid "You have {0}% of the space on the network, so farming a block will take {expectedTimeToWin} in expectation."
@@ -3094,7 +3093,7 @@ msgstr ""
 
 #: src/hooks/useKeyringMigrationPrompt.tsx:20
 msgid "Your keys have not been migrated to a new keyring. You will be unable to create new keys or delete existing keys until migration completes. Would you like to migrate your keys now?"
-msgstr ""
+msgstr "Kulcsai nem kerültek át egy új kulcstartóra. A migráció befejezéséig nem tud új kulcsokat létrehozni vagy meglévő kulcsokat törölni. Szeretné most áttelepíteni a kulcsait?"
 
 #: src/components/app/AppKeyringMigrator.tsx:106
 #~ msgid "Your keys need to be migrated to a new keyring that is optionally secured by a master passphrase."
@@ -3173,7 +3172,7 @@ msgstr ""
 
 #: src/components/Amount/Amount.tsx:96
 msgid "{0, plural, one {mojo} other {mojos}}"
-msgstr ""
+msgstr "{0, plural, one {mojo} other {mojok}}"
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"
@@ -3206,7 +3205,7 @@ msgstr ""
 
 #: src/hooks/useValidateChangePassphraseParams.tsx:33
 msgid "{minPassphraseLength, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
-msgstr ""
+msgstr "{minPassphraseLength, plural, one {A jelszavaknak legalább # karakter hosszúságúnak kell lennie} other {A jelszavaknak legalább # karakter hosszúságúnak kell lennie}}"
 
 #: src/components/Amount/Amount.tsx:95
 #~ msgid "{mojo, plural, one {mojo} other {mojos}}"

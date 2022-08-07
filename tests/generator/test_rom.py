@@ -92,16 +92,14 @@ class TestROM:
         assert cost == EXPECTED_ABBREVIATED_COST
         assert r.as_bin().hex() == EXPECTED_OUTPUT
 
-    def test_get_name_puzzle_conditions(self, softfork_height):
+    def test_get_name_puzzle_conditions(self):
         # this tests that extra block or coin data doesn't confuse `get_name_puzzle_conditions`
 
         gen = block_generator()
         cost, r = run_generator_unsafe(gen, max_cost=MAX_COST)
         print(r)
 
-        npc_result = get_name_puzzle_conditions(
-            gen, max_cost=MAX_COST, cost_per_byte=COST_PER_BYTE, mempool_mode=False, height=softfork_height
-        )
+        npc_result = get_name_puzzle_conditions(gen, max_cost=MAX_COST, cost_per_byte=COST_PER_BYTE, mempool_mode=False)
         assert npc_result.error is None
         assert npc_result.cost == EXPECTED_COST + ConditionCost.CREATE_COIN.value + (
             len(bytes(gen.program)) * COST_PER_BYTE
@@ -112,7 +110,7 @@ class TestROM:
             puzzle_hash=bytes32.fromhex("9dcf97a184f32623d11a73124ceb99a5709b083721e878a16d78f596718ba7b2"),
             height_relative=None,
             seconds_relative=0,
-            create_coin=[(bytes([0] * 31 + [1]), 500, b"")],
+            create_coin=[(bytes([0] * 31 + [1]), 500, None)],
             agg_sig_me=[],
         )
 

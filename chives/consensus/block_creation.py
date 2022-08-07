@@ -5,17 +5,18 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 import blspy
 from blspy import G1Element, G2Element
+from chia_rs import compute_merkle_set_root
 from chiabip158 import PyBIP158
 
 from chives.consensus.block_record import BlockRecord
-from chives.consensus.block_rewards import calculate_base_community_reward, calculate_base_farmer_reward, calculate_pool_reward
+from chives.consensus.block_rewards import calculate_base_masternode_reward, calculate_base_community_reward, calculate_base_farmer_reward, calculate_pool_reward
 from chives.consensus.blockchain_interface import BlockchainInterface
-from chives.consensus.coinbase import create_community_coin, create_farmer_coin, create_pool_coin
+from chives.consensus.coinbase import create_masternode_coin, create_community_coin, create_farmer_coin, create_pool_coin
 from chives.consensus.constants import ConsensusConstants
 from chives.consensus.cost_calculator import NPCResult
 from chives.full_node.mempool_check_conditions import get_name_puzzle_conditions
 from chives.full_node.signage_point import SignagePoint
-from chives.types.blockchain_format.coin import Coin, hash_coin_list
+from chives.types.blockchain_format.coin import Coin, hash_coin_ids
 from chives.types.blockchain_format.foliage import Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
 from chives.types.blockchain_format.pool_target import PoolTarget
 from chives.types.blockchain_format.proof_of_space import ProofOfSpace
@@ -28,7 +29,6 @@ from chives.types.generator_types import BlockGenerator
 from chives.types.unfinished_block import UnfinishedBlock
 from chives.util.hash import std_hash
 from chives.util.ints import uint8, uint32, uint64, uint128
-from chives.util.merkle_set import MerkleSet
 from chives.util.prev_transaction_block import get_prev_transaction_block
 from chives.util.recursive_replace import recursive_replace
 
@@ -48,6 +48,7 @@ def create_foliage(
     timestamp: uint64,
     farmer_reward_puzzlehash: bytes32,
     community_reward_puzzlehash: bytes32,
+    masternode_reward_puzzlehash: bytes32,
     pool_target: PoolTarget,
     get_plot_signature: Callable[[bytes32, G1Element], G2Element],
     get_pool_signature: Callable[[PoolTarget, Optional[G1Element]], Optional[G2Element]],
@@ -69,6 +70,7 @@ def create_foliage(
         timestamp: timestamp to put into the foliage block
         farmer_reward_puzzlehash: where to pay out farming reward
         community_reward_puzzlehash: where to pay out community reward
+        masternode_reward_puzzlehash: where to pay out masternode reward
         pool_target: where to pay out pool reward
         get_plot_signature: retrieve the signature corresponding to the plot public key
         get_pool_signature: retrieve the signature corresponding to the pool public key
@@ -108,6 +110,7 @@ def create_foliage(
         pool_target_signature,
         farmer_reward_puzzlehash,
         community_reward_puzzlehash,
+        masternode_reward_puzzlehash,
         extension_data,
     )
 
@@ -176,8 +179,14 @@ def create_foliage(
                 constants.GENESIS_CHALLENGE,
             )
             
+            masternode_coin = create_masternode_coin(
+                curr.height,
+                constants.GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH,
+                calculate_base_masternode_reward(curr.height),
+                constants.GENESIS_CHALLENGE,
+            )
             assert curr.header_hash == prev_transaction_block.header_hash
-            reward_claims_incorporated += [pool_coin, farmer_coin, community_coin]
+            reward_claims_incorporated += [pool_coin, farmer_coin, community_coin, masternode_coin]
 
             if curr.height > 0:
                 curr = blocks.block_record(curr.prev_hash)
@@ -201,42 +210,44 @@ def create_foliage(
                         calculate_base_community_reward(curr.height),
                         constants.GENESIS_CHALLENGE,
                     )
-                    reward_claims_incorporated += [pool_coin, farmer_coin, community_coin]
+                    masternode_coin = create_masternode_coin(
+                        curr.height,
+                        constants.GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH,
+                        calculate_base_masternode_reward(curr.height),
+                        constants.GENESIS_CHALLENGE,
+                    )
+                    reward_claims_incorporated += [pool_coin, farmer_coin, community_coin, masternode_node]
                     curr = blocks.block_record(curr.prev_hash)
         additions.extend(reward_claims_incorporated.copy())
         for coin in additions:
             tx_additions.append(coin)
             byte_array_tx.append(bytearray(coin.puzzle_hash))
         for coin in removals:
-            tx_removals.append(coin.name())
-            byte_array_tx.append(bytearray(coin.name()))
+            cname = coin.name()
+            tx_removals.append(cname)
+            byte_array_tx.append(bytearray(cname))
 
         bip158: PyBIP158 = PyBIP158(byte_array_tx)
         encoded = bytes(bip158.GetEncoded())
 
-        removal_merkle_set = MerkleSet()
-        addition_merkle_set = MerkleSet()
-
-        # Create removal Merkle set
-        for coin_name in tx_removals:
-            removal_merkle_set.add_already_hashed(coin_name)
+        additions_merkle_items: List[bytes32] = []
 
         # Create addition Merkle set
-        puzzlehash_coin_map: Dict[bytes32, List[Coin]] = {}
+        puzzlehash_coin_map: Dict[bytes32, List[bytes32]] = {}
 
         for coin in tx_additions:
             if coin.puzzle_hash in puzzlehash_coin_map:
-                puzzlehash_coin_map[coin.puzzle_hash].append(coin)
+                puzzlehash_coin_map[coin.puzzle_hash].append(coin.name())
             else:
-                puzzlehash_coin_map[coin.puzzle_hash] = [coin]
+                puzzlehash_coin_map[coin.puzzle_hash] = [coin.name()]
 
         # Addition Merkle set contains puzzlehash and hash of all coins with that puzzlehash
-        for puzzle, coins in puzzlehash_coin_map.items():
-            addition_merkle_set.add_already_hashed(puzzle)
-            addition_merkle_set.add_already_hashed(hash_coin_list(coins))
+        for puzzle, coin_ids in puzzlehash_coin_map.items():
+            additions_merkle_items.append(puzzle)
+            additions_merkle_items.append(hash_coin_ids(coin_ids))
 
-        additions_root = addition_merkle_set.get_root()
-        removals_root = removal_merkle_set.get_root()
+        additions_root = bytes32(compute_merkle_set_root(additions_merkle_items))
+        removals_root = bytes32(compute_merkle_set_root(tx_removals))
 
         generator_hash = bytes32([0] * 32)
         if block_generator is not None:
@@ -308,6 +319,7 @@ def create_unfinished_block(
     slot_cc_challenge: bytes32,
     farmer_reward_puzzle_hash: bytes32,
     community_reward_puzzle_hash: bytes32,
+    masternode_reward_puzzle_hash: bytes32,
     pool_target: PoolTarget,
     get_plot_signature: Callable[[bytes32, G1Element], G2Element],
     get_pool_signature: Callable[[PoolTarget, Optional[G1Element]], Optional[G2Element]],
@@ -320,7 +332,7 @@ def create_unfinished_block(
     additions: Optional[List[Coin]] = None,
     removals: Optional[List[Coin]] = None,
     prev_block: Optional[BlockRecord] = None,
-    finished_sub_slots_input: List[EndOfSubSlotBundle] = None,
+    finished_sub_slots_input: Optional[List[EndOfSubSlotBundle]] = None,
 ) -> UnfinishedBlock:
     """
     Creates a new unfinished block using all the information available at the signage point. This will have to be
@@ -337,6 +349,7 @@ def create_unfinished_block(
         slot_cc_challenge: challenge hash at the sp sub-slot
         farmer_reward_puzzle_hash: where to pay out farmer rewards
         community_reward_puzzle_hash: where to pay out community rewards
+        masternode_reward_puzzle_hash: where to pay out masternode rewards
         pool_target: where to pay out pool rewards
         get_plot_signature: function that returns signature corresponding to plot public key
         get_pool_signature: function that returns signature corresponding to pool public key
@@ -422,6 +435,7 @@ def create_unfinished_block(
         timestamp,
         farmer_reward_puzzle_hash,
         community_reward_puzzle_hash,
+        masternode_reward_puzzle_hash,
         pool_target,
         get_plot_signature,
         get_pool_signature,
@@ -537,8 +551,9 @@ def unfinished_block_to_full_block(
         new_generator,
         new_generator_ref_list,
     )
-    return recursive_replace(
+    ret = recursive_replace(
         ret,
         "foliage.reward_block_hash",
         ret.reward_chain_block.get_hash(),
     )
+    return ret

@@ -14,8 +14,7 @@ from chives.full_node.hint_store import HintStore
 from chives.types.full_block import FullBlock
 from chives.util.db_wrapper import DBWrapper2
 from chives.util.default_root import DEFAULT_ROOT_PATH
-from chives.util.path import mkdir
-from tests.block_tools import BlockTools
+from chives.simulator.block_tools import BlockTools
 
 
 async def create_blockchain(constants: ConsensusConstants, db_version: int):
@@ -59,7 +58,7 @@ def persistent_blocks(
     if ci is not None and not file_path.exists():
         raise Exception(f"Running in CI and expected path not found: {file_path!r}")
 
-    mkdir(block_path_dir)
+    block_path_dir.mkdir(parents=True, exist_ok=True)
 
     if file_path.exists():
         print(f"File found at: {file_path}")

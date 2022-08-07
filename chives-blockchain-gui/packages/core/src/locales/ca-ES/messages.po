@@ -8,7 +8,7 @@ msgstr ""
 "Language: ca_ES\n"
 "Project-Id-Version: chives-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-04-20 18:12\n"
+"PO-Revision-Date: 2022-05-26 15:57\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -499,7 +499,7 @@ msgstr "Connectat"
 #~ msgid "Contribute on GitHub"
 #~ msgstr "Contribute on GitHub"
 
-#: src/components/CopyToClipboard/CopyToClipboard.tsx:37
+#: src/components/CopyToClipboard/CopyToClipboard.tsx:41
 msgid "Copied"
 msgstr "Copiat"
 
@@ -510,7 +510,7 @@ msgstr "Copiat"
 #~ msgid "Copy"
 #~ msgstr "Copy"
 
-#: src/components/CopyToClipboard/CopyToClipboard.tsx:39
+#: src/components/CopyToClipboard/CopyToClipboard.tsx:43
 msgid "Copy to Clipboard"
 msgstr "Copiar al porta-retalls"
 
@@ -752,7 +752,7 @@ msgstr ""
 #~ msgid "Disable bitfield plotting"
 #~ msgstr "Disable bitfield plotting"
 
-#: src/components/Back/Back.tsx:40
+#: src/components/Back/Back.tsx:35
 #: src/components/FormBackButton/FormBackButton.tsx:27
 msgid "Discard"
 msgstr ""
@@ -1270,8 +1270,8 @@ msgstr ""
 #~ msgid "Local Harvester Plots"
 #~ msgstr "Local Harvester Plots"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:111
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:131
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:128
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:150
 msgid "Log Out"
 msgstr ""
 
@@ -1279,8 +1279,7 @@ msgstr ""
 #~ msgid "Logging in"
 #~ msgstr "Logging in"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:110
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:130
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:146
 msgid "Logout"
 msgstr ""
 
@@ -1493,8 +1492,8 @@ msgstr "Desconnectat"
 #~ msgstr "Not found Plots"
 
 #: src/components/farm/FarmManageFarmingRewards.tsx:164
-#~ msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the reward for pooling plots."
-#~ msgstr "Note that this does not change your pooling payout addresses. This only affects old format plots, and the reward for pooling plots."
+#~ msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCC reward for pooling plots."
+#~ msgstr "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCC reward for pooling plots."
 
 #: src/components/LayoutDashboard/LayoutDashboard.tsx:115
 #~ msgid "Notifications"
@@ -2343,7 +2342,7 @@ msgstr ""
 
 #: src/components/ErrorBoundary/ErrorBoundary.tsx:73
 msgid "Something went wrong"
-msgstr "Something went wrong"
+msgstr ""
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:138
 #~ msgid "Specify a value of 0 to use all available threads"
@@ -2798,7 +2797,7 @@ msgstr "Desconegut"
 #~ msgid "Unlock Keyring"
 #~ msgstr "Unlock Keyring"
 
-#: src/components/Back/Back.tsx:39
+#: src/components/Back/Back.tsx:34
 #: src/components/FormBackButton/FormBackButton.tsx:26
 msgid "Unsaved Changes"
 msgstr ""
@@ -2881,7 +2880,7 @@ msgstr ""
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
 
-#: src/components/LayoutDashboard/LayoutDashboard.tsx:84
+#: src/components/LayoutDashboard/LayoutDashboard.tsx:98
 #: src/components/Settings/SettingsApp.tsx:69
 msgid "Wallet"
 msgstr ""
@@ -3023,7 +3022,7 @@ msgstr "Benvingut a Chives. Inicia la sessió amb una clau existent o crea'n una
 #~ msgid "You do not need to be synched or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 #~ msgstr "You do not need to be synced or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 
-#: src/components/Back/Back.tsx:43
+#: src/components/Back/Back.tsx:38
 #: src/components/FormBackButton/FormBackButton.tsx:30
 msgid "You have made changes. Do you want to discard them?"
 msgstr ""

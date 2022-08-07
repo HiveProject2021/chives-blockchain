@@ -7,23 +7,27 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 
-from chives.protocols.shared_protocol import protocol_version
+from chives.protocols.shared_protocol import capabilities, protocol_version
 from chives.server.outbound_message import NodeType
 from chives.server.server import ChivesServer, ssl_context_for_client
 from chives.server.ws_connection import WSChivesConnection
+from chives.simulator.time_out_assert import time_out_assert
 from chives.ssl.create_ssl import generate_ca_signed_cert
 from chives.types.blockchain_format.sized_bytes import bytes32
 from chives.types.peer_info import PeerInfo
 from chives.util.ints import uint16
-from tests.time_out_assert import time_out_assert
 
 log = logging.getLogger(__name__)
 
 
-async def disconnect_all_and_reconnect(server: ChivesServer, reconnect_to: ChivesServer, self_hostname: str) -> bool:
+async def disconnect_all(server: ChivesServer) -> None:
     cons = list(server.all_connections.values())[:]
     for con in cons:
         await con.close()
+
+
+async def disconnect_all_and_reconnect(server: ChivesServer, reconnect_to: ChivesServer, self_hostname: str) -> bool:
+    await disconnect_all(server)
     return await server.start_client(PeerInfo(self_hostname, uint16(reconnect_to._port)), None)
 
 
@@ -59,9 +63,9 @@ async def add_dummy_connection(
         peer_id,
         100,
         30,
+        local_capabilities_for_handshake=capabilities,
     )
-    handshake = await wsc.perform_handshake(server._network_id, protocol_version, dummy_port, NodeType.FULL_NODE)
-    assert handshake is True
+    await wsc.perform_handshake(server._network_id, protocol_version, dummy_port, NodeType.FULL_NODE)
     return incoming_queue, peer_id
 
 

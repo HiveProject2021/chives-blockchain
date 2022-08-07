@@ -242,7 +242,7 @@ export default function PlotAddNumberOfPlots(props: Props) {
               </FormControl>
             </Grid>
           )}
-          {/* {plotter.options.haveBladebitWarmStart && (
+          {plotter.options.haveBladebitWarmStart && (
             <Grid xs={12} item>
               <FormControl variant="filled" fullWidth>
                 <FormControlLabel
@@ -269,7 +269,7 @@ export default function PlotAddNumberOfPlots(props: Props) {
                 />
               </FormControl>
             </Grid>
-          )} */}
+          )}
           <Grid xs={12} item>
             <FormControl variant="filled" fullWidth>
               <FormControlLabel

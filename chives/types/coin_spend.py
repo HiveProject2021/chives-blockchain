@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import List
-
 from chives.types.blockchain_format.coin import Coin
 from chives.types.blockchain_format.program import SerializedProgram, INFINITE_COST
 from chives.util.chain_utils import additions_for_solution, fee_for_solution

@@ -59,7 +59,9 @@ export default function WalletSend(props: SendCardProps) {
     name: 'address',
   });
 
-  const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery();
+  const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery({}, {
+    pollingInterval: 10000,
+  });
 
   const { wallet } = useWallet(walletId);
 
@@ -67,7 +69,7 @@ export default function WalletSend(props: SendCardProps) {
     return null;
   }
 
-  const syncing = walletState.syncing;
+  const syncing = !!walletState?.syncing;
 
   async function farm() {
     if (addressValue) {

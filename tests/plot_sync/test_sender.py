@@ -5,8 +5,8 @@ from chives.plot_sync.sender import ExpectedResponse, Sender
 from chives.plot_sync.util import Constants
 from chives.protocols.harvester_protocol import PlotSyncIdentifier, PlotSyncResponse
 from chives.server.ws_connection import NodeType, ProtocolMessageTypes
+from chives.simulator.block_tools import BlockTools
 from chives.util.ints import int16, uint64
-from tests.block_tools import BlockTools
 from tests.plot_sync.util import get_dummy_connection, plot_sync_identifier
 
 
@@ -20,7 +20,6 @@ def test_default_values(bt: BlockTools) -> None:
     assert sender._last_sync_id == uint64(0)
     assert not sender._stop_requested
     assert sender._task is None
-    assert not sender._lock.locked()
     assert sender._response is None
 
 

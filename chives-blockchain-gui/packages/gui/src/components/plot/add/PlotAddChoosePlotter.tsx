@@ -78,9 +78,9 @@ export default function PlotAddChoosePlotter(props: Props) {
   };
 
   const plotterWarningString = (plotterName: PlotterName | undefined): string | undefined => {
-    // if (plotterName === PlotterName.BLADEBIT) {
-    //   return plotters[PlotterName.BLADEBIT]?.installInfo?.bladebitMemoryWarning;
-    // }
+    if (plotterName === PlotterName.BLADEBIT) {
+      return plotters[PlotterName.BLADEBIT]?.installInfo?.bladebitMemoryWarning;
+    }
     return undefined;
   };
 

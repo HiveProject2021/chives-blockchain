@@ -32,6 +32,7 @@ if ($null -eq (Get-Command git -ErrorAction SilentlyContinue))
     Exit 1
 }
 
+git submodule update --init mozilla-ca
 
 if ($null -eq (Get-Command py -ErrorAction SilentlyContinue))
 {
@@ -43,7 +44,7 @@ if ($null -eq (Get-Command py -ErrorAction SilentlyContinue))
 }
 
 $supportedPythonVersions = "3.10", "3.9", "3.8", "3.7"
-if (Test-Path env:INSTALL_PYTHON_VERSION)
+if ("$env:INSTALL_PYTHON_VERSION" -ne "")
 {
     $pythonVersion = $env:INSTALL_PYTHON_VERSION
 }
@@ -104,7 +105,6 @@ py -$pythonVersion -m venv venv
 venv\scripts\python -m pip install --upgrade pip setuptools wheel
 venv\scripts\pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc==2.2.2
 venv\scripts\pip install --editable ".$extras_cli" --extra-index-url https://pypi.chia.net/simple/
-venv\scripts\pip install requests
 
 Write-Output ""
 Write-Output "Chives blockchain .\Install.ps1 complete."

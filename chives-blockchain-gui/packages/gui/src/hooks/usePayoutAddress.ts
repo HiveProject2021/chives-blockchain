@@ -1,6 +1,6 @@
+import { toBech32m, fromBech32m } from '@chives/api';
 import type { PlotNFT } from '@chives/api';
 import { useSetPayoutInstructionsMutation, useGetNetworkInfoQuery } from '@chives/api-react';
-import { toBech32m, fromBech32m } from '@chives/core';
 
 export default function usePayoutAddress(nft: PlotNFT): {
   loading: boolean;

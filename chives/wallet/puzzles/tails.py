@@ -5,6 +5,7 @@ from chives.types.blockchain_format.sized_bytes import bytes32
 from chives.types.spend_bundle import SpendBundle
 from chives.util.ints import uint64
 from chives.util.byte_types import hexstr_to_bytes
+from chives.wallet.cat_wallet.lineage_store import CATLineageStore
 from chives.wallet.lineage_proof import LineageProof
 from chives.wallet.puzzles.load_clvm import load_clvm
 from chives.wallet.cat_wallet.cat_utils import (
@@ -72,8 +73,12 @@ class GenesisById(LimitationsProgram):
         origin_id = origin.name()
 
         cat_inner: Program = await wallet.get_new_inner_puzzle()
-        await wallet.add_lineage(origin_id, LineageProof(), False)
         tail: Program = cls.construct([Program.to(origin_id)])
+
+        wallet.lineage_store = await CATLineageStore.create(
+            wallet.wallet_state_manager.db_wrapper, tail.get_tree_hash().hex()
+        )
+        await wallet.add_lineage(origin_id, LineageProof())
 
         minted_cat_puzzle_hash: bytes32 = construct_cat_puzzle(CAT_MOD, tail.get_tree_hash(), cat_inner).get_tree_hash()
 
@@ -103,10 +108,7 @@ class GenesisById(LimitationsProgram):
         signed_eve_spend = await wallet.sign(eve_spend)
 
         if wallet.cat_info.my_tail is None:
-            await wallet.save_info(
-                CATInfo(tail.get_tree_hash(), tail),
-                False,
-            )
+            await wallet.save_info(CATInfo(tail.get_tree_hash(), tail))
 
         return tx_record, SpendBundle.aggregate([tx_record.spend_bundle, signed_eve_spend])
 

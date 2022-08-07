@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/HiveProject2021/chives-blockchain/tree/main/tests#readme
 #
 name: MacOS wallet-rl_wallet Test
 
@@ -66,7 +66,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-# Omitted checking out blocks and plots repo Chia-Network/test-cache
+# Omitted checking out blocks and plots repo Chives-Network/test-cache
 
     - name: Run install script
       env:
@@ -98,5 +98,5 @@ jobs:
         path: coverage_reports/*
         if-no-files-found: error
 #
-# THIS FILE IS GENERATED. SEE https://github.com/Chia-Network/chia-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/HiveProject2021/chives-blockchain/tree/main/tests#readme
 #
