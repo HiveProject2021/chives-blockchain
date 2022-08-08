@@ -13,9 +13,10 @@ from typing import Any, Callable, Dict, Iterator, Optional, Union
 
 import pkg_resources
 import yaml
+from filelock import FileLock
 from typing_extensions import Literal
 
-from chives.util.lock import Lockfile
+from chives.util.path import mkdir
 
 PEER_DB_PATH_KEY_DEPRECATED = "peer_db_path"  # replaced by "peers_file_path"
 WALLET_PEERS_PATH_KEY_DEPRECATED = "wallet_peers_path"  # replaced by "wallet_peers_file_path"
@@ -32,7 +33,7 @@ def create_default_chives_config(root_path: Path, filenames=["config.yaml"]) -> 
         default_config_file_data: str = initial_config_file(filename)
         path: Path = config_path_for_filename(root_path, filename)
         tmp_path: Path = path.with_suffix("." + str(os.getpid()))
-        path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(path.parent)
         with open(tmp_path, "w") as f:
             f.write(default_config_file_data)
         try:
@@ -54,7 +55,8 @@ def lock_config(root_path: Path, filename: Union[str, Path]) -> Iterator[None]:
     #       configuration file without having loaded it right there.  This usage
     #       should probably be removed and this function made private.
     config_path = config_path_for_filename(root_path, filename)
-    with Lockfile.create(config_path):
+    lock_path: Path = config_path.with_name(config_path.name + ".lock")
+    with FileLock(lock_path):
         yield
 
 
@@ -180,16 +182,13 @@ def unflatten_properties(config: Dict) -> Dict:
 
 
 def add_property(d: Dict, partial_key: str, value: Any):
-    if "." not in partial_key:  # root of dict
-        d[partial_key] = value
+    key_1, key_2 = partial_key.split(".", maxsplit=1)
+    if key_1 not in d:
+        d[key_1] = {}
+    if "." in key_2:
+        add_property(d[key_1], key_2, value)
     else:
-        key_1, key_2 = partial_key.split(".", maxsplit=1)
-        if key_1 not in d:
-            d[key_1] = {}
-        if "." in key_2:
-            add_property(d[key_1], key_2, value)
-        else:
-            d[key_1][key_2] = value
+        d[key_1][key_2] = value
 
 
 def str2bool(v: Union[str, bool]) -> bool:
@@ -273,8 +272,3 @@ def override_config(config: Dict[str, Any], config_overrides: Optional[Dict[str,
     for k, v in config_overrides.items():
         add_property(new_config, k, v)
     return new_config
-
-
-def selected_network_address_prefix(config: Dict[str, Any]) -> str:
-    address_prefix = config["network_overrides"]["config"][config["selected_network"]]["address_prefix"]
-    return address_prefix

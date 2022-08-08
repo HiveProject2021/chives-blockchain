@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import { Trans } from '@lingui/macro';
-import { toBech32m } from '@chives/api';
 import { useGetBlockQuery, useGetBlockRecordQuery  } from '@chives/api-react'
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -28,6 +27,7 @@ import {
   useCurrencyCode,
   mojoToChives,
   Suspender,
+  toBech32m,
 } from '@chives/core';
 import {
   hex_to_array,
@@ -184,7 +184,7 @@ export default function Block() {
       value: <FormatLargeNumber value={blockRecord.weight} />,
       tooltip: (
         <Trans>
-          Weight is the total added difficulty of all blocks up to and
+          Weight is the total added difficulty of all sub blocks up to and
           including this one
         </Trans>
       ),
@@ -205,7 +205,7 @@ export default function Block() {
       tooltip: (
         <Trans>
           The total number of VDF (verifiable delay function) or proof of time
-          iterations on the whole chain up to this block.
+          iterations on the whole chain up to this sub block.
         </Trans>
       ),
     },
@@ -243,17 +243,35 @@ export default function Block() {
     },
     {
       name: <Trans>Farmer Puzzle Hash</Trans>,
-      value: currencyCode ? toBech32m(
-        blockRecord.farmerPuzzleHash,
-        currencyCode.toLowerCase(),
-      ) : '',
+      value: (
+        <Link
+          target="_blank"
+          href={`https://explorer.chivescoin.org/addressview.php?goback=block&hash=${blockRecord.farmer_puzzle_hash}`}
+        >
+          {currencyCode
+            ? toBech32m(
+                blockRecord.farmerPuzzleHash,
+                currencyCode.toLowerCase(),
+              )
+            : ''}
+        </Link>
+      ),
     },
     {
       name: <Trans>Pool Puzzle Hash</Trans>,
-      value: currencyCode ? toBech32m(
-        blockRecord.poolPuzzleHash,
-        currencyCode.toLowerCase(),
-      ) : '',
+      value: (
+        <Link
+          target="_blank"
+          href={`https://explorer.chivescoin.org/addressview.php?goback=block&hash=${blockRecord.pool_puzzle_hash}`}
+        >
+          {currencyCode
+            ? toBech32m(
+                blockRecord.poolPuzzleHash,
+                currencyCode.toLowerCase(),
+              )
+            : ''}
+        </Link>
+      ),
     },
     {
       name: <Trans>Plot Id</Trans>,

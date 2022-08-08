@@ -118,7 +118,7 @@ export default function OfferExchangeRate(props: Props) {
             InputProps={{
               inputComponent: OfferExchangeRateNumberFormat as any,
               inputProps: {
-                decimalScale: makerAssetInfo.walletType === WalletType.STANDARD_WALLET ? 12 : 9,
+                decimalScale: makerAssetInfo.walletType === WalletType.STANDARD_WALLET ? 8 : 5,
               },
               endAdornment: <InputAdornment position="end">{makerAssetInfo.displayName}</InputAdornment>,
               readOnly: readOnly,

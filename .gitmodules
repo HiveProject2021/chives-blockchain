@@ -1,8 +1,8 @@
-[submodule "chives-blockchain-gui"]
-	path = chives-blockchain-gui
-	url = https://github.com/HiveProject2021/chives-blockchain-gui.git
-	branch = main
 [submodule "mozilla-ca"]
 	path = mozilla-ca
 	url = https://github.com/HiveProject2021/mozilla-ca.git
         branch = main
+[submodule "chives-blockchain-gui"]
+	path = chives-blockchain-gui
+	url = https://github.com/HiveProject2021/chives-blockchain-gui.git
+	branch = release/1.5.0

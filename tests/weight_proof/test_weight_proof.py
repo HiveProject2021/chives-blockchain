@@ -11,7 +11,7 @@ from chives.full_node.block_store import BlockStore
 from chives.types.blockchain_format.sized_bytes import bytes32
 from chives.types.blockchain_format.sub_epoch_summary import SubEpochSummary
 from chives.util.block_cache import BlockCache
-from chives.simulator.block_tools import test_constants
+from tests.block_tools import test_constants
 from chives.util.generator_tools import get_block_header
 
 from chives.consensus.pot_iterations import calculate_iterations_quality

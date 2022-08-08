@@ -22,7 +22,6 @@ log = logging.getLogger(__name__)
 KEYCHAIN_ERR_KEYERROR = "key error"
 KEYCHAIN_ERR_LOCKED = "keyring is locked"
 KEYCHAIN_ERR_NO_KEYS = "no keys present"
-KEYCHAIN_ERR_KEY_NOT_FOUND = "key not found"
 KEYCHAIN_ERR_MALFORMED_REQUEST = "malformed request"
 
 
@@ -82,15 +81,16 @@ class KeychainServer:
             return {"success": False, "error": KEYCHAIN_ERR_LOCKED}
 
         mnemonic = request.get("mnemonic", None)
-        if mnemonic is None:
+        passphrase = request.get("passphrase", None)
+        if mnemonic is None or passphrase is None:
             return {
                 "success": False,
                 "error": KEYCHAIN_ERR_MALFORMED_REQUEST,
-                "error_details": {"message": "missing mnemonic"},
+                "error_details": {"message": "missing mnemonic and/or passphrase"},
             }
 
         try:
-            self.get_keychain_for_request(request).add_private_key(mnemonic)
+            self.get_keychain_for_request(request).add_private_key(mnemonic, passphrase)
         except KeyError as e:
             return {
                 "success": False,
@@ -191,7 +191,7 @@ class KeychainServer:
         else:
             private_key, entropy = private_keys[0]
 
-        if private_key is not None and entropy is not None:
-            return {"success": True, "pk": bytes(private_key.get_g1()).hex(), "entropy": entropy.hex()}
+        if not private_key or not entropy:
+            return {"success": False, "error": KEYCHAIN_ERR_NO_KEYS}
         else:
-            return {"success": False, "error": KEYCHAIN_ERR_KEY_NOT_FOUND}
+            return {"success": True, "pk": bytes(private_key.get_g1()).hex(), "entropy": entropy.hex()}

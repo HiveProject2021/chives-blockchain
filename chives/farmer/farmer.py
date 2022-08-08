@@ -11,7 +11,12 @@ from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
 import chives.server.ws_connection as ws  # lgtm [py/import-and-import-from]
 from chives.consensus.constants import ConsensusConstants
-from chives.daemon.keychain_proxy import KeychainProxy, connect_to_keychain_and_validate, wrap_local_keychain
+from chives.daemon.keychain_proxy import (
+    KeychainProxy,
+    KeychainProxyConnectionFailure,
+    connect_to_keychain_and_validate,
+    wrap_local_keychain,
+)
 from chives.plot_sync.delta import Delta
 from chives.plot_sync.receiver import Receiver
 from chives.pools.pool_config import PoolWalletConfig, add_auth_key, load_pool_config
@@ -37,7 +42,6 @@ from chives.types.blockchain_format.sized_bytes import bytes32
 from chives.util.bech32m import decode_puzzle_hash
 from chives.util.byte_types import hexstr_to_bytes
 from chives.util.config import config_path_for_filename, load_config, lock_and_load_config, save_config
-from chives.util.errors import KeychainProxyConnectionFailure
 from chives.util.hash import std_hash
 from chives.util.ints import uint8, uint16, uint32, uint64
 from chives.util.keychain import Keychain
@@ -121,7 +125,7 @@ class Farmer:
             else:
                 self.keychain_proxy = await connect_to_keychain_and_validate(self._root_path, self.log)
                 if not self.keychain_proxy:
-                    raise KeychainProxyConnectionFailure()
+                    raise KeychainProxyConnectionFailure("Failed to connect to keychain service")
         return self.keychain_proxy
 
     async def get_all_private_keys(self):
@@ -130,11 +134,7 @@ class Farmer:
 
     async def setup_keys(self) -> bool:
         no_keys_error_str = "No keys exist. Please run 'chives keys generate' or open the UI."
-        try:
-            self.all_root_sks: List[PrivateKey] = [sk for sk, _ in await self.get_all_private_keys()]
-        except KeychainProxyConnectionFailure:
-            return False
-
+        self.all_root_sks: List[PrivateKey] = [sk for sk, _ in await self.get_all_private_keys()]
         self._private_keys = [master_sk_to_farmer_sk(sk) for sk in self.all_root_sks] + [
             master_sk_to_pool_sk(sk) for sk in self.all_root_sks
         ]

@@ -144,7 +144,7 @@ async def validate_block_body(
                         calculate_base_farmer_reward(curr_b.height),
                         constants.GENESIS_CHALLENGE,
                     )
-                )         
+                )               
                 expected_reward_coins.add(
                     create_community_coin(
                         curr_b.height,
@@ -152,7 +152,7 @@ async def validate_block_body(
                         calculate_base_community_reward(curr_b.height),
                         constants.GENESIS_CHALLENGE,
                     )
-                )      
+                )
                 curr_b = blocks.block_record(curr_b.prev_hash)
 
     if set(block.transactions_info.reward_claims_incorporated) != expected_reward_coins:
@@ -226,10 +226,10 @@ async def validate_block_body(
         assert npc_result.conds is not None
 
         for spend in npc_result.conds.spends:
-            removals.append(bytes32(spend.coin_id))
-            removals_puzzle_dic[bytes32(spend.coin_id)] = bytes32(spend.puzzle_hash)
+            removals.append(spend.coin_id)
+            removals_puzzle_dic[spend.coin_id] = spend.puzzle_hash
             for puzzle_hash, amount, _ in spend.create_coin:
-                c = Coin(bytes32(spend.coin_id), bytes32(puzzle_hash), uint64(amount))
+                c = Coin(spend.coin_id, puzzle_hash, uint64(amount))
                 additions.append((c, c.name()))
     else:
         assert npc_result is None
@@ -331,6 +331,7 @@ async def validate_block_body(
                     min(constants.MAX_BLOCK_COST_CLVM, curr.transactions_info.cost),
                     cost_per_byte=constants.COST_PER_BYTE,
                     mempool_mode=False,
+                    height=curr.height,
                 )
                 removals_in_curr, additions_in_curr = tx_removals_and_additions(curr_npc_result.conds)
             else:
@@ -445,7 +446,7 @@ async def validate_block_body(
     assert_fee_sum: uint64 = uint64(0)
     if npc_result:
         assert npc_result.conds is not None
-        assert_fee_sum = uint64(npc_result.conds.reserve_fee)
+        assert_fee_sum = npc_result.conds.reserve_fee
 
     # 17. Check that the assert fee sum <= fees, and that each reserved fee is non-negative
     if fees < assert_fee_sum:
@@ -458,8 +459,7 @@ async def validate_block_body(
     # 18. Check that the fee amount + farmer reward < maximum coin amount
     if fees + calculate_base_community_reward(height) > constants.MAX_COIN_AMOUNT:
         return Err.COIN_AMOUNT_EXCEEDS_MAXIMUM, None
-    
-
+        
     # 19. Check that the computed fees are equal to the fees in the block header
     if block.transactions_info.fees != fees:
         return Err.INVALID_BLOCK_FEE_AMOUNT, None

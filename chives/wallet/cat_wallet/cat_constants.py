@@ -1,30 +1,30 @@
-SPACEBUCKS = {
-    "asset_id": "a628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913",
-    "name": "Spacebucks",
-    "symbol": "SBX",
+KITTY = {
+    "asset_id": "3e3a7614a02d9714a21927ef99c7ef9bf8270e374dc6ecc48f2619cbc70c4ddc",
+    "name": "KITTY",
+    "symbol": "KTY",
 }
 
-MARMOT = {
-    "asset_id": "8ebf855de6eb146db5602f0456d2f0cbe750d57f821b6f91a8592ee9f1d4cf31",
-    "name": "Marmot",
-    "symbol": "MRMT",
+CHIVESPET = {
+    "asset_id": "ea443ca6390d227cdc838acf045cd077accefa4bf7f96b3d4b58c24461fe9c97",
+    "name": "CHIVESPET",
+    "symbol": "CHVP",
 }
 
-STABLY_USDS = {
-    "asset_id": "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
-    "name": "Stably USD",
-    "symbol": "USDS",
+PONY = {
+    "asset_id": "44bdcb770528c5e0d2fd95afddb029c7c0424bd4875b9bc962cc36c84194afba",
+    "name": "PONY",
+    "symbol": "PONY",
 }
 
-CHIVES_HOLIDAY_TOKEN = {
-    "asset_id": "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
-    "name": "Chives Holiday 2021 Token",
-    "symbol": "CH21",
+USDV = {
+    "asset_id": "a43cd19274383d988f6c204c317f31ecd9c7a404e086e7ccefa0bcbdeb9e42ca",
+    "name": "USDV",
+    "symbol": "USDV",
 }
 
 DEFAULT_CATS = {
-    SPACEBUCKS["asset_id"]: SPACEBUCKS,
-    MARMOT["asset_id"]: MARMOT,
-    STABLY_USDS["asset_id"]: STABLY_USDS,
-    CHIVES_HOLIDAY_TOKEN["asset_id"]: CHIVES_HOLIDAY_TOKEN,
+    KITTY["asset_id"]: KITTY,
+    CHIVESPET["asset_id"]: CHIVESPET,
+    PONY["asset_id"]: PONY,
+    USDV["asset_id"]: USDV,
 }

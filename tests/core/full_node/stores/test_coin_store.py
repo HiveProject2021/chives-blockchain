@@ -18,7 +18,7 @@ from chives.util.generator_tools import tx_removals_and_additions
 from chives.util.hash import std_hash
 from chives.util.ints import uint64, uint32
 from tests.blockchain.blockchain_test_utils import _validate_and_add_block
-from chives.simulator.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.setup_nodes import test_constants
 from chives.types.blockchain_format.sized_bytes import bytes32
 from tests.util.db_connection import DBConnection
@@ -50,7 +50,7 @@ def get_future_reward_coins(block: FullBlock) -> Tuple[Coin, Coin]:
 
 class TestCoinStoreWithBlocks:
     @pytest.mark.asyncio
-    async def test_basic_coin_store(self, db_version, bt):
+    async def test_basic_coin_store(self, db_version, softfork_height, bt):
         wallet_a = WALLET_A
         reward_ph = wallet_a.get_new_puzzlehash()
 
@@ -99,6 +99,7 @@ class TestCoinStoreWithBlocks:
                             bt.constants.MAX_BLOCK_COST_CLVM,
                             cost_per_byte=bt.constants.COST_PER_BYTE,
                             mempool_mode=False,
+                            height=softfork_height,
                         )
                         tx_removals, tx_additions = tx_removals_and_additions(npc_result.conds)
                     else:
@@ -169,7 +170,7 @@ class TestCoinStoreWithBlocks:
                 if block.is_transaction_block():
                     removals: List[bytes32] = []
                     additions: List[Coin] = []
-                    async with db_wrapper.writer():
+                    async with db_wrapper.write_db():
                         if block.is_transaction_block():
                             assert block.foliage_transaction_block is not None
                             await coin_store.new_block(

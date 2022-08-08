@@ -1,47 +1,44 @@
-from __future__ import annotations
+import contextlib
+import os
+import time
+from typing import Iterator, Optional, TextIO, TypeVar
 
-from dataclasses import dataclass
-from pathlib import Path
-from types import TracebackType
-from typing import Optional, Type
-
-from filelock import BaseFileLock, FileLock, Timeout
-from typing_extensions import final
+T = TypeVar("T")
 
 
-class LockfileError(Exception):
-    pass
+# Cribbed mostly from chives/daemon/server.py
+def create_exclusive_lock(lockfile: str) -> Optional[TextIO]:
+    """
+    Open a lockfile exclusively.
+    """
+
+    try:
+        fd = os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+        f = open(fd, "w")
+
+        f.write("lock")
+    except IOError:
+        return None
+
+    return f
 
 
-@final
-@dataclass(frozen=True)
-class Lockfile:
-    _lock: BaseFileLock
-    timeout: float
-    poll_interval: float
+@contextlib.contextmanager
+def lock_by_path(lock_filename: str) -> Iterator[None]:
+    """
+    Ensure that this process and this thread is the only one operating on the
+    resource associated with lock_filename systemwide.
+    """
 
-    @classmethod
-    def create(cls, path: Path, timeout: float = -1, poll_interval: float = 0.05) -> Lockfile:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        return cls(_lock=FileLock(path.with_name(path.name + ".lock")), timeout=timeout, poll_interval=poll_interval)
+    while True:
+        lock_file = create_exclusive_lock(lock_filename)
+        if lock_file is not None:
+            break
 
-    def __enter__(self) -> Lockfile:
-        self.acquire(timeout=self.timeout, poll_interval=self.poll_interval)
-        return self
+        time.sleep(0.1)
 
-    def __exit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc: Optional[BaseException],
-        traceback: Optional[TracebackType],
-    ) -> None:
-        self.release()
-
-    def acquire(self, timeout: float, poll_interval: float) -> None:
-        try:
-            self._lock.acquire(timeout=timeout, poll_interval=poll_interval)
-        except Timeout as e:
-            raise LockfileError(e) from e
-
-    def release(self) -> None:
-        self._lock.release()
+    try:
+        yield
+    finally:
+        lock_file.close()
+        os.remove(lock_filename)

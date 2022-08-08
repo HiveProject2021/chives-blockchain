@@ -155,23 +155,22 @@ class Offer:
                 inner_solution: Optional[Program] = get_inner_solution(puzzle_driver, parent_solution)
                 assert inner_puzzle is not None and inner_solution is not None
                 conditions: Program = inner_puzzle.run(inner_solution)
-                matching_spend_additions: List[Coin] = []  # coins that match offered amount and are sent to offer ph.
                 for condition in conditions.as_iter():
                     if condition.first() == 51 and condition.rest().first() == OFFER_HASH:
-                        matching_spend_additions.extend(
-                            [a for a in additions if a.amount == condition.rest().rest().first().as_int()]
-                        )
-                if len(matching_spend_additions) == 1:
-                    coins_for_this_spend.append(matching_spend_additions[0])
-                else:
-                    additions_w_amount_and_puzhash: List[Coin] = [
-                        a
-                        for a in matching_spend_additions
-                        if a.puzzle_hash
-                        == construct_puzzle(puzzle_driver, OFFER_HASH).get_tree_hash(OFFER_HASH)  # type: ignore
-                    ]
-                    if len(additions_w_amount_and_puzhash) == 1:
-                        coins_for_this_spend.append(additions_w_amount_and_puzhash[0])
+                        additions_w_amount: List[Coin] = [
+                            a for a in additions if a.amount == condition.rest().rest().first().as_int()
+                        ]
+                        if len(additions_w_amount) == 1:
+                            coins_for_this_spend.append(additions_w_amount[0])
+                        else:
+                            additions_w_amount_and_puzhash: List[Coin] = [
+                                a
+                                for a in additions_w_amount
+                                if a.puzzle_hash
+                                == construct_puzzle(puzzle_driver, OFFER_HASH).get_tree_hash(OFFER_HASH)  # type: ignore
+                            ]
+                            if len(additions_w_amount_and_puzhash) == 1:
+                                coins_for_this_spend.append(additions_w_amount_and_puzhash[0])
             else:
                 asset_id = None
                 coins_for_this_spend.extend([a for a in additions if a.puzzle_hash == OFFER_HASH])
@@ -199,11 +198,6 @@ class Offer:
         return requested_amounts
 
     def arbitrage(self) -> Dict[Optional[bytes32], int]:
-        """
-        Returns a dictionary of the type of each asset and amount that is involved in the trade
-        With the amount being how much their offered amount within the offer
-        exceeds/falls short of their requested amount.
-        """
         offered_amounts: Dict[Optional[bytes32], int] = self.get_offered_amounts()
         requested_amounts: Dict[Optional[bytes32], int] = self.get_requested_amounts()
 
@@ -327,13 +321,11 @@ class Offer:
             raise ValueError("Offer is currently incomplete")
 
         completion_spends: List[CoinSpend] = []
-        all_offered_coins: Dict[Optional[bytes32], List[Coin]] = self.get_offered_coins()
-        total_arbitrage_amount: Dict[Optional[bytes32], int] = self.arbitrage()
         for asset_id, payments in self.requested_payments.items():
-            offered_coins: List[Coin] = all_offered_coins[asset_id]
+            offered_coins: List[Coin] = self.get_offered_coins()[asset_id]
 
             # Because of CAT supply laws, we must specify a place for the leftovers to go
-            arbitrage_amount: int = total_arbitrage_amount[asset_id]
+            arbitrage_amount: int = self.arbitrage()[asset_id]
             all_payments: List[NotarizedPayment] = payments.copy()
             if arbitrage_amount > 0:
                 assert arbitrage_amount is not None
@@ -370,7 +362,7 @@ class Offer:
                                 "0x"
                                 + sibling_coin.parent_coin_info.hex()
                                 + sibling_coin.puzzle_hash.hex()
-                                + bytes(uint64(sibling_coin.amount)).hex()
+                                + bytes(sibling_coin.amount).hex()
                             )
                             sibling_spends += "0x" + bytes(coin_to_spend_dict[sibling_coin]).hex() + ")"
                             sibling_puzzles += disassembled_offer_mod
@@ -387,7 +379,7 @@ class Offer:
                                 "coin": "0x"
                                 + coin.parent_coin_info.hex()
                                 + coin.puzzle_hash.hex()
-                                + bytes(uint64(coin.amount)).hex(),
+                                + bytes(coin.amount).hex(),
                                 "parent_spend": "0x" + bytes(coin_to_spend_dict[coin]).hex(),
                                 "siblings": siblings,
                                 "sibling_spends": sibling_spends,

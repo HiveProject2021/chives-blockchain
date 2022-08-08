@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import contextlib
 import dataclasses
@@ -73,7 +71,7 @@ from chives.util.config import PEER_DB_PATH_KEY_DEPRECATED, process_config_start
 from chives.util.db_wrapper import DBWrapper2
 from chives.util.errors import ConsensusError, Err, ValidationError
 from chives.util.ints import uint8, uint32, uint64, uint128
-from chives.util.path import path_from_root
+from chives.util.path import mkdir, path_from_root
 from chives.util.safe_cancel_task import cancel_task_safe
 from chives.util.profiler import profile_task
 from datetime import datetime
@@ -117,7 +115,6 @@ class FullNode:
     _blockchain_lock_high_priority: LockClient
     _blockchain_lock_low_priority: LockClient
     _transaction_queue_task: Optional[asyncio.Task]
-    simulator_transaction_callback: Optional[Callable]
 
     def __init__(
         self,
@@ -159,9 +156,8 @@ class FullNode:
         self.peer_coin_ids: Dict[bytes32, Set[bytes32]] = {}  # Peer ID: Set[Coin ids]
         self.peer_puzzle_hash: Dict[bytes32, Set[bytes32]] = {}  # Peer ID: Set[puzzle_hash]
         self.peer_sub_counter: Dict[bytes32, int] = {}  # Peer ID: int (subscription count)
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(self.db_path.parent)
         self._transaction_queue_task = None
-        self.simulator_transaction_callback = None
 
     def _set_state_changed_callback(self, callback: Callable):
         self.state_changed_callback = callback
@@ -179,7 +175,6 @@ class FullNode:
         # create the store (db) and full node instance
         db_connection = await aiosqlite.connect(self.db_path)
         db_version: int = await lookup_db_version(db_connection)
-        self.log.info(f"using blockchain database {self.db_path}, which is version {db_version}")
 
         if self.config.get("log_sqlite_cmds", False):
             sql_log_path = path_from_root(self.root_path, "log/sql.log")
@@ -208,17 +203,16 @@ class FullNode:
         await (await db_connection.execute("pragma synchronous={}".format(db_sync))).close()
 
         if db_version != 2:
-            async with self.db_wrapper.reader_no_transaction() as conn:
+            async with self.db_wrapper.read_db() as conn:
                 async with conn.execute(
                     "SELECT name FROM sqlite_master WHERE type='table' AND name='full_blocks'"
                 ) as cur:
                     if len(await cur.fetchall()) == 0:
                         try:
                             # this is a new DB file. Make it v2
-                            async with self.db_wrapper.writer_maybe_transaction() as w_conn:
+                            async with self.db_wrapper.write_db() as w_conn:
                                 await set_db_version_async(w_conn, 2)
                                 self.db_wrapper.db_version = 2
-                                self.log.info("blockchain database is empty, configuring as v2")
                         except sqlite3.OperationalError:
                             # it could be a database created with "chives init", which is
                             # empty except it has the database_version table
@@ -669,8 +663,6 @@ class FullNode:
                 await self.server.send_to_specific([msg], peer.peer_node_id)
 
     async def synced(self) -> bool:
-        if "simulator" in str(self.config.get("selected_network")):
-            return True  # sim is always synced because it has no peers
         curr: Optional[BlockRecord] = self.blockchain.get_peak()
         if curr is None:
             return False
@@ -1745,7 +1737,8 @@ class FullNode:
             if block_bytes is None:
                 block_bytes = bytes(block)
 
-            npc_result = await self.blockchain.run_generator(block_bytes, block_generator)
+            height = uint32(0) if prev_b is None else uint32(prev_b.height + 1)
+            npc_result = await self.blockchain.run_generator(block_bytes, block_generator, height)
             pre_validation_time = time.time() - pre_validation_start
 
             # blockchain.run_generator throws on errors, so npc_result is
@@ -2118,8 +2111,6 @@ class FullNode:
                 else:
                     await self.server.send_to_all_except([msg], NodeType.FULL_NODE, peer.peer_node_id)
                 self.not_dropped_tx += 1
-                if self.simulator_transaction_callback is not None:  # callback
-                    await self.simulator_transaction_callback(spend_name)  # pylint: disable=E1102
             else:
                 self.mempool_manager.remove_seen(spend_name)
                 self.log.debug(
@@ -2255,7 +2246,7 @@ class FullNode:
                 new_block = dataclasses.replace(block, challenge_chain_ip_proof=vdf_proof)
         if new_block is None:
             return False
-        async with self.db_wrapper.writer():
+        async with self.db_wrapper.write_db():
             try:
                 await self.block_store.replace_proof(header_hash, new_block)
                 return True

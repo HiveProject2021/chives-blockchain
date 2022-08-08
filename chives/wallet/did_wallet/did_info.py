@@ -8,6 +8,8 @@ from chives.wallet.lineage_proof import LineageProof
 from chives.types.blockchain_format.program import Program
 from chives.types.blockchain_format.coin import Coin
 
+DID_HRP = "did:chives:"
+
 
 @streamable
 @dataclass(frozen=True)

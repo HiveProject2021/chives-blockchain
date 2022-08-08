@@ -27,29 +27,31 @@ class CATOuterPuzzle:
     _get_inner_solution: Any
 
     def match(self, puzzle: Program) -> Optional[PuzzleInfo]:
-        args = match_cat_puzzle(*puzzle.uncurry())
-        if args is None:
+        matched, curried_args = match_cat_puzzle(puzzle)
+        if matched:
+            _, tail_hash, inner_puzzle = curried_args
+            constructor_dict = {
+                "type": "CAT",
+                "tail": "0x" + tail_hash.as_python().hex(),
+            }
+            next_constructor = self._match(inner_puzzle)
+            if next_constructor is not None:
+                constructor_dict["also"] = next_constructor.info
+            return PuzzleInfo(constructor_dict)
+        else:
             return None
-        _, tail_hash, inner_puzzle = args
-        constructor_dict = {
-            "type": "CAT",
-            "tail": "0x" + tail_hash.as_python().hex(),
-        }
-        next_constructor = self._match(inner_puzzle)
-        if next_constructor is not None:
-            constructor_dict["also"] = next_constructor.info
-        return PuzzleInfo(constructor_dict)
 
     def get_inner_puzzle(self, constructor: PuzzleInfo, puzzle_reveal: Program) -> Optional[Program]:
-        args = match_cat_puzzle(*puzzle_reveal.uncurry())
-        if args is None:
-            raise ValueError("This driver is not for the specified puzzle reveal")
-        _, _, inner_puzzle = args
-        if constructor.also() is not None:
-            deep_inner_puzzle: Optional[Program] = self._get_inner_puzzle(constructor.also(), inner_puzzle)
-            return deep_inner_puzzle
+        matched, curried_args = match_cat_puzzle(puzzle_reveal)
+        if matched:
+            _, _, inner_puzzle = curried_args
+            if constructor.also() is not None:
+                deep_inner_puzzle: Optional[Program] = self._get_inner_puzzle(constructor.also(), inner_puzzle)
+                return deep_inner_puzzle
+            else:
+                return inner_puzzle
         else:
-            return inner_puzzle
+            raise ValueError("This driver is not for the specified puzzle reveal")
 
     def get_inner_solution(self, constructor: PuzzleInfo, solution: Program) -> Optional[Program]:
         my_inner_solution: Program = solution.first()
@@ -94,9 +96,9 @@ class CATOuterPuzzle:
             if constructor.also() is not None:
                 puzzle = self._construct(constructor.also(), puzzle)
                 solution = self._solve(constructor.also(), solver, inner_puzzle, inner_solution)
-            args = match_cat_puzzle(*parent_spend.puzzle_reveal.to_program().uncurry())
-            assert args is not None
-            _, _, parent_inner_puzzle = args
+            matched, curried_args = match_cat_puzzle(parent_spend.puzzle_reveal.to_program())
+            assert matched
+            _, _, parent_inner_puzzle = curried_args
             spendable_cats.append(
                 SpendableCAT(
                     coin,
@@ -104,7 +106,7 @@ class CATOuterPuzzle:
                     puzzle,
                     solution,
                     lineage_proof=LineageProof(
-                        parent_coin.parent_coin_info, parent_inner_puzzle.get_tree_hash(), uint64(parent_coin.amount)
+                        parent_coin.parent_coin_info, parent_inner_puzzle.get_tree_hash(), parent_coin.amount
                     ),
                 )
             )

@@ -18,7 +18,7 @@ from chives.types.unfinished_block import UnfinishedBlock
 from chives.util.block_cache import BlockCache
 from chives.util.hash import std_hash
 from chives.util.ints import uint8, uint32, uint64, uint128
-from chives.simulator.block_tools import get_signage_point, create_block_tools_async
+from tests.block_tools import get_signage_point, create_block_tools_async
 from tests.blockchain.blockchain_test_utils import (
     _validate_and_add_block,
     _validate_and_add_block_no_error,

@@ -171,10 +171,11 @@ def create_foliage(
             
             community_coin = create_community_coin(
                 curr.height,
-                constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH,
+                constants.GENESIS_PRE_FARM_community_PUZZLE_HASH,
                 calculate_base_community_reward(curr.height),
                 constants.GENESIS_CHALLENGE,
             )
+            
             assert curr.header_hash == prev_transaction_block.header_hash
             reward_claims_incorporated += [pool_coin, farmer_coin, community_coin]
 
@@ -196,7 +197,7 @@ def create_foliage(
                     )
                     community_coin = create_community_coin(
                         curr.height,
-                        constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH,
+                        constants.GENESIS_PRE_FARM_community_PUZZLE_HASH,
                         calculate_base_community_reward(curr.height),
                         constants.GENESIS_CHALLENGE,
                     )

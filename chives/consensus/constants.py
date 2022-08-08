@@ -43,7 +43,6 @@ class ConsensusConstants:
     GENESIS_PRE_FARM_POOL_PUZZLE_HASH: bytes32  # The block at height must pay out to this pool puzzle hash
     GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: bytes32  # The block at height must pay out to this farmer puzzle hash
     GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH: bytes32  # The block at height must pay out to this farmer puzzle hash
-    GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH: bytes32  # The block at height must pay out to this farmer puzzle hash
     MAX_VDF_WITNESS_SIZE: int  # The maximum number of classgroup elements within an n-wesolowski proof
     # Size of mempool = 10x the size of block
     MEMPOOL_BLOCK_BUFFER: int
@@ -64,10 +63,10 @@ class ConsensusConstants:
     POOL_SUB_SLOT_ITERS: uint64
     SOFT_FORK_HEIGHT: uint32
 
-    def replace(self, **changes: object) -> "ConsensusConstants":
+    def replace(self, **changes) -> "ConsensusConstants":
         return dataclasses.replace(self, **changes)
 
-    def replace_str_to_bytes(self, **changes: Any) -> "ConsensusConstants":
+    def replace_str_to_bytes(self, **changes) -> "ConsensusConstants":
         """
         Overrides str (hex) values with bytes.
         """
@@ -75,9 +74,7 @@ class ConsensusConstants:
         filtered_changes = {}
         for k, v in changes.items():
             if not hasattr(self, k):
-                # NETWORK_TYPE used to be present in default config, but has been removed
-                if k not in ["NETWORK_TYPE"]:
-                    log.warning(f'invalid key in network configuration (config.yaml) "{k}". Ignoring')
+                log.warn(f'invalid key in network configuration (config.yaml) "{k}". Ignoring')
                 continue
             if isinstance(v, str):
                 filtered_changes[k] = hexstr_to_bytes(v)

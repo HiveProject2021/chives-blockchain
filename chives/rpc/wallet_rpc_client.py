@@ -5,7 +5,7 @@ from chives.rpc.rpc_client import RpcClient
 from chives.types.announcement import Announcement
 from chives.types.blockchain_format.coin import Coin
 from chives.types.blockchain_format.sized_bytes import bytes32
-from chives.util.ints import uint32, uint64
+from chives.util.ints import uint32, uint64, uint128
 from chives.wallet.trade_record import TradeRecord
 from chives.wallet.trading.offer import Offer
 from chives.wallet.transaction_record import TransactionRecord
@@ -146,7 +146,7 @@ class WalletRpcClient(RpcClient):
         address: str,
         fee: uint64 = uint64(0),
         memos: Optional[List[str]] = None,
-        min_coin_amount: uint64 = uint64(0),
+        min_coin_amount: uint128 = uint128(0),
     ) -> TransactionRecord:
         if memos is None:
             send_dict: Dict = {
@@ -213,8 +213,7 @@ class WalletRpcClient(RpcClient):
         fee: uint64 = uint64(0),
         coin_announcements: Optional[List[Announcement]] = None,
         puzzle_announcements: Optional[List[Announcement]] = None,
-        min_coin_amount: uint64 = uint64(0),
-        exclude_coins: Optional[List[Coin]] = None,
+        min_coin_amount: uint128 = uint128(0),
     ) -> TransactionRecord:
         # Converts bytes to hex for puzzle hashes
         additions_hex = []
@@ -253,29 +252,11 @@ class WalletRpcClient(RpcClient):
             coins_json = [c.to_json_dict() for c in coins]
             request["coins"] = coins_json
 
-        if exclude_coins is not None and len(exclude_coins) > 0:
-            exclude_coins_json = [exclude_coin.to_json_dict() for exclude_coin in exclude_coins]
-            request["exclude_coins"] = exclude_coins_json
-
         response: Dict = await self.fetch("create_signed_transaction", request)
         return TransactionRecord.from_json_dict_convenience(response["signed_tx"])
 
-    async def select_coins(
-        self,
-        *,
-        amount: int,
-        wallet_id: int,
-        excluded_coins: Optional[List[Coin]] = None,
-        min_coin_amount: uint64 = uint64(0),
-    ) -> List[Coin]:
-        if excluded_coins is None:
-            excluded_coins = []
-        request = {
-            "amount": amount,
-            "wallet_id": wallet_id,
-            "min_coin_amount": min_coin_amount,
-            "excluded_coins": [excluded_coin.to_json_dict() for excluded_coin in excluded_coins],
-        }
+    async def select_coins(self, *, amount: int, wallet_id: int) -> List[Coin]:
+        request = {"amount": amount, "wallet_id": wallet_id}
         response: Dict[str, List[Dict]] = await self.fetch("select_coins", request)
         return [Coin.from_json_dict(coin) for coin in response["coins"]]
 
@@ -524,7 +505,7 @@ class WalletRpcClient(RpcClient):
         inner_address: str,
         fee: uint64 = uint64(0),
         memos: Optional[List[str]] = None,
-        min_coin_amount: uint64 = uint64(0),
+        min_coin_amount: uint128 = uint128(0),
     ) -> TransactionRecord:
         send_dict = {
             "wallet_id": wallet_id,
@@ -544,7 +525,7 @@ class WalletRpcClient(RpcClient):
         driver_dict: Dict[str, Any] = None,
         fee=uint64(0),
         validate_only: bool = False,
-        min_coin_amount: uint64 = uint64(0),
+        min_coin_amount: uint128 = uint128(0),
     ) -> Tuple[Optional[Offer], TradeRecord]:
         send_dict: Dict[str, int] = {}
         for key in offer_dict:
@@ -571,7 +552,7 @@ class WalletRpcClient(RpcClient):
         res = await self.fetch("check_offer_validity", {"offer": offer.to_bech32()})
         return res["valid"]
 
-    async def take_offer(self, offer: Offer, fee=uint64(0), min_coin_amount: uint64 = uint64(0)) -> TradeRecord:
+    async def take_offer(self, offer: Offer, fee=uint64(0), min_coin_amount: uint128 = uint128(0)) -> TradeRecord:
         res = await self.fetch(
             "take_offer", {"offer": offer.to_bech32(), "fee": fee, "min_coin_amount": min_coin_amount}
         )
@@ -641,7 +622,7 @@ class WalletRpcClient(RpcClient):
         meta_uris=[],
         license_hash="",
         license_uris=[],
-        edition_total=1,
+        edition_count=1,
         edition_number=1,
         fee=0,
         royalty_percentage=0,
@@ -657,8 +638,8 @@ class WalletRpcClient(RpcClient):
             "meta_uris": meta_uris,
             "license_hash": license_hash,
             "license_uris": license_uris,
-            "edition_number": edition_number,
-            "edition_total": edition_total,
+            "series_number": edition_number,
+            "series_total": edition_count,
             "royalty_percentage": royalty_percentage,
             "did_id": did_id,
             "fee": fee,

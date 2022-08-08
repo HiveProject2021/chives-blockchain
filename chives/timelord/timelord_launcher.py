@@ -16,11 +16,12 @@ from chives.util.setproctitle import setproctitle
 
 active_processes: List = []
 stopped = False
+lock = asyncio.Lock()
 
 log = logging.getLogger(__name__)
 
 
-async def kill_processes(lock: asyncio.Lock):
+async def kill_processes():
     global stopped
     global active_processes
     async with lock:
@@ -39,7 +40,7 @@ def find_vdf_client() -> pathlib.Path:
     raise FileNotFoundError("can't find vdf_client binary")
 
 
-async def spawn_process(host: str, port: int, counter: int, lock: asyncio.Lock, prefer_ipv6: Optional[bool]):
+async def spawn_process(host: str, port: int, counter: int, prefer_ipv6: Optional[bool]):
     global stopped
     global active_processes
     path_to_vdf_client = find_vdf_client()
@@ -54,7 +55,7 @@ async def spawn_process(host: str, port: int, counter: int, lock: asyncio.Lock, 
                 f"{basename} {resolved} {port} {counter}",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
-                env={"PATH": os.fspath(dirname)},
+                env={"PATH": dirname},
             )
         except Exception as e:
             log.warning(f"Exception while spawning process {counter}: {(e)}")
@@ -77,7 +78,7 @@ async def spawn_process(host: str, port: int, counter: int, lock: asyncio.Lock, 
         await asyncio.sleep(0.1)
 
 
-async def spawn_all_processes(config: Dict, net_config: Dict, lock: asyncio.Lock):
+async def spawn_all_processes(config: Dict, net_config: Dict):
     await asyncio.sleep(5)
     hostname = net_config["self_hostname"] if "host" not in config else config["host"]
     port = config["port"]
@@ -85,26 +86,25 @@ async def spawn_all_processes(config: Dict, net_config: Dict, lock: asyncio.Lock
     if process_count == 0:
         log.info("Process_count set to 0, stopping TLauncher.")
         return
-    awaitables = [spawn_process(hostname, port, i, lock, net_config.get("prefer_ipv6")) for i in range(process_count)]
+    awaitables = [spawn_process(hostname, port, i, net_config.get("prefer_ipv6")) for i in range(process_count)]
     await asyncio.gather(*awaitables)
 
 
-def signal_received(lock: asyncio.Lock):
-    asyncio.create_task(kill_processes(lock))
+def signal_received():
+    asyncio.create_task(kill_processes())
 
 
 async def async_main(config, net_config):
     loop = asyncio.get_running_loop()
-    lock = asyncio.Lock()
 
     try:
-        loop.add_signal_handler(signal.SIGINT, signal_received, lock)
-        loop.add_signal_handler(signal.SIGTERM, signal_received, lock)
+        loop.add_signal_handler(signal.SIGINT, signal_received)
+        loop.add_signal_handler(signal.SIGTERM, signal_received)
     except NotImplementedError:
         log.info("signal handlers unsupported")
 
     try:
-        await spawn_all_processes(config, net_config, lock)
+        await spawn_all_processes(config, net_config)
     finally:
         log.info("Launcher fully closed.")
 

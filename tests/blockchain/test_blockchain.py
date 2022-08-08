@@ -32,8 +32,7 @@ from chives.types.generator_types import BlockGenerator
 from chives.types.spend_bundle import SpendBundle
 from chives.types.unfinished_block import UnfinishedBlock
 from chives.util.generator_tools import get_block_header
-from chives.util.vdf_prover import get_vdf_info_and_proof
-from chives.simulator.block_tools import create_block_tools_async
+from tests.block_tools import create_block_tools_async, get_vdf_info_and_proof
 from chives.util.errors import Err
 from chives.util.hash import std_hash
 from chives.util.ints import uint8, uint64, uint32
@@ -45,7 +44,7 @@ from tests.blockchain.blockchain_test_utils import (
     _validate_and_add_block_multi_result,
     _validate_and_add_block_no_error,
 )
-from chives.simulator.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.setup_nodes import test_constants
 from tests.util.blockchain import create_blockchain
 from tests.util.keyring import TempKeyring
@@ -242,7 +241,7 @@ class TestBlockHeaderValidation:
         assert empty_blockchain.get_peak().height == len(blocks) - 1
 
     @pytest.mark.asyncio
-    async def test_unfinished_blocks(self, empty_blockchain, bt):
+    async def test_unfinished_blocks(self, empty_blockchain, softfork_height, bt):
         blockchain = empty_blockchain
         blocks = bt.get_consecutive_blocks(3)
         for block in blocks[:-1]:
@@ -263,7 +262,7 @@ class TestBlockHeaderValidation:
         if unf.transactions_generator is not None:
             block_generator: BlockGenerator = await blockchain.get_block_generator(unf)
             block_bytes = bytes(unf)
-            npc_result = await blockchain.run_generator(block_bytes, block_generator)
+            npc_result = await blockchain.run_generator(block_bytes, block_generator, height=softfork_height)
 
         validate_res = await blockchain.validate_unfinished_block(unf, npc_result, False)
         err = validate_res.error
@@ -287,7 +286,7 @@ class TestBlockHeaderValidation:
         if unf.transactions_generator is not None:
             block_generator: BlockGenerator = await blockchain.get_block_generator(unf)
             block_bytes = bytes(unf)
-            npc_result = await blockchain.run_generator(block_bytes, block_generator)
+            npc_result = await blockchain.run_generator(block_bytes, block_generator, height=softfork_height)
         validate_res = await blockchain.validate_unfinished_block(unf, npc_result, False)
         assert validate_res.error is None
 
@@ -332,7 +331,7 @@ class TestBlockHeaderValidation:
         assert blockchain.get_peak().height == num_blocks - 1
 
     @pytest.mark.asyncio
-    async def test_unf_block_overflow(self, empty_blockchain, bt):
+    async def test_unf_block_overflow(self, empty_blockchain, softfork_height, bt):
         blockchain = empty_blockchain
 
         blocks = []
@@ -366,7 +365,7 @@ class TestBlockHeaderValidation:
                 if block.transactions_generator is not None:
                     block_generator: BlockGenerator = await blockchain.get_block_generator(unf)
                     block_bytes = bytes(unf)
-                    npc_result = await blockchain.run_generator(block_bytes, block_generator)
+                    npc_result = await blockchain.run_generator(block_bytes, block_generator, height=softfork_height)
                 validate_res = await blockchain.validate_unfinished_block(
                     unf, npc_result, skip_overflow_ss_validation=True
                 )
@@ -2261,7 +2260,7 @@ class TestBodyValidation:
             )
 
     @pytest.mark.asyncio
-    async def test_cost_exceeds_max(self, empty_blockchain, bt):
+    async def test_cost_exceeds_max(self, empty_blockchain, softfork_height, bt):
         # 7
         b = empty_blockchain
         blocks = bt.get_consecutive_blocks(
@@ -2295,6 +2294,7 @@ class TestBodyValidation:
             b.constants.MAX_BLOCK_COST_CLVM * 1000,
             cost_per_byte=b.constants.COST_PER_BYTE,
             mempool_mode=False,
+            height=softfork_height,
         )
         err = (await b.receive_block(blocks[-1], PreValidationResult(None, uint64(1), npc_result, True)))[1]
         assert err in [Err.BLOCK_COST_EXCEEDS_MAX]
@@ -2311,7 +2311,7 @@ class TestBodyValidation:
         pass
 
     @pytest.mark.asyncio
-    async def test_invalid_cost_in_block(self, empty_blockchain, bt):
+    async def test_invalid_cost_in_block(self, empty_blockchain, softfork_height, bt):
         # 9
         b = empty_blockchain
         blocks = bt.get_consecutive_blocks(
@@ -2355,6 +2355,7 @@ class TestBodyValidation:
             min(b.constants.MAX_BLOCK_COST_CLVM * 1000, block.transactions_info.cost),
             cost_per_byte=b.constants.COST_PER_BYTE,
             mempool_mode=False,
+            height=softfork_height,
         )
         result, err, _ = await b.receive_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))
         assert err == Err.INVALID_BLOCK_COST
@@ -2379,6 +2380,7 @@ class TestBodyValidation:
             min(b.constants.MAX_BLOCK_COST_CLVM * 1000, block.transactions_info.cost),
             cost_per_byte=b.constants.COST_PER_BYTE,
             mempool_mode=False,
+            height=softfork_height,
         )
         result, err, _ = await b.receive_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))
         assert err == Err.INVALID_BLOCK_COST
@@ -2403,6 +2405,7 @@ class TestBodyValidation:
             min(b.constants.MAX_BLOCK_COST_CLVM * 1000, block.transactions_info.cost),
             cost_per_byte=b.constants.COST_PER_BYTE,
             mempool_mode=False,
+            height=softfork_height,
         )
 
         result, err, _ = await b.receive_block(block_2, PreValidationResult(None, uint64(1), npc_result, False))

@@ -31,7 +31,7 @@
     "foliage_transaction_block": {
       "additions_root": "0x339ea61cacaad1c7f298809084514ac46cab94c34aebe1ffa353c9bc80382d68",
       "filter_hash": "0x953b10894e80beb9dd0162824b71a5180ff4a9b7fbacd1633140227ad35cf1c1",
-      "prev_transaction_block_hash": "0xf9623879e0085b4685362ff8ed8ee80afee3e1dd8a4d64c38561ccf9ca4dc341",
+      "prev_transaction_block_hash": "0xf9623879e0085b4685362ff8ed8ee80afee3e1dd8a4d64c39561ccf9ca4dc341",
       "removals_root": "0x64da9a1840643e85296e7d0f2436fa199f0b7f24cf5285ea3b8eee1ebf86b817",
       "timestamp": 1637360856,
       "transactions_info_hash": "0xf715a0f89ca11629707d2ffbfcb7caed1ef1d24b0b1b543406631a898c15c4f0"

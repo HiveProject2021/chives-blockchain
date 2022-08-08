@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, TextIO, Tuple, cast
 
 from chives import __version__
-from chives.cmds.init_funcs import check_keys, chives_init, chives_full_version_str
+from chives.cmds.init_funcs import check_keys, chives_init
 from chives.cmds.passphrase_funcs import default_passphrase, using_default_passphrase
 from chives.daemon.keychain_server import KeychainServer, keychain_commands
 from chives.daemon.windows_signal import kill
@@ -25,14 +25,16 @@ from chives.server.server import ssl_context_for_root, ssl_context_for_server
 from chives.ssl.create_ssl import get_mozilla_ca_crt
 from chives.util.chives_logging import initialize_logging
 from chives.util.config import load_config
-from chives.util.errors import KeychainRequiresMigration, KeychainCurrentPassphraseIsInvalid
 from chives.util.json_util import dict_to_json_str
 from chives.util.keychain import (
     Keychain,
+    KeyringCurrentPassphraseIsInvalid,
+    KeyringRequiresMigration,
     passphrase_requirements,
+    supports_keyring_passphrase,
     supports_os_passphrase_storage,
 )
-from chives.util.lock import Lockfile, LockfileError
+from chives.util.path import mkdir
 from chives.util.service_groups import validate_service
 from chives.util.setproctitle import setproctitle
 from chives.util.ws_message import WsRpcMessage, create_payload, format_response
@@ -46,6 +48,12 @@ except ModuleNotFoundError:
     print("Error: Make sure to run . ./activate from the project folder before starting Chives.")
     quit()
 
+try:
+    import fcntl
+
+    has_fcntl = True
+except ImportError:
+    has_fcntl = False
 
 log = logging.getLogger(__name__)
 
@@ -199,14 +207,14 @@ class WebSocketServer:
 
     async def stop(self) -> Dict[str, Any]:
         self.cancel_task_safe(self.ping_job)
-        service_names = list(self.services.keys())
-        stop_service_jobs = [kill_service(self.root_path, self.services, s_n) for s_n in service_names]
-        if stop_service_jobs:
-            await asyncio.wait(stop_service_jobs)
+        jobs = []
+        for service_name in self.services.keys():
+            jobs.append(kill_service(self.root_path, self.services, service_name))
+        if jobs:
+            await asyncio.wait(jobs)
         self.services.clear()
         asyncio.create_task(self.exit())
-        log.info(f"Daemon Server stopping, Services stopped: {service_names}")
-        return {"success": True, "services_stopped": service_names}
+        return {"success": True}
 
     async def incoming_connection(self, request):
         ws: WebSocketResponse = web.WebSocketResponse(max_msg_size=self.daemon_max_message_size, heartbeat=30)
@@ -313,7 +321,7 @@ class WebSocketServer:
         if len(data) == 0 and command in commands_with_data:
             response = {"success": False, "error": f'{command} requires "data"'}
         # Keychain commands should be handled by KeychainServer
-        elif command in keychain_commands:
+        elif command in keychain_commands and supports_keyring_passphrase():
             response = await self.keychain_server.handle_command(command, data)
         elif command == "ping":
             response = await ping()
@@ -366,6 +374,7 @@ class WebSocketServer:
         return response
 
     async def keyring_status(self) -> Dict[str, Any]:
+        passphrase_support_enabled: bool = supports_keyring_passphrase()
         can_save_passphrase: bool = supports_os_passphrase_storage()
         user_passphrase_is_set: bool = Keychain.has_master_passphrase() and not using_default_passphrase()
         locked: bool = Keychain.is_keyring_locked()
@@ -377,6 +386,7 @@ class WebSocketServer:
         response: Dict[str, Any] = {
             "success": True,
             "is_keyring_locked": locked,
+            "passphrase_support_enabled": passphrase_support_enabled,
             "can_save_passphrase": can_save_passphrase,
             "user_passphrase_is_set": user_passphrase_is_set,
             "needs_migration": needs_migration,
@@ -530,9 +540,9 @@ class WebSocketServer:
                 passphrase_hint=passphrase_hint,
                 save_passphrase=save_passphrase,
             )
-        except KeychainRequiresMigration:
+        except KeyringRequiresMigration:
             error = "keyring requires migration"
-        except KeychainCurrentPassphraseIsInvalid:
+        except KeyringCurrentPassphraseIsInvalid:
             error = "current passphrase is invalid"
         except Exception as e:
             tb = traceback.format_exc()
@@ -559,7 +569,7 @@ class WebSocketServer:
 
         try:
             Keychain.remove_master_passphrase(current_passphrase)
-        except KeychainCurrentPassphraseIsInvalid:
+        except KeyringCurrentPassphraseIsInvalid:
             error = "current passphrase is invalid"
         except Exception as e:
             tb = traceback.format_exc()
@@ -881,10 +891,7 @@ class WebSocketServer:
         exclude_final_dir: bool = job["exclude_final_dir"]
         log.info(f"Post-processing plotter job with ID {id}")  # lgtm [py/clear-text-logging-sensitive-data]
         if not exclude_final_dir:
-            try:
-                add_plot_directory(self.root_path, final_dir)
-            except ValueError as e:
-                log.warning(f"_post_process_plotting_job: {e}")
+            add_plot_directory(self.root_path, final_dir)
 
     async def _start_plotting(self, id: str, loop: asyncio.AbstractEventLoop, queue: str = "default"):
         current_process = None
@@ -1175,15 +1182,15 @@ def daemon_launch_lock_path(root_path: Path) -> Path:
     A path to a file that is lock when a daemon is launching but not yet started.
     This prevents multiple instances from launching.
     """
-    return service_launch_lock_path(root_path, "daemon")
+    return root_path / "run" / "start-daemon.launching"
 
 
 def service_launch_lock_path(root_path: Path, service: str) -> Path:
     """
-    A path that is locked when a service is running.
+    A path to a file that is lock when a service is running.
     """
     service_name = service.replace(" ", "-").replace("/", "-")
-    return root_path / "run" / service_name
+    return root_path / "run" / f"{service_name}.lock"
 
 
 def pid_path_for_service(root_path: Path, service: str, id: str = "") -> Path:
@@ -1206,12 +1213,16 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
     # Swap service name with name of executable
     service_array[0] = service_executable
     startupinfo = None
-    creationflags = 0
-    if sys.platform == "win32" or sys.platform == "cygwin":
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        # If the current process group is used, CTRL_C_EVENT will kill the parent and everyone in the group!
-        creationflags = subprocess.CREATE_NEW_PROCESS_GROUP
+    if os.name == "nt":
+        startupinfo = subprocess.STARTUPINFO()  # type: ignore
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
+
+    # Windows-specific.
+    # If the current process group is used, CTRL_C_EVENT will kill the parent and everyone in the group!
+    try:
+        creationflags: int = subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore
+    except AttributeError:  # Not on Windows.
+        creationflags = 0
 
     plotter_path = plotter_log_path(root_path, id)
 
@@ -1219,7 +1230,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
         if plotter_path.exists():
             plotter_path.unlink()
     else:
-        plotter_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(plotter_path.parent)
     outfile = open(plotter_path.resolve(), "w")
     log.info(f"Service array: {service_array}")  # lgtm [py/clear-text-logging-sensitive-data]
     process = subprocess.Popen(
@@ -1233,7 +1244,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
 
     pid_path = pid_path_for_service(root_path, service_name, id)
     try:
-        pid_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(pid_path.parent)
         with open(pid_path, "w") as f:
             f.write(f"{process.pid}\n")
     except Exception:
@@ -1259,10 +1270,15 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     service_executable = executable_for_service(service_array[0])
     service_array[0] = service_executable
 
+    if service_command == "chives_full_node_simulator":
+        # Set the -D/--connect_to_daemon flag to signify that the child should connect
+        # to the daemon to access the keychain
+        service_array.append("-D")
+
     startupinfo = None
-    if sys.platform == "win32" or sys.platform == "cygwin":
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    if os.name == "nt":
+        startupinfo = subprocess.STARTUPINFO()  # type: ignore
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW  # type: ignore
 
     # CREATE_NEW_PROCESS_GROUP allows graceful shutdown on windows, by CTRL_BREAK_EVENT signal
     if sys.platform == "win32" or sys.platform == "cygwin":
@@ -1275,7 +1291,7 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     )
     pid_path = pid_path_for_service(root_path, service_command)
     try:
-        pid_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(pid_path.parent)
         with open(pid_path, "w") as f:
             f.write(f"{process.pid}\n")
     except Exception:
@@ -1335,6 +1351,29 @@ def is_running(services: Dict[str, subprocess.Popen], service_name: str) -> bool
     return process is not None and process.poll() is None
 
 
+def singleton(lockfile: Path, text: str = "semaphore") -> Optional[TextIO]:
+    """
+    Open a lockfile exclusively.
+    """
+
+    if not lockfile.parent.exists():
+        mkdir(lockfile.parent)
+
+    try:
+        if has_fcntl:
+            f = open(lockfile, "w")
+            fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        else:
+            if lockfile.exists():
+                lockfile.unlink()
+            fd = os.open(lockfile, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+            f = open(fd, "w")
+        f.write(text)
+    except IOError:
+        return None
+    return f
+
+
 async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:
     # When wait_for_unlock is true, we want to skip the check_keys() call in chives_init
     # since it might be necessary to wait for the GUI to unlock the keyring first.
@@ -1342,6 +1381,7 @@ async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> in
     config = load_config(root_path, "config.yaml")
     setproctitle("chives_daemon")
     initialize_logging("daemon", config["logging"], root_path)
+    lockfile = singleton(daemon_launch_lock_path(root_path))
     crt_path = root_path / config["daemon_ssl"]["private_crt"]
     key_path = root_path / config["daemon_ssl"]["private_key"]
     ca_crt_path = root_path / config["private_ssl_ca"]["crt"]
@@ -1358,29 +1398,27 @@ async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> in
     )
     sys.stdout.write("\n" + json_msg + "\n")
     sys.stdout.flush()
-    try:
-        with Lockfile.create(daemon_launch_lock_path(root_path), timeout=1):
-            log.info(f"chives-blockchain version: {chives_full_version_str()}")
-
-            shutdown_event = asyncio.Event()
-
-            ws_server = WebSocketServer(
-                root_path,
-                ca_crt_path,
-                ca_key_path,
-                crt_path,
-                key_path,
-                shutdown_event,
-                run_check_keys_on_unlock=wait_for_unlock,
-            )
-            await ws_server.start()
-            await shutdown_event.wait()
-            log.info("Daemon WebSocketServer closed")
-            # sys.stdout.close()
-            return 0
-    except LockfileError:
+    if lockfile is None:
         print("daemon: already launching")
         return 2
+
+    shutdown_event = asyncio.Event()
+
+    # TODO: clean this up, ensuring lockfile isn't removed until the listen port is open
+    ws_server = WebSocketServer(
+        root_path,
+        ca_crt_path,
+        ca_key_path,
+        crt_path,
+        key_path,
+        shutdown_event,
+        run_check_keys_on_unlock=wait_for_unlock,
+    )
+    await ws_server.start()
+    await shutdown_event.wait()
+    log.info("Daemon WebSocketServer closed")
+    # sys.stdout.close()
+    return 0
 
 
 def run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:

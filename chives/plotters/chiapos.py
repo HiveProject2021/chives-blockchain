@@ -55,7 +55,4 @@ def plot_chives(args, root_path):
     )
     asyncio.run(create_plots(Params(args), plot_keys))
     if not args.exclude_final_dir:
-        try:
-            add_plot_directory(root_path, args.finaldir)
-        except ValueError as e:
-            print(e)
+        add_plot_directory(root_path, args.finaldir)

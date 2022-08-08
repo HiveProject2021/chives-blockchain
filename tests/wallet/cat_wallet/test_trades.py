@@ -6,7 +6,6 @@ import pytest
 
 from chives.full_node.mempool_manager import MempoolManager
 from chives.simulator.simulator_protocol import FarmNewBlockProtocol
-from chives.simulator.time_out_assert import time_out_assert
 from chives.util.ints import uint64
 from chives.wallet.cat_wallet.cat_wallet import CATWallet
 from chives.wallet.outer_puzzles import AssetType
@@ -15,6 +14,7 @@ from chives.wallet.trading.offer import Offer
 from chives.wallet.trading.trade_status import TradeStatus
 from chives.wallet.transaction_record import TransactionRecord
 from chives.wallet.util.transaction_type import TransactionType
+from tests.time_out_assert import time_out_assert
 
 
 async def tx_in_pool(mempool: MempoolManager, tx_id):

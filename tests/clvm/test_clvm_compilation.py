@@ -1,6 +1,4 @@
-from os import remove
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 from unittest import TestCase
 
 from clvm_tools.clvmc import compile_clvm
@@ -48,7 +46,6 @@ wallet_program_files = set(
         "chives/wallet/puzzles/nft_state_layer.clvm",
         "chives/wallet/puzzles/nft_ownership_layer.clvm",
         "chives/wallet/puzzles/nft_ownership_transfer_program_one_way_claim_with_royalties.clvm",
-        "chives/wallet/puzzles/decompress_block_spends.clvm",
     ]
 )
 
@@ -170,13 +167,3 @@ class TestClvmCompilation(TestCase):
                 existing_sha,
                 msg=f"Checked-in shatree hash file does not match shatree hash of loaded Program: {prog_path}",
             )
-
-    def test_017_encoding_bug_fixed(self):
-        with NamedTemporaryFile(delete=False) as tf:
-            tf.write(b"10000000")
-        hexname = tf.name + ".hex"
-        compile_clvm(tf.name, hexname, [])
-        with open(hexname) as f:
-            self.assertEqual(f.read().strip(), "8400989680")
-        remove(tf.name)
-        remove(hexname)

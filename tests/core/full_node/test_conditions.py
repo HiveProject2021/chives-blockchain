@@ -23,7 +23,7 @@ from chives.types.full_block import FullBlock
 from chives.types.spend_bundle import SpendBundle
 from chives.util.errors import Err
 from chives.util.ints import uint32
-from chives.simulator.block_tools import BlockTools
+from tests.block_tools import BlockTools
 from tests.util.keyring import TempKeyring
 
 from .ram_db import create_ram_blockchain

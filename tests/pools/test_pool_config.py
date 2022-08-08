@@ -1,13 +1,15 @@
 # flake8: noqa: E501
+from pathlib import Path
+
 from blspy import AugSchemeMPL, PrivateKey
 
 from chives.pools.pool_config import PoolWalletConfig
-from chives.util.config import create_default_chives_config, load_config, lock_config, save_config
+from chives.util.config import load_config, lock_config, save_config, create_default_chives_config
 
 
-def test_pool_config(tmp_path):
-    test_root = tmp_path
-    test_path = test_root / "config"
+def test_pool_config():
+    test_root = Path("/tmp")
+    test_path = Path("/tmp/config")
     eg_config = test_path / "config.yaml"
     to_config = test_path / "test_pool_config.yaml"
 

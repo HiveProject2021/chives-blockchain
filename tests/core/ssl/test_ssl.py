@@ -2,14 +2,17 @@ import asyncio
 
 import aiohttp
 import pytest
+import pytest_asyncio
 
-from chives.protocols.shared_protocol import protocol_version, capabilities
+from chives.protocols.shared_protocol import protocol_version
 from chives.server.outbound_message import NodeType
 from chives.server.server import ChivesServer, ssl_context_for_client
 from chives.server.ws_connection import WSChivesConnection
 from chives.ssl.create_ssl import generate_ca_signed_cert
 from chives.types.peer_info import PeerInfo
 from chives.util.ints import uint16
+from tests.block_tools import test_constants
+from tests.setup_nodes import setup_harvester_farmer
 
 
 async def establish_connection(server: ChivesServer, self_hostname: str, ssl_context) -> None:
@@ -32,15 +35,20 @@ async def establish_connection(server: ChivesServer, self_hostname: str, ssl_con
             None,
             100,
             30,
-            local_capabilities_for_handshake=capabilities,
         )
         await wsc.perform_handshake(server._network_id, protocol_version, dummy_port, NodeType.FULL_NODE)
+
+
+@pytest_asyncio.fixture(scope="function")
+async def harvester_farmer(bt, tmp_path):
+    async for _ in setup_harvester_farmer(bt, tmp_path, test_constants, start_services=True):
+        yield _
 
 
 class TestSSL:
     @pytest.mark.asyncio
     async def test_public_connections(self, wallet_node_sim_and_wallet, self_hostname):
-        full_nodes, wallets, _ = wallet_node_sim_and_wallet
+        full_nodes, wallets = wallet_node_sim_and_wallet
         full_node_api = full_nodes[0]
         server_1: ChivesServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
@@ -49,8 +57,8 @@ class TestSSL:
         assert success is True
 
     @pytest.mark.asyncio
-    async def test_farmer(self, farmer_one_harvester, self_hostname):
-        _, farmer_service, _ = farmer_one_harvester
+    async def test_farmer(self, harvester_farmer, self_hostname):
+        harvester_service, farmer_service = harvester_farmer
         farmer_api = farmer_service._api
 
         farmer_server = farmer_api.farmer.server
@@ -87,7 +95,7 @@ class TestSSL:
 
     @pytest.mark.asyncio
     async def test_full_node(self, wallet_node_sim_and_wallet, self_hostname):
-        full_nodes, wallets, _ = wallet_node_sim_and_wallet
+        full_nodes, wallets = wallet_node_sim_and_wallet
         full_node_api = full_nodes[0]
         full_node_server = full_node_api.full_node.server
 
@@ -107,7 +115,7 @@ class TestSSL:
 
     @pytest.mark.asyncio
     async def test_wallet(self, wallet_node_sim_and_wallet, self_hostname):
-        full_nodes, wallets, _ = wallet_node_sim_and_wallet
+        full_nodes, wallets = wallet_node_sim_and_wallet
         wallet_node, wallet_server = wallets[0]
 
         # Wallet should not accept incoming connections
@@ -138,9 +146,9 @@ class TestSSL:
             await establish_connection(wallet_server, self_hostname, ssl_context)
 
     @pytest.mark.asyncio
-    async def test_harvester(self, farmer_one_harvester, self_hostname):
-        harvesters, _, _ = farmer_one_harvester
-        harvester_server = harvesters[0]._server
+    async def test_harvester(self, harvester_farmer, self_hostname):
+        harvester, farmer_api = harvester_farmer
+        harvester_server = harvester._server
 
         # harvester should not accept incoming connections
         pub_crt = harvester_server._private_key_path.parent / "p2p.crt"

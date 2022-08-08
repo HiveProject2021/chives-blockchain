@@ -1,18 +1,15 @@
-import asyncio
 import sys
 from pathlib import Path
-from typing import Any, Dict
 
 import click
 
-from chives.util.config import load_config
 from chives.util.service_groups import all_groups, services_for_groups
 
 
-async def async_stop(root_path: Path, config: Dict[str, Any], group: str, stop_daemon: bool) -> int:
+async def async_stop(root_path: Path, group: str, stop_daemon: bool) -> int:
     from chives.daemon.client import connect_to_daemon_and_validate
 
-    daemon = await connect_to_daemon_and_validate(root_path, config)
+    daemon = await connect_to_daemon_and_validate(root_path)
     if daemon is None:
         print("Couldn't connect to chives daemon")
         return 1
@@ -21,9 +18,6 @@ async def async_stop(root_path: Path, config: Dict[str, Any], group: str, stop_d
         r = await daemon.exit()
         await daemon.close()
         if r.get("data", {}).get("success", False):
-            if r["data"].get("services_stopped") is not None:
-                [print(f"{service}: Stopped") for service in r["data"]["services_stopped"]]
-            await asyncio.sleep(1)  # just cosmetic
             print("Daemon stopped")
         else:
             print(f"Stop daemon failed {r}")
@@ -50,6 +44,6 @@ async def async_stop(root_path: Path, config: Dict[str, Any], group: str, stop_d
 @click.argument("group", type=click.Choice(list(all_groups())), nargs=-1, required=True)
 @click.pass_context
 def stop_cmd(ctx: click.Context, daemon: bool, group: str) -> None:
-    root_path = ctx.obj["root_path"]
-    config = load_config(root_path, "config.yaml")
-    sys.exit(asyncio.run(async_stop(root_path, config, group, daemon)))
+    import asyncio
+
+    sys.exit(asyncio.run(async_stop(ctx.obj["root_path"], group, daemon)))

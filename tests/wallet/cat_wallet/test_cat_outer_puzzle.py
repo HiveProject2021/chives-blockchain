@@ -1,6 +1,5 @@
 from typing import Optional
 
-import pytest
 from clvm_tools.binutils import disassemble
 
 from chives.types.blockchain_format.coin import Coin
@@ -43,7 +42,7 @@ def test_cat_outer_puzzle() -> None:
     child_coin = Coin(parent_coin.name(), double_cat_puzzle.get_tree_hash(), uint64(100))
     parent_spend = CoinSpend(parent_coin, double_cat_puzzle.to_serialized_program(), Program.to([]))
     child_coin_as_hex: str = (
-        "0x" + child_coin.parent_coin_info.hex() + child_coin.puzzle_hash.hex() + bytes(uint64(child_coin.amount)).hex()
+        "0x" + child_coin.parent_coin_info.hex() + child_coin.puzzle_hash.hex() + bytes(child_coin.amount).hex()
     )
     parent_spend_as_hex: str = "0x" + bytes(parent_spend).hex()
     inner_solution = Program.to([[51, ACS.get_tree_hash(), 100]])
@@ -63,7 +62,10 @@ def test_cat_outer_puzzle() -> None:
         ACS,
         inner_solution,
     )
-    with pytest.raises(ValueError, match="clvm raise"):
+    try:
         double_cat_puzzle.run(solution)
-
+    except Exception as e:
+        assert e is not None  # this should be failing
+    else:
+        assert False
     assert get_inner_solution(cat_driver, solution) == inner_solution

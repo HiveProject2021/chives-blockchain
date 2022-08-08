@@ -13,7 +13,6 @@ from time import thread_time
 from types import TracebackType
 from typing import Callable, Iterator, List, Optional, Type, Union
 
-import pytest
 from typing_extensions import final
 
 
@@ -277,10 +276,3 @@ class _AssertRuntime:
 # decorator, this is just here to retain the function-style naming as the public
 # interface.  Hopefully we can switch away from the class at some point.
 assert_runtime = _AssertRuntime
-
-
-@contextlib.contextmanager
-def assert_rpc_error(error: str) -> Iterator[None]:
-    with pytest.raises(ValueError) as exception_info:
-        yield
-    assert error in exception_info.value.args[0]["error"]

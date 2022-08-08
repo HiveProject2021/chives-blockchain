@@ -17,14 +17,14 @@ from chives.util.network import is_localhost
 SECONDS_PER_BLOCK = (24 * 3600) / 4608
 
 
-async def get_harvesters_summary(farmer_rpc_port: Optional[int]) -> Optional[Dict[str, Any]]:
+async def get_harvesters(farmer_rpc_port: Optional[int]) -> Optional[Dict[str, Any]]:
     try:
         config = load_config(DEFAULT_ROOT_PATH, "config.yaml")
         self_hostname = config["self_hostname"]
         if farmer_rpc_port is None:
             farmer_rpc_port = config["farmer"]["rpc_port"]
         farmer_client = await FarmerRpcClient.create(self_hostname, uint16(farmer_rpc_port), DEFAULT_ROOT_PATH, config)
-        plots = await farmer_client.get_harvesters_summary()
+        plots = await farmer_client.get_harvesters()
     except Exception as e:
         if isinstance(e, aiohttp.ClientConnectorError):
             print(f"Connection error. Check if farmer is running at {farmer_rpc_port}")
@@ -214,7 +214,7 @@ async def summary(
     if amounts is not None:
         print(f"Total chives farmed: {amounts['farmed_amount'] / units['chives']}")
         print(f"User transaction fees: {amounts['fee_amount'] / units['chives']}")
-        print(f"Block rewards: {(amounts['farmer_reward_amount'] + amounts['community_reward_amount'] + amounts['pool_reward_amount']) / units['chives']}")
+        print(f"Block rewards: {(amounts['farmer_reward_amount'] + amounts['pool_reward_amount']) / units['chives']}")
         print(f"Last height farmed: {amounts['last_height_farmed']}")
 
     class PlotStats:
@@ -278,7 +278,6 @@ async def summary(
             print("For details on farmed rewards and fees you should run 'chives wallet show'")
     else:
         print("Note: log into your key using 'chives wallet show' to see rewards for each key")
-
 
 async def uploadfarmerdata(rpc_port: int, wallet_rpc_port: int, harvester_rpc_port: int, farmer_rpc_port: int) -> None:
     all_harvesters = await get_harvesters(farmer_rpc_port)
