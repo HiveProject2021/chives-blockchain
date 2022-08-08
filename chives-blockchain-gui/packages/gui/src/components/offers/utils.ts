@@ -343,7 +343,7 @@ export function calculateNFTRoyalties(
   const royaltyAmountString: string = formatAmount(royaltyAmount);
   const nftSellerNetAmount: number = amount;
   // : parseFloat(
-  //     (amount - parseFloat(royaltyAmountString) - makerFee).toFixed(12),
+  //     (amount - parseFloat(royaltyAmountString) - makerFee).toFixed(8),
   //   );
   const totalAmount: number =
     exchangeType === NFTOfferExchangeType.NFTForXCH
@@ -361,7 +361,7 @@ export function calculateNFTRoyalties(
 }
 
 export function formatAmount(amount: number): string {
-  let s = amount.toFixed(12).replace(/0+$/, '');
+  let s = amount.toFixed(8).replace(/0+$/, '');
   if (s.endsWith('.')) {
     s = s.slice(0, -1);
   }
