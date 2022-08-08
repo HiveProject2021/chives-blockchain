@@ -525,23 +525,15 @@ if (!handleSquirrelEvent()) {
           },
         ],
       },
-      {
-        label: i18n._(/* i18n */ { id: 'Help' }),
+        {
+          label: i18n._(/* i18n */ { id: 'Help' }),
         role: 'help',
         submenu: [
           {
-            label: i18n._(/* i18n */ { id: 'Chives Blockchain Wiki' }),
+            label: i18n._(/* i18n */ { id: 'Contribute on GitHub' }),
             click: () => {
               openExternal(
-                'https://github.com/HiveProject2021/chives-blockchain/wiki',
-              );
-            },
-          },
-          {
-            label: i18n._(/* i18n */ { id: 'Frequently Asked Questions' }),
-            click: () => {
-              openExternal(
-                'https://github.com/HiveProject2021/chives-blockchain/wiki/FAQ',
+                'https://github.com/HiveProject2021/chives-blockchain/',
               );
             },
           },
@@ -554,38 +546,113 @@ if (!handleSquirrelEvent()) {
             },
           },
           {
-            label: i18n._(/* i18n */ { id: 'Contribute on GitHub' }),
-            click: () => {
-              openExternal(
-                'https://github.com/HiveProject2021/chives-blockchain/blob/main/CONTRIBUTING.md',
-              );
-            },
-          },
-          {
             type: 'separator',
           },
-          {
-            label: i18n._(/* i18n */ { id: 'Report an Issue...' }),
+		  {
+            label: i18n._(/* i18n */ { id: 'Chives Website' }),
             click: () => {
-              openExternal(
-                'https://github.com/HiveProject2021/chives-blockchain/issues',
-              );
+              openExternal('https://chivescoin.org');
             },
           },
           {
-            label: i18n._(/* i18n */ { id: 'Chat on KeyBase' }),
+            label: i18n._(/* i18n */ { id: 'Blockchain Explorer' }),
             click: () => {
-              openExternal('https://keybase.io/team/chives_network.public');
+              openExternal('https://explorer.chivescoin.org');
             },
           },
           {
-            label: i18n._(/* i18n */ { id: 'Follow on Twitter' }),
+            label: i18n._(/* i18n */ { id: 'Community Autonomy' }),
             click: () => {
-              openExternal('https://twitter.com/chives_project');
+              openExternal('https://community.chivescoin.org');
             },
           },
+          {
+            label: i18n._(/* i18n */ { id: 'Chives Swap' }),
+            click: () => {
+              openExternal('https://chivescoin.net');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Chives Pool' }),
+            click: () => {
+              openExternal('https://chivespool.com/');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Foxy Pool' }),
+            click: () => {
+              openExternal('https://chives.foxypool.io/');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Eco Pool' }),
+            click: () => {
+              openExternal('https://ecopool.group/en/xcc');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Igi Pool' }),
+            click: () => {
+              openExternal('https://xcc.igipool.one');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Twitter' }),
+            click: () => {
+              openExternal('https://twitter.com/chivesxcc');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Discord' }),
+            click: () => {
+              openExternal('https://discord.gg/chivescoin');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Facebook' }),
+            click: () => {
+              openExternal('https://www.facebook.com/groups/chivescoin/');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Telegram' }),
+            click: () => {
+              openExternal('https://t.me/chives_network');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Reddit' }),
+            click: () => {
+              openExternal('https://www.reddit.com/r/chives/');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Medium' }),
+            click: () => {
+              openExternal('https://chivescoin.medium.com/');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Instagram' }),
+            click: () => {
+              openExternal('https://www.instagram.com/chivescoinofficial/');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Lbank Exchange' }),
+            click: () => {
+              openExternal('https://lbank.info/exchange/xcc/usdt');
+            },
+          },
+          {
+            label: i18n._(/* i18n */ { id: 'Register Lbank Account (Get 20% rebate)' }),
+            click: () => {
+              openExternal('https://www.lbank.info/invitevip?icode=N325');
+            },
+          },
+		  
         ],
-      },
+        },
     ];
 
     if (process.platform === 'darwin') {
