@@ -40,9 +40,6 @@ testnet_kwargs = {
     "GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH": bytes.fromhex(
         "4e7d87c3752c0b4a1f25ec7ac5c10f347c39406e6753220043f28e5a450e0388"
     ),
-    "GENESIS_PRE_FARM_MASTERNODE_PUZZLE_HASH": bytes.fromhex(
-        "6d231cad6b1069f37d8b1ecb627b5a66b05d2fb6f7e17c198e173cdc31b3e9be"
-    ),
     "MAX_VDF_WITNESS_SIZE": 64,
     # Size of mempool = 50x the size of block
     "MEMPOOL_BLOCK_BUFFER": 50,
