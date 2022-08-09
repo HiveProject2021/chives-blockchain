@@ -116,3 +116,4 @@ Copy-Item ".\release-builds" -Destination "$env:GITHUB_WORKSPACE\chives-blockcha
 Write-Output "   ---"
 Write-Output "Windows Installer complete"
 Write-Output "   ---"
+
