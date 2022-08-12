@@ -1,16 +1,17 @@
-name: Benchmarks
+name: ⚡️ Benchmarks
 
 on:
-  push:
-    branches:
-      - 'long_lived/**'
-      - main
-      - 'release/**'
-    tags:
-      - '**'
-  pull_request:
-    branches:
-      - '**'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - 'long_lived/**'
+  #     - main
+  #     - 'release/**'
+  #   tags:
+  #     - '**'
+  # pull_request:
+  #   branches:
+  #     - '**'
 
 concurrency:
   # SHA is added to the end if on `main` to let all main workflows run
@@ -29,10 +30,11 @@ jobs:
         python-version: [ 3.9 ]
     env:
       CHIVES_ROOT: ${{ github.workspace }}/.chives/mainnet
+      BLOCKS_AND_PLOTS_VERSION: 0.29.0
 
     steps:
       - name: Clean workspace
-        uses: Chives-Network/actions/clean-workspace@main
+        uses: Chia-Network/actions/clean-workspace@main
 
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -60,18 +62,18 @@ jobs:
       - name: Checkout test blocks and plots
         uses: actions/checkout@v3
         with:
-          repository: 'Chives-Network/test-cache'
+          repository: 'Chia-Network/test-cache'
           path: '.chives'
-          ref: '0.29.0'
+          ref: ${{ env.BLOCKS_AND_PLOTS_VERSION }}
           fetch-depth: 1
 
-      - name: Run install script
-        env:
-          INSTALL_PYTHON_VERSION: ${{ matrix.python-version }}
-        run: |
-          sh install.sh -d
+      - uses: ./.github/actions/install
+        with:
+          python-version: ${{ matrix.python-version }}
+          development: true
+
+      - uses: chia-network/actions/activate-venv@main
 
       - name: pytest
         run: |
-          . ./activate
-          ./venv/bin/py.test -n 0 -m benchmark tests
+          pytest -n 0 --capture no -m benchmark tests

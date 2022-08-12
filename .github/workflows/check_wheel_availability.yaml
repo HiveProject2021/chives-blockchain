@@ -1,16 +1,17 @@
-name: Check Dependency Artifacts
+name: 🚨 Check Dependency Artifacts
 
 on:
-  push:
-    branches:
-      - 'long_lived/**'
-      - main
-      - 'release/**'
-    tags:
-        - '**'
-  pull_request:
-    branches:
-      - '**'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - 'long_lived/**'
+  #     - main
+  #     - 'release/**'
+  #   tags:
+  #       - '**'
+  # pull_request:
+  #   branches:
+  #     - '**'
 
 concurrency:
   # SHA is added to the end if on `main` to let all main workflows run
@@ -60,12 +61,12 @@ jobs:
               matrix: arm
 
     steps:
-    - uses: Chives-Network/actions/clean-workspace@main
+    - uses: Chia-Network/actions/clean-workspace@main
 
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - uses: Chives-Network/actions/setup-python@main
+    - uses: Chia-Network/actions/setup-python@main
       with:
         python-version: ${{ matrix.python-version }}
 
