@@ -114,24 +114,23 @@ jobs:
         run: |
           arch -arm64 brew install node@16
 
-      - name: Prepare GUI cache
-        id: gui-ref
-        run: |
-          gui_ref=$(git submodule status chives-blockchain-gui | sed -e 's/^ //g' -e 's/ chives-blockchain-gui.*$//g')
-          echo "${gui_ref}"
-          echo "::set-output name=GUI_REF::${gui_ref}"
-          echo "rm -rf ./chives-blockchain-gui"
-          rm -rf ./chives-blockchain-gui
+      # - name: Prepare GUI cache
+      #   id: gui-ref
+      #   run: |
+      #     gui_ref=$(git submodule status chives-blockchain-gui | sed -e 's/^ //g' -e 's/ chives-blockchain-gui.*$//g')
+      #     echo "${gui_ref}"
+      #     echo "::set-output name=GUI_REF::${gui_ref}"
+      #     echo "rm -rf ./chives-blockchain-gui"
+      #     rm -rf ./chives-blockchain-gui
 
-      - name: Cache GUI
-        uses: actions/cache@v3
-        id: cache-gui
-        with:
-          path: ./chives-blockchain-gui
-          key: ${{ runner.os }}-arm64-chives-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
+      # - name: Cache GUI
+      #   uses: actions/cache@v3
+      #   id: cache-gui
+      #   with:
+      #     path: ./chives-blockchain-gui
+      #     key: ${{ runner.os }}-arm64-chives-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
 
-      - if: steps.cache-gui.outputs.cache-hit != 'true'
-        name: Build GUI
+      - name: Build GUI
         continue-on-error: false
         run: |
           export PATH=$(brew --prefix node@16)/bin:$PATH

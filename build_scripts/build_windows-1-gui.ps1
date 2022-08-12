@@ -12,7 +12,7 @@ npm ci
 $Env:Path = $(npm bin) + ";" + $Env:Path
 
 Set-Location -Path "..\..\" -PassThru
-git submodule update --init chives-blockchain-gui
+# git submodule update --init chives-blockchain-gui
 
 Set-Location -Path ".\chives-blockchain-gui" -PassThru
 

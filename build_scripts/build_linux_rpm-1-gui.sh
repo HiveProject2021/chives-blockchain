@@ -8,7 +8,7 @@ npm ci
 PATH=$(npm bin):$PATH
 
 cd ../../ || exit
-git submodule update --init chives-blockchain-gui
+# git submodule update --init chives-blockchain-gui
 
 cd ./chives-blockchain-gui || exit
 echo "npm build"

@@ -155,25 +155,24 @@ jobs:
       run: |
         .\Install.ps1 -d
 
-    - name: Prepare GUI cache
-      id: gui-ref
-      run: |
-        $gui_ref = git submodule status chives-blockchain-gui
-        $gui_ref = $gui_ref -replace "^ | chives-blockchain-gui.*$",""
-        echo $gui_ref
-        echo "::set-output name=GUI_REF::$gui_ref"
-        echo "Remove-Item -Recurse -Force .\chives-blockchain-gui"
-        Remove-Item -Recurse -Force .\chives-blockchain-gui
+    # - name: Prepare GUI cache
+    #   id: gui-ref
+    #   run: |
+    #     $gui_ref = git submodule status chives-blockchain-gui
+    #     $gui_ref = $gui_ref -replace "^ | chives-blockchain-gui.*$",""
+    #     echo $gui_ref
+    #     echo "::set-output name=GUI_REF::$gui_ref"
+    #     echo "Remove-Item -Recurse -Force .\chives-blockchain-gui"
+    #     Remove-Item -Recurse -Force .\chives-blockchain-gui
 
-    - name: Cache GUI
-      uses: actions/cache@v3
-      id: cache-gui
-      with:
-        path: .\chives-blockchain-gui
-        key: ${{ runner.os }}-chives-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
+    # - name: Cache GUI
+    #   uses: actions/cache@v3
+    #   id: cache-gui
+    #   with:
+    #     path: .\chives-blockchain-gui
+    #     key: ${{ runner.os }}-chives-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
 
-    - if: steps.cache-gui.outputs.cache-hit != 'true'
-      name: Build GUI
+    - name: Build GUI
       continue-on-error: false
       run: |
         cd .\build_scripts
