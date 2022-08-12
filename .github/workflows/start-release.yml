@@ -2,9 +2,9 @@
 name: Start Release
 on:
   workflow_dispatch:
-  push:
-    tags:
-        - '**'
+  # push:
+  #   tags:
+  #       - '**'
 
 jobs:
   start_release:

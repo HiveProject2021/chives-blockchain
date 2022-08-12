@@ -1,17 +1,17 @@
-name: Build Installer - Linux DEB AMD64
+name: 📦🚀 Build Installer - Linux DEB AMD64
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - 'long_lived/**'
-      - main
-      - 'release/**'
+    # branches:
+    #   - 'long_lived/**'
+    #   - main
+    #   - 'release/**'
     tags:
         - '**'
-  pull_request:
-    branches:
-      - '**'
+  # pull_request:
+  #   branches:
+  #     - '**'
 
 concurrency:
   # SHA is added to the end if on `main` to let all main workflows run
@@ -37,12 +37,12 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
-    - uses: Chives-Network/actions/git-ssh-to-https@main
+    - uses: Chia-Network/actions/git-ssh-to-https@main
 
     - name: Cleanup any leftovers that exist from previous runs
       run: bash build_scripts/clean-runner.sh || true
 
-    - uses: Chives-Network/actions/enforce-semver@main
+    - uses: Chia-Network/actions/enforce-semver@main
       if: startsWith(github.ref, 'refs/tags/')
 
     - name: Setup Python environment
@@ -97,7 +97,7 @@ jobs:
       env:
         SECRET: "${{ secrets.INSTALLER_UPLOAD_SECRET }}"
 
-      # Get the most recent release from chives-plotter-madmax
+      # Get the most recent release from chia-plotter-madmax
     - uses: actions/github-script@v6
       id: 'latest-madmax'
       with:
@@ -105,8 +105,8 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chives-Network',
-            repo: 'chives-plotter-madmax',
+            owner: 'Chia-Network',
+            repo: 'chia-plotter-madmax',
           });
           return release.data.tag_name;
 
@@ -126,7 +126,7 @@ jobs:
         result-encoding: string
         script: |
           const release = await github.rest.repos.getLatestRelease({
-            owner: 'Chives-Network',
+            owner: 'Chia-Network',
             repo: 'bladebit',
           });
           return release.data.tag_name;
@@ -138,11 +138,12 @@ jobs:
         tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
         chmod +x "$GITHUB_WORKSPACE/bladebit/bladebit"
 
-    - name: Run install script
-      env:
-        INSTALL_PYTHON_VERSION: ${{ matrix.python-version }}
-      run: |
-        sh install.sh -d
+    - uses: ./.github/actions/install
+      with:
+        python-version: ${{ matrix.python-version }}
+        development: true
+
+    - uses: chia-network/actions/activate-venv@main
 
     - name: Setup Node 16.x
       uses: actions/setup-node@v3
@@ -153,15 +154,36 @@ jobs:
       run: |
         sudo apt-get install -y jq
 
+    - name: Prepare GUI cache
+      id: gui-ref
+      run: |
+        gui_ref=$(git submodule status chives-blockchain-gui | sed -e 's/^ //g' -e 's/ chives-blockchain-gui.*$//g')
+        echo "${gui_ref}"
+        echo "::set-output name=GUI_REF::${gui_ref}"
+        echo "rm -rf ./chives-blockchain-gui"
+        rm -rf ./chives-blockchain-gui
+
+    - name: Cache GUI
+      uses: actions/cache@v3
+      id: cache-gui
+      with:
+        path: ./chives-blockchain-gui
+        key: ${{ runner.os }}-deb-chives-blockchain-gui-${{ steps.gui-ref.outputs.GUI_REF }}
+
+    - if: steps.cache-gui.outputs.cache-hit != 'true'
+      name: Build GUI
+      continue-on-error: false
+      run: |
+        cd ./build_scripts
+        bash build_linux_deb-1-gui.sh
+
     - name: Build .deb package
       env:
         CHIVES_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIVES_INSTALLER_VERSION }}
       run: |
         ldd --version
-        git -C ./chives-blockchain-gui status
-        . ./activate
         cd ./build_scripts
-        sh build_linux_deb.sh amd64
+        sh build_linux_deb-2-installer.sh amd64
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v3
@@ -169,25 +191,25 @@ jobs:
         name: chives-installers-linux-deb-intel
         path: ${{ github.workspace }}/build_scripts/final_installer/
 
-    - name: Configure AWS Credentials
-      if: steps.check_secrets.outputs.HAS_SECRET
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.INSTALLER_UPLOAD_KEY }}
-        aws-secret-access-key: ${{ secrets.INSTALLER_UPLOAD_SECRET }}
-        aws-region: us-west-2
+    # - name: Configure AWS Credentials
+    #   if: steps.check_secrets.outputs.HAS_SECRET
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     aws-access-key-id: ${{ secrets.INSTALLER_UPLOAD_KEY }}
+    #     aws-secret-access-key: ${{ secrets.INSTALLER_UPLOAD_SECRET }}
+    #     aws-region: us-west-2
 
-    - name: Upload to s3
-      if: steps.check_secrets.outputs.HAS_SECRET
-      env:
-        CHIVES_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIVES_INSTALLER_VERSION }}
-      run: |
-        GIT_SHORT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-8)
-        CHIVES_DEV_BUILD=${CHIVES_INSTALLER_VERSION}-$GIT_SHORT_HASH
-        echo "CHIVES_DEV_BUILD=$CHIVES_DEV_BUILD" >>$GITHUB_ENV
-        ls ${{ github.workspace }}/build_scripts/final_installer/
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb s3://download.chivescoin.org/dev/chives-blockchain_${CHIVES_DEV_BUILD}_amd64.deb
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb s3://download.chivescoin.org/dev/chives-blockchain-cli_${CHIVES_DEV_BUILD}-1_amd64.deb
+    # - name: Upload to s3
+    #   if: steps.check_secrets.outputs.HAS_SECRET
+    #   env:
+    #     CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
+    #   run: |
+    #     GIT_SHORT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-8)
+    #     CHIA_DEV_BUILD=${CHIA_INSTALLER_VERSION}-$GIT_SHORT_HASH
+    #     echo "CHIA_DEV_BUILD=$CHIA_DEV_BUILD" >>$GITHUB_ENV
+    #     ls ${{ github.workspace }}/build_scripts/final_installer/
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb s3://download.chia.net/dev/chia-blockchain_${CHIA_DEV_BUILD}_amd64.deb
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb s3://download.chia.net/dev/chia-blockchain-cli_${CHIA_DEV_BUILD}-1_amd64.deb
 
     - name: Create Checksums
       if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
@@ -199,41 +221,36 @@ jobs:
         sha256sum ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb > ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb.sha256
         ls ${{ github.workspace }}/build_scripts/final_installer/
 
-    - name: Install py3createtorrent
-      if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
-      run: |
-        pip3 install py3createtorrent
+    # - name: Create .deb torrent
+    #   env:
+    #     CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
+    #   if: startsWith(github.ref, 'refs/tags/')
+    #   run: |
+    #     py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb -o ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb.torrent --webseed https://download.chia.net/install/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb
+    #     py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb -o ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb.torrent --webseed https://download.chia.net/install/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb
+    #     ls
 
-    - name: Create .deb torrent
-      env:
-        CHIVES_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIVES_INSTALLER_VERSION }}
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb -o ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb.torrent --webseed https://download.chivescoin.org/install/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb
-        py3createtorrent -f -t udp://tracker.opentrackr.org:1337/announce ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb -o ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb.torrent --webseed https://download.chivescoin.org/install/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb
-        ls
+    # - name: Upload Dev Installer
+    #   if: steps.check_secrets.outputs.HAS_SECRET && github.ref == 'refs/heads/main'
+    #   env:
+    #     CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
+    #   run: |
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb s3://download.chia.net/latest-dev/chia-blockchain_amd64_latest_dev.deb
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb.sha256 s3://download.chia.net/latest-dev/chia-blockchain_amd64_latest_dev.deb.sha256
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb s3://download.chia.net/latest-dev/chia-blockchain-cli_amd64_latest_dev.deb
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb.sha256 s3://download.chia.net/latest-dev/chia-blockchain-cli_amd64_latest_dev.deb.sha256
 
-    - name: Upload Beta Installer
-      if: steps.check_secrets.outputs.HAS_SECRET && github.ref == 'refs/heads/main'
-      env:
-        CHIVES_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIVES_INSTALLER_VERSION }}
-      run: |
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb s3://download.chivescoin.org/beta/chives-blockchain_amd64_latest_beta.deb
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb.sha256 s3://download.chivescoin.org/beta/chives-blockchain_amd64_latest_beta.deb.sha256
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb s3://download.chivescoin.org/beta/chives-blockchain-cli_amd64_latest_beta.deb
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb.sha256 s3://download.chivescoin.org/beta/chives-blockchain-cli_amd64_latest_beta.deb.sha256
-
-    - name: Upload Release Files
-      env:
-        CHIVES_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIVES_INSTALLER_VERSION }}
-      if: steps.check_secrets.outputs.HAS_SECRET && startsWith(github.ref, 'refs/tags/')
-      run: |
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb s3://download.chivescoin.org/install/
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb.sha256 s3://download.chivescoin.org/install/
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain_${CHIVES_INSTALLER_VERSION}_amd64.deb.torrent s3://download.chivescoin.org/torrents/
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb s3://download.chivescoin.org/install/
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb.sha256 s3://download.chivescoin.org/install/
-        aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chives-blockchain-cli_${CHIVES_INSTALLER_VERSION}-1_amd64.deb.torrent s3://download.chivescoin.org/torrents/
+    # - name: Upload Release Files
+    #   env:
+    #     CHIA_INSTALLER_VERSION: ${{ steps.version_number.outputs.CHIA_INSTALLER_VERSION }}
+    #   if: steps.check_secrets.outputs.HAS_SECRET && startsWith(github.ref, 'refs/tags/')
+    #   run: |
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb s3://download.chia.net/install/
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb.sha256 s3://download.chia.net/install/
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain_${CHIA_INSTALLER_VERSION}_amd64.deb.torrent s3://download.chia.net/torrents/
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb s3://download.chia.net/install/
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb.sha256 s3://download.chia.net/install/
+    #     aws s3 cp ${{ github.workspace }}/build_scripts/final_installer/chia-blockchain-cli_${CHIA_INSTALLER_VERSION}-1_amd64.deb.torrent s3://download.chia.net/torrents/
 
     - name: Get tag name
       if: startsWith(github.ref, 'refs/tags/')
@@ -242,7 +259,11 @@ jobs:
         echo "::set-output name=TAG_NAME::$(echo ${{ github.ref }} | cut -d'/' -f 3)"
         echo "::set-output name=REPO_NAME::$(echo ${{ github.repository }} | cut -d'/' -f 2)"
 
-    - name: Mark installer complete
-      if: startsWith(github.ref, 'refs/tags/')
+    # - name: Mark installer complete
+    #   if: startsWith(github.ref, 'refs/tags/')
+    #   run: |
+    #     curl -s -XPOST -H "Authorization: Bearer ${{ secrets.GLUE_ACCESS_TOKEN }}" --data '{"chia_ref": "${{ steps.tag-name.outputs.TAG_NAME }}"}' ${{ secrets.GLUE_API_URL }}/api/v1/${{ steps.tag-name.outputs.REPO_NAME }}/${{ steps.tag-name.outputs.TAG_NAME }}/success/build-linux-deb
+
+    - name: Remove working files to exclude from cache
       run: |
-        curl -s -XPOST -H "Authorization: Bearer ${{ secrets.GLUE_ACCESS_TOKEN }}" --data '{"chives_ref": "${{ steps.tag-name.outputs.TAG_NAME }}"}' ${{ secrets.GLUE_API_URL }}/api/v1/${{ steps.tag-name.outputs.REPO_NAME }}/${{ steps.tag-name.outputs.TAG_NAME }}/success/build-linux-deb
+        rm -rf ./chives-blockchain-gui/packages/gui/daemon
