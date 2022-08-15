@@ -44,7 +44,7 @@ async function main(opts) {
     console.log('Finished');
 }
 
-const appName = 'Chia';
+const appName = 'Chives';
 const dmgIcon = '../chives-blockchain-gui/packages/gui/src/assets/img/chives.icns';
 const dmgBackground = './assets/dmg/background.tiff';
 const outputDir = './final_installer';
