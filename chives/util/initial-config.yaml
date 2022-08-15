@@ -490,6 +490,7 @@ wallet:
   # see description for full_node.db_sync
   db_sync: auto
   
+  # Allow connecting to remote peers for sync
   connect_to_unknown_peers: True
 
 
@@ -514,9 +515,7 @@ wallet:
   # wallet_peers_path is deprecated and has been replaced by wallet_peers_file_path
   wallet_peers_path: wallet/db/wallet_peers.sqlite
   wallet_peers_file_path: wallet/db/wallet_peers.dat
-  
-  # Allow connecting to remote peers for sync
-  connect_to_unknown_peers: True
+
 
   logging: *logging
   network_overrides: *network_overrides
