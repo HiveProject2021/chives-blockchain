@@ -56,7 +56,7 @@ export default function PlotAddChooseSize(props: Props) {
     if (canUse) {
       setValue('overrideK', true);
     } else {
-      setValue('plotSize', 32);
+      setValue('plotSize', 29);
     }
   }
 

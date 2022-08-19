@@ -2,7 +2,7 @@ import PlotterName from './PlotterName';
 import { PlotterOptions, PlotterDefaults } from '../@types/Plotter';
 
 export const bladebitOptions: PlotterOptions = {
-  kSizes: [32],
+  kSizes: [29],
   haveNumBuckets: false,
   haveMadmaxNumBucketsPhase3: false,
   haveMadmaxThreadMultiplier: false,
@@ -33,7 +33,7 @@ export const bladebitDefaults: PlotterDefaults = {
 };
 
 export const chiaposOptions: PlotterOptions = {
-  kSizes: [25, 32, 33, 34, 35],
+  kSizes: [25, 29, 30, 31],
   haveNumBuckets: true,
   haveMadmaxNumBucketsPhase3: false,
   haveMadmaxThreadMultiplier: false,
@@ -64,7 +64,7 @@ export const chiaposDefaults: PlotterDefaults = {
 };
 
 export const madmaxOptions: PlotterOptions = {
-  kSizes: [25, 32, 33, 34],
+  kSizes: [25, 29, 30, 31],
   haveNumBuckets: true,
   haveMadmaxNumBucketsPhase3: true,
   haveMadmaxThreadMultiplier: true,
