@@ -82,13 +82,13 @@ binaries = [
     )
 ]
 
-if not THIS_IS_MAC:
-    binaries.extend([
-        (
-            f"{ROOT}/bladebit/bladebit",
-            "bladebit"
-        )
-    ])
+# if not THIS_IS_MAC:
+#    binaries.extend([
+#        (
+#            f"{ROOT}/bladebit/bladebit",
+#            "bladebit"
+#        )
+#    ])
 
 if THIS_IS_WINDOWS:
     hiddenimports.extend(["win32timezone", "win32cred", "pywintypes", "win32ctypes.pywin32"])
@@ -118,15 +118,16 @@ if THIS_IS_WINDOWS:
             f"{ROOT}\\madmax\\chia_plot.exe",
             "madmax"
         ),
-        (
-            f"{ROOT}\\madmax\\chia_plot_k34.exe",
-            "madmax"
-        ),
-        (
-            f"{ROOT}\\bladebit\\bladebit.exe",
-            "bladebit"
-        ),
     ]
+#        (
+#            f"{ROOT}\\madmax\\chia_plot_k34.exe",
+#            "madmax"
+#        ),
+#        (
+#            f"{ROOT}\\bladebit\\bladebit.exe",
+#            "bladebit"
+#        ),
+
 
 
 datas = []

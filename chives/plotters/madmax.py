@@ -27,7 +27,7 @@ def get_madmax_package_path() -> Path:
     return Path(os.path.dirname(sys.executable)) / "madmax"
 
 
-def get_madmax_executable_path_for_ksize(plotters_root_path: Path, ksize: int = 32) -> Path:
+def get_madmax_executable_path_for_ksize(plotters_root_path: Path, ksize: int = 29) -> Path:
     madmax_dir: Path = get_madmax_package_path()
     madmax_exec: str = "chia_plot"
     # if ksize > 32:
