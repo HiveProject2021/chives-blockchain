@@ -75,12 +75,12 @@ binaries = [
     (
         f"{ROOT}/madmax/chia_plot",
         "madmax"
-    ),
-    (
-        f"{ROOT}/madmax/chia_plot_k34",
-        "madmax"
     )
 ]
+#    (
+#        f"{ROOT}/madmax/chia_plot_k34",
+#        "madmax"
+#    )
 
 # if not THIS_IS_MAC:
 #    binaries.extend([
