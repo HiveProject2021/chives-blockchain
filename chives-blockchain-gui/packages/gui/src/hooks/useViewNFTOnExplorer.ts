@@ -17,7 +17,7 @@ function getSkyNFTURL(nft: NFTInfo, testnet: boolean) {
     : nft.launcherId;
   const url = `https://${
     testnet ? 'test.' : ''
-  }skynft.org/item.php?launcher_id=${launcherId}`;
+  }chives.skynft.org/item.php?NFTID=${launcherId}`;
   return url;
 }
 
@@ -31,15 +31,11 @@ function getSpacescanURL(nft: NFTInfo, testnet: boolean) {
 /* ========================================================================== */
 
 export enum NFTExplorer {
-  MintGarden = 'mintgarden',
   SkyNFT = 'skynft',
-  Spacescan = 'spacescan',
 }
 
 const UrlBuilderMapping = {
-  [NFTExplorer.MintGarden]: getMintGardenURL,
   [NFTExplorer.SkyNFT]: getSkyNFTURL,
-  [NFTExplorer.Spacescan]: getSpacescanURL,
 };
 
 export default function useViewNFTOnExplorer() {

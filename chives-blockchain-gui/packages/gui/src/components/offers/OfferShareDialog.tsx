@@ -41,12 +41,6 @@ import path from 'path';
 /* ========================================================================== */
 
 enum OfferSharingService {
-  Dexie = 'Dexie',
-  Hashgreen = 'Hashgreen',
-  MintGarden = 'MintGarden',
-  OfferBin = 'OfferBin',
-  Offerpool = 'Offerpool',
-  Keybase = 'Keybase',
 }
 
 enum OfferSharingCapability {
@@ -78,36 +72,6 @@ const testnetDummyHost = 'offers-api-sim.chivescoin.org';
 const OfferSharingProviders: {
   [key in OfferSharingService]: OfferSharingProvider;
 } = {
-  [OfferSharingService.Dexie]: {
-    service: OfferSharingService.Dexie,
-    name: 'Dexie',
-    capabilities: [OfferSharingCapability.Token, OfferSharingCapability.NFT],
-  },
-  [OfferSharingService.Hashgreen]: {
-    service: OfferSharingService.Hashgreen,
-    name: 'Hashgreen DEX',
-    capabilities: [OfferSharingCapability.Token],
-  },
-  [OfferSharingService.MintGarden]: {
-    service: OfferSharingService.MintGarden,
-    name: 'MintGarden',
-    capabilities: [OfferSharingCapability.NFT],
-  },
-  [OfferSharingService.OfferBin]: {
-    service: OfferSharingService.OfferBin,
-    name: 'OfferBin',
-    capabilities: [OfferSharingCapability.Token],
-  },
-  [OfferSharingService.Offerpool]: {
-    service: OfferSharingService.Offerpool,
-    name: 'offerpool.io',
-    capabilities: [OfferSharingCapability.Token, OfferSharingCapability.NFT],
-  },
-  [OfferSharingService.Keybase]: {
-    service: OfferSharingService.Keybase,
-    name: 'Keybase',
-    capabilities: [OfferSharingCapability.Token, OfferSharingCapability.NFT],
-  },
 };
 
 /* ========================================================================== */
