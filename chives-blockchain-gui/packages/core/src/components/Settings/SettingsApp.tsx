@@ -104,9 +104,6 @@ export default function SettingsApp(props: SettingsAppProps) {
           <Link onClick={handleOpenFAQURL}>
             <Trans>Frequently Asked Questions</Trans>
           </Link>
-          <Link onClick={handleOpenSendFeedbackURL}>
-            <Trans>Send Feedback</Trans>
-          </Link>
         </Flex>
       </Flex>
     </Flex>

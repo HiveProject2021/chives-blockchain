@@ -49,9 +49,6 @@ export default function LayoutFooter() {
         <FAQ onClick={openFAQURL}>
           <Trans>FAQ</Trans>
         </FAQ>
-        <SendFeedback onClick={openSendFeedbackURL}>
-          <Trans>Send Feedback</Trans>
-        </SendFeedback>
       </Flex>
     </Flex>
   )
