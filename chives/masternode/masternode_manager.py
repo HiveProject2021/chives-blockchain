@@ -197,7 +197,7 @@ class MasterNodeManager:
         StakingData['StakingAmount'] = get_staking_address['StakingAmount'];
         StakingData['NodeName'] = blockchain_state["node_id"];      
         IsStakingCoin = False;
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(get_staking_address['puzzle_hash'],True)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(get_staking_address['puzzle_hash'],False)
         for coin_record in all_staking_coins:
             stakingAmount = coin_record.coin.amount;
             if stakingAmount == StakingData['StakingAmount'] * 100000000 :
@@ -448,7 +448,7 @@ class MasterNodeWallet:
                 if nft_data is not None and len(nft_data)==2 and nft_data[0]==b"MasterNodeNFT":
                     try:
                         NftDataJson = json.loads(nft_data[1].decode("utf-8"))
-                        print(NftDataJson)
+                        #print(NftDataJson)
                         if "ReceivedAddress" in NftDataJson and "StakingAddress" in NftDataJson and "StakingAmount" in NftDataJson and "NodeName" in NftDataJson:
                             await self.save_launcher(launcher_id, state[-1], eve_cr[0].spent_block_index, NftDataJson)
                             MasterNode = MasterNodeCoin(launcher_id, launcher_rec.coin, launcher_spend, nft_data, 0)
@@ -474,7 +474,7 @@ class MasterNodeWallet:
             str(StakingData['NodeName'])
             )
         )
-        print(f"save_launcher:{StakingData}")
+        #print(f"save_launcher:{StakingData}")
         await cursor.close()
         await self.db_connection.commit()
 

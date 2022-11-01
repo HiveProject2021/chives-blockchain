@@ -202,7 +202,7 @@ def masternode_merge_cmd(
 
 
 #Begin staking for MasterNode
-@wallet_cmd.command("masternode_staking", short_help="Begin staking coin for MasterNode. Your coins still in your wallet, just not show them.")
+@wallet_cmd.command("masternode_staking", short_help="Begin staking coins for MasterNode. Your coins still in your wallet, just not show them.")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -240,7 +240,7 @@ def masternode_cancel_cmd(
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_cancel))
 
 #show the staking status for MasterNode
-@wallet_cmd.command("masternode_show", short_help="Begin cancel staking coin for MasterNode. Once cancel, your coins will back to your wallet.")
+@wallet_cmd.command("masternode_show", short_help="show your masternode information.")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -260,7 +260,7 @@ def masternode_show_cmd(
 
 
 #Initial all MasterNode on the blockchain
-@wallet_cmd.command("masternode_init", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@wallet_cmd.command("masternode_init", short_help="Syncing master nodes data from blockchain.")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -280,7 +280,7 @@ def masternode_init_cmd(
 
 
 #list all MasterNode on the localhost database
-@wallet_cmd.command("masternode_list", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@wallet_cmd.command("masternode_list", short_help="List all the masternodes from blockchain.")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -300,7 +300,7 @@ def masternode_list_cmd(
 
 
 #list all MasterNode on the localhost database
-@wallet_cmd.command("masternode_register", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@wallet_cmd.command("masternode_register", short_help="register your masternode into blockchain.")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
