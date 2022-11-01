@@ -68,10 +68,10 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
 log = logging.getLogger(__name__)
 SINGLETON_MOD = load_clvm("singleton_top_layer.clvm")
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
-LAUNCHER_PUZZLE = load_clsp_relative("masternode/clsp/nft_launcher.clsp")
+LAUNCHER_PUZZLE = load_clsp_relative("chives/masternode/clsp/nft_launcher.clsp")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 
-INNER_MOD = load_clsp_relative("masternode/clsp/creator_nft.clsp")
+INNER_MOD = load_clsp_relative("chives/masternode/clsp/creator_nft.clsp")
 ESCAPE_VALUE = -113
 MELT_CONDITION = [ConditionOpcode.CREATE_COIN, 0, ESCAPE_VALUE]
 
