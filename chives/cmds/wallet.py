@@ -180,6 +180,145 @@ def send_cmd(
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, send))
 
 
+# ##############################################################################
+#Merge many little amount coins to one large amount coin for MasterNode
+@wallet_cmd.command("masternode_merge", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_merge_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_merge
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_merge))
+
+
+#Begin staking for MasterNode
+@wallet_cmd.command("masternode_staking", short_help="Begin staking coin for MasterNode. Your coins still in your wallet, just not show them.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_staking_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_staking
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_staking))
+
+#Cancel staking for MasterNode
+@wallet_cmd.command("masternode_cancel", short_help="Begin cancel staking coin for MasterNode. Once cancel, your coins will back to your wallet.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_cancel_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_cancel
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_cancel))
+
+#show the staking status for MasterNode
+@wallet_cmd.command("masternode_show", short_help="Begin cancel staking coin for MasterNode. Once cancel, your coins will back to your wallet.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_show_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_show
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_show))
+
+
+#Initial all MasterNode on the blockchain
+@wallet_cmd.command("masternode_init", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_init_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_init
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_init))
+
+
+#list all MasterNode on the localhost database
+@wallet_cmd.command("masternode_list", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_list_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_list
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_list))
+
+
+#list all MasterNode on the localhost database
+@wallet_cmd.command("masternode_register", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_register_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_register
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_register))
+# ##############################################################################
+
 @wallet_cmd.command("show", short_help="Show wallet information")
 @click.option(
     "-wp",
