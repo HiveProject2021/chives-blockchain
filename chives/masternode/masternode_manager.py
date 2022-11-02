@@ -294,11 +294,12 @@ class MasterNodeManager:
 
 
 class MasterNodeCoin(Coin):
-    def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None):
+    def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None, StakingData=None):
         super().__init__(coin.parent_coin_info, coin.puzzle_hash, coin.amount)
         self.launcher_id = launcher_id
         self.last_spend = last_spend
         self.data = nft_data
+        self.StakingData = StakingData
         self.royalty = royalty
         #MASTERNODE属性信息
         self.Height = 0
@@ -484,8 +485,8 @@ class MasterNodeWallet:
                         NftDataJson = json.loads(nft_data[1].decode("utf-8"))
                         #print(NftDataJson)
                         if "ReceivedAddress" in NftDataJson and "StakingAddress" in NftDataJson and "StakingAmount" in NftDataJson and "NodeName" in NftDataJson:
-                            await self.save_launcher(launcher_id, state[-1], eve_cr[0].spent_block_index, NftDataJson)
-                            MasterNode = MasterNodeCoin(launcher_id, launcher_rec.coin, launcher_spend, nft_data, 0)
+                            StakingData = await self.save_launcher(launcher_id, state[-1], eve_cr[0].spent_block_index, NftDataJson)
+                            MasterNode = MasterNodeCoin(launcher_id, launcher_rec.coin, launcher_spend, nft_data, 0, StakingData)
                             return MasterNode
                         #else:
                         #    print("NftDataJson Json Format Error.")
@@ -497,6 +498,14 @@ class MasterNodeWallet:
         await self.filter_singletons(all_nfts)
 
     async def save_launcher(self, launcher_id, pk, Height, StakingData):
+        if "StakingAddress" in StakingData and StakingData['StakingAddress'] is not None:
+            all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingData['StakingAddress']),False)
+            stakingAmount = 0
+            for coin_record in all_staking_coins:
+                stakingAmount += coin_record.coin.amount
+        print(f"stakingAmount:{stakingAmount}")
+        print(f"stakingAmount:{StakingData['StakingAddress']}")
+        
         cursor = await self.db_connection.execute(
             "INSERT OR REPLACE INTO masternode_list (launcher_id, owner_pk, Height, ReceivedAddress, StakingAddress, StakingAmount, NodeName) VALUES (?,?,?,?,?,?,?)", (
             str(bytes(launcher_id).hex()), 
@@ -504,13 +513,16 @@ class MasterNodeWallet:
             int(Height),
             str(StakingData['ReceivedAddress']),
             str(StakingData['StakingAddress']),
-            int(StakingData['StakingAmount']),
+            int(stakingAmount),
             str(StakingData['NodeName'])
             )
         )
         #print(f"save_launcher:{StakingData}")
         await cursor.close()
         await self.db_connection.commit()
+
+        StakingData['stakingAmount'] = stakingAmount
+        return StakingData
 
     async def get_all_nft_ids(self):
         query = "SELECT launcher_id FROM masternode_list"
@@ -579,6 +591,7 @@ class MasterNodeWallet:
             totalAmount += coin.coin.amount
         self.get_max_send_amount = totalAmount
         Memos = "Cancel Masternode Staking Amount."
+        #print(totalAmount)
         spend_bundle = await self.generate_signed_transaction(
             totalAmount, get_staking_address['first_puzzle_hash'], uint64(0), memos=[Memos]
         )
@@ -587,9 +600,11 @@ class MasterNodeWallet:
             if res["success"]:
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
                 #print(f"coin name: {coin.coin.name()}")
-                print(f"push_tx tx_id: {tx_id}")
+                print(f"Cancel Masternode Staking Amount Successful. tx_id: {tx_id}")
+                return tx_id
             else:
-                print(f"push_tx res: {res}")
+                print(f"Cancel Masternode Staking Amount Failed. push_tx res: {res}")
+                return None
 
     async def get_tx_from_mempool(self, sb_name):
         # get mempool txn
@@ -882,8 +897,8 @@ class MasterNodeWallet:
                             synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
                             self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
                             select_coins.append(coin_record.coin)
-                            if self.get_max_send_amount >= amount:
-                                return select_coins
+                if self.get_max_send_amount >= amount:
+                    return select_coins
         print(f"No spendable coins found !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Need Select: {amount}")
         print(f"select_coins:{select_coins}")
         return None

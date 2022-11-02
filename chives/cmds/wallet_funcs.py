@@ -449,7 +449,7 @@ async def masternode_staking(args: dict, wallet_client: WalletRpcClient, fingerp
             if len(tx.sent_to) > 0:
                 print(f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}")
                 print(f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}")
-                print("Waiting for block (180s)")
+                print("Waiting for block (180s).Do not quit.")
                 await asyncio.sleep(180)
                 print(f"finish to submit blockchain")
                 print("")
@@ -507,9 +507,13 @@ async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerpr
     #取消质押
     if isHaveStakingCoin is True:
         print("Cancel staking coin for MasterNode Submitting transaction...")
-        await cancel_staking_coins(keypair=get_staking_address_result, coin_records=get_target_xcc_coin_result)
+        manager = MasterNodeManager()
+        await manager.connect()
+        await manager.cancel_masternode_staking_coins()
+        await manager.close()
+        print("")
         print("Canncel staking coins for MasterNode have submitted to nodes")
-        print("You have canncel staking coins. Waiting 1-3 minutes, will see your coins.");
+        print("You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.");
         print("")
         return None
     else:
@@ -598,12 +602,12 @@ def print_masternode(nft,counter=0):
         print(f"ID:  {counter}")
     print(f"MasterNode NFT:  {nft.launcher_id.hex()}")
     print(f"Chialisp:        {str(nft.data[0].decode('utf-8'))}")
-    StakingJson = json.loads(nft.data[1].decode("utf-8"))
-    print(f"StakingAddress:  {StakingJson['StakingAddress']}")
-    print(f"StakingAmount:   {StakingJson['StakingAmount']}")
-    print(f"ReceivedAddress: {StakingJson['ReceivedAddress']}")
-    print(f"All Data:")
-    print(StakingJson)
+    StakingData = nft.StakingData
+    StakingAmount = StakingData['stakingAmount']
+    print(f"StakingAddress:  {StakingData['StakingAddress']}")
+    print(f"StakingAmount:   {StakingAmount}")
+    print(f"ReceivedAddress: {StakingData['ReceivedAddress']}")
+    #print(f"All Data:")
     print("-" * 64)
     print("\n")
   
