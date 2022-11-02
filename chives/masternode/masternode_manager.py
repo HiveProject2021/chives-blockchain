@@ -6,7 +6,8 @@ import binascii
 import sqlite3
 import json
 import logging
-from typing import Dict, List, Tuple, Optional, Union, Any
+import time
+from typing import Dict, List, Set, Tuple, Optional, Union, Any
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
 from chives.types.blockchain_format.coin import Coin
@@ -17,6 +18,8 @@ from clvm.casts import int_to_bytes, int_from_bytes
 from chives.util.byte_types import hexstr_to_bytes
 from chives.consensus.default_constants import DEFAULT_CONSTANTS
 from chives.wallet.puzzles.load_clvm import load_clvm
+from chives.wallet.util.wallet_types import AmountWithPuzzlehash, WalletType
+from chives.wallet.transaction_record import TransactionRecord
 from chives.util.keychain import Keychain, bytes_from_mnemonic, bytes_to_mnemonic, generate_mnemonic, mnemonic_to_seed, unlocks_keyring
 from chives.util.condition_tools import ConditionOpcode
 from chives.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (  # standard_transaction
@@ -35,6 +38,16 @@ from chives.wallet.derive_keys import (
     _derive_path_unhardened,
     master_sk_to_singleton_owner_sk,
 )
+from chives.wallet.puzzles.puzzle_utils import (
+    make_assert_absolute_seconds_exceeds_condition,
+    make_assert_coin_announcement,
+    make_assert_my_coin_id_condition,
+    make_assert_puzzle_announcement,
+    make_create_coin_announcement,
+    make_create_coin_condition,
+    make_create_puzzle_announcement,
+    make_reserve_fee_condition,
+)
 from chives.wallet.derive_keys import master_sk_to_wallet_sk_unhardened
 from chives.types.coin_spend import CoinSpend
 from chives.wallet.sign_coin_spends import sign_coin_spends
@@ -49,6 +62,8 @@ from chives.rpc.wallet_rpc_client import WalletRpcClient
 from chives.util.config import load_config
 from chives.util.ints import uint16, uint64, uint32
 from chives.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from chives.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import solution_for_conditions
+from chives.wallet.secret_key_store import SecretKeyStore
 
 from clvm_tools.clvmc import compile_clvm
 
@@ -247,12 +262,21 @@ class MasterNodeManager:
             if mem_sb_name == sb_name:
                 return tx_id
         raise ValueError("No tx found in mempool. Check if confirmed")
-
+    
     async def wait_for_confirmation(self, tx_id, launcher_id):
         while True:
             item = await self.node_client.get_mempool_item_by_tx_id(tx_id)
             if not item:
                 return await self.masternode_wallet.get_nft_by_launcher_id(launcher_id)
+            else:
+                print("Waiting for block (30s)")
+                await asyncio.sleep(30)
+    
+    async def wait_tx_for_confirmation(self, tx_id):
+        while True:
+            item = await self.node_client.get_mempool_item_by_tx_id(tx_id)
+            if not item:
+                print(f"wait_tx_for_confirmation: {item}")
             else:
                 print("Waiting for block (30s)")
                 await asyncio.sleep(30)
@@ -264,6 +288,9 @@ class MasterNodeManager:
             nft = await self.masternode_wallet.get_nft_by_launcher_id(hexstr_to_bytes(launcher_id))
             get_all_masternodes.append(nft)
         return get_all_masternodes
+    
+    async def cancel_masternode_staking_coins(self) -> List:
+        cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins()
 
 
 class MasterNodeCoin(Coin):
@@ -318,6 +345,13 @@ class MasterNodeWallet:
     db_connection: aiosqlite.Connection
     db_wrapper: DBWrapper
     _state_transitions_cache: Dict[int, List[Tuple[uint32, CoinSpend]]]
+
+    key_dict = {}
+    key_dict_synth_sk = {}
+    puzzle_for_puzzle_hash = {}
+    puzzlehash_to_privatekey = {}
+    puzzlehash_to_publickey = {}
+    secret_key_store = SecretKeyStore()
 
     @classmethod
     async def create(cls, wrapper: DBWrapper, node_client):
@@ -503,6 +537,7 @@ class MasterNodeWallet:
             print("There are no saved private keys")
             return None
         result = {}
+        # Standard wallet keys
         for sk, seed in private_keys:   
             privateKey = _derive_path_unhardened(sk, [12381, 9699, 2, 0])
             publicKey = privateKey.get_g1()
@@ -511,7 +546,8 @@ class MasterNodeWallet:
             #print(puzzle_hash)
             first_address = encode_puzzle_hash(puzzle_hash, prefix)
             result['first_address'] = first_address;      
-            result['first_puzzle_hash'] = puzzle_hash;      
+            result['first_puzzle_hash'] = puzzle_hash;   
+        # Masternode wallet keys   
         for sk, seed in private_keys:   
             privateKey = _derive_path(sk, [12381, 9699, 99, 0])
             publicKey = privateKey.get_g1()
@@ -520,13 +556,338 @@ class MasterNodeWallet:
             #print(puzzle_hash)
             address = encode_puzzle_hash(puzzle_hash, prefix)
             #print(address)        
-            result['privateKey'] = privateKey;
-            result['publicKey'] = publicKey;
-            result['puzzle_hash'] = puzzle_hash;
-            result['address'] = address;
-            result['StakingAmount'] = 100000;
+            result['privateKey'] = privateKey
+            result['publicKey'] = publicKey
+            result['puzzle_hash'] = puzzle_hash
+            result['address'] = address
+            result['StakingAmount'] = 100000
+            self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
+            self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
+            self.puzzlehash_to_publickey[puzzle_hash] = publicKey
+            self.key_dict[bytes(publicKey)] = privateKey
             return result;
 
+    async def cancel_staking_coins(self) -> Tuple[Coin, Program]:
+        get_staking_address = self.get_staking_address()
+        staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
+            [get_staking_address['puzzle_hash']], include_spent_coins=False
+        )
+        print(f"staking_coins: {staking_coins}")
+        
+        totalAmount = 0
+        for coin in staking_coins:
+            totalAmount += coin.coin.amount
+        self.get_max_send_amount = totalAmount
+        Memos = "Cancel Masternode Staking Amount."
+        spend_bundle = await self.generate_signed_transaction(
+            totalAmount, get_staking_address['first_puzzle_hash'], uint64(0), memos=[Memos]
+        )
+        if spend_bundle is not None:
+            res = await self.node_client.push_tx(spend_bundle)
+            if res["success"]:
+                tx_id = await self.get_tx_from_mempool(spend_bundle.name())
+                #print(f"coin name: {coin.coin.name()}")
+                print(f"push_tx tx_id: {tx_id}")
+            else:
+                print(f"push_tx res: {res}")
+
+    async def get_tx_from_mempool(self, sb_name):
+        # get mempool txn
+        mempool_items = await self.node_client.get_all_mempool_items()
+        for tx_id in mempool_items.keys():
+            mem_sb_name = bytes32(hexstr_to_bytes(mempool_items[tx_id]["spend_bundle_name"]))
+            if mem_sb_name == sb_name:
+                return tx_id
+        raise ValueError("No tx found in mempool. Check if confirmed")
+        
+    # ###############################################################################
+    # 标准钱包功能
+    def make_solution(
+        self,
+        primaries: List[AmountWithPuzzlehash],
+        min_time=0,
+        me=None,
+        coin_announcements: Optional[Set[bytes]] = None,
+        coin_announcements_to_assert: Optional[Set[bytes32]] = None,
+        puzzle_announcements: Optional[Set[bytes]] = None,
+        puzzle_announcements_to_assert: Optional[Set[bytes32]] = None,
+        fee=0,
+    ) -> Program:
+        assert fee >= 0
+        condition_list = []
+        if len(primaries) > 0:
+            for primary in primaries:
+                if "memos" in primary:
+                    memos: Optional[List[bytes]] = primary["memos"]
+                    if memos is not None and len(memos) == 0:
+                        memos = None
+                else:
+                    memos = None
+                condition_list.append(make_create_coin_condition(primary["puzzlehash"], primary["amount"], memos))
+        if min_time > 0:
+            condition_list.append(make_assert_absolute_seconds_exceeds_condition(min_time))
+        if me:
+            condition_list.append(make_assert_my_coin_id_condition(me["id"]))
+        if fee:
+            condition_list.append(make_reserve_fee_condition(fee))
+        if coin_announcements:
+            for announcement in coin_announcements:
+                condition_list.append(make_create_coin_announcement(announcement))
+        if coin_announcements_to_assert:
+            for announcement_hash in coin_announcements_to_assert:
+                condition_list.append(make_assert_coin_announcement(announcement_hash))
+        if puzzle_announcements:
+            for announcement in puzzle_announcements:
+                condition_list.append(make_create_puzzle_announcement(announcement))
+        if puzzle_announcements_to_assert:
+            for announcement_hash in puzzle_announcements_to_assert:
+                condition_list.append(make_assert_puzzle_announcement(announcement_hash))
+        return solution_for_conditions(condition_list)
+
+    def add_condition_to_solution(self, condition: Program, solution: Program) -> Program:
+        python_program = solution.as_python()
+        python_program[1].append(condition)
+        return Program.to(python_program)
+    
+    def get_max_send_amount() -> int:
+        return self.get_max_send_amount
+
+    async def _generate_unsigned_transaction(
+        self,
+        amount: uint64,
+        newpuzzlehash: bytes32,
+        fee: uint64 = uint64(0),
+        origin_id: bytes32 = None,
+        coins: Set[Coin] = None,
+        primaries_input: Optional[List[AmountWithPuzzlehash]] = None,
+        ignore_max_send_amount: bool = False,
+        coin_announcements_to_consume: Set[Announcement] = None,
+        puzzle_announcements_to_consume: Set[Announcement] = None,
+        memos: Optional[List[bytes]] = None,
+        negative_change_allowed: bool = False,
+    ) -> List[CoinSpend]:
+        """
+        Generates a unsigned transaction in form of List(Puzzle, Solutions)
+        Note: this must be called under a wallet state manager lock
+        """
+        if primaries_input is None:
+            primaries: Optional[List[AmountWithPuzzlehash]] = None
+            total_amount = amount + fee
+        else:
+            primaries = primaries_input.copy()
+            primaries_amount = 0
+            for prim in primaries:
+                primaries_amount += prim["amount"]
+            total_amount = amount + fee + primaries_amount
+
+        if not ignore_max_send_amount:
+            max_send = self.get_max_send_amount
+            if total_amount > max_send:
+                print(f"get_max_send_amount:{self.get_max_send_amount} Actual to tx:{total_amount} Failed.")
+                return None
+            #self.log.debug("Got back max send amount: %s", max_send)
+        if coins is None:
+            coins = await self.select_coins(uint64(total_amount))
+        if coins is None:
+            return None
+        #self.log.info(f"coins is not None {coins}")
+        spend_value = sum([coin.amount for coin in coins])
+
+        change = spend_value - total_amount
+        if negative_change_allowed:
+            change = max(0, change)
+
+        #assert change >= 0
+
+        if coin_announcements_to_consume is not None:
+            coin_announcements_bytes: Optional[Set[bytes32]] = {a.name() for a in coin_announcements_to_consume}
+        else:
+            coin_announcements_bytes = None
+        if puzzle_announcements_to_consume is not None:
+            puzzle_announcements_bytes: Optional[Set[bytes32]] = {a.name() for a in puzzle_announcements_to_consume}
+        else:
+            puzzle_announcements_bytes = None
+
+        spends: List[CoinSpend] = []
+        primary_announcement_hash: Optional[bytes32] = None
+
+        # Check for duplicates
+        if primaries is not None:
+            all_primaries_list = [(p["puzzlehash"], p["amount"]) for p in primaries] + [(newpuzzlehash, amount)]
+            if len(set(all_primaries_list)) != len(all_primaries_list):
+                raise ValueError("Cannot create two identical coins")
+        if memos is None:
+            memos = []
+        assert memos is not None
+        for coin in coins:
+            # Only one coin creates outputs
+            if origin_id in (None, coin.name()):
+                origin_id = coin.name()
+                if primaries is None:
+                    if amount > 0:
+                        primaries = [{"puzzlehash": newpuzzlehash, "amount": uint64(amount), "memos": memos}]
+                    else:
+                        primaries = []
+                else:
+                    primaries.append({"puzzlehash": newpuzzlehash, "amount": uint64(amount), "memos": memos})
+                if change > 0:
+                    change_puzzle_hash: bytes32 = self.first_puzzle_hash
+                    primaries.append({"puzzlehash": change_puzzle_hash, "amount": uint64(change), "memos": []})
+                message_list: List[bytes32] = [c.name() for c in coins]
+                for primary in primaries:
+                    message_list.append(Coin(coin.name(), primary["puzzlehash"], primary["amount"]).name())
+                message: bytes32 = std_hash(b"".join(message_list))
+                #print(self.puzzle_for_puzzle_hash)
+                if coin.puzzle_hash not in self.puzzle_for_puzzle_hash:
+                    print(f"Not found puzzle_hash {coin.puzzle_hash} in kv pairs. Need to enlarge address numbers")
+                    print("")
+                    return None
+                puzzle: Program = self.puzzle_for_puzzle_hash[coin.puzzle_hash]
+                solution: Program = self.make_solution(
+                    primaries=primaries,
+                    fee=fee,
+                    coin_announcements={message},
+                    coin_announcements_to_assert=coin_announcements_bytes,
+                    puzzle_announcements_to_assert=puzzle_announcements_bytes,
+                )
+                primary_announcement_hash = Announcement(coin.name(), message).name()
+
+                spends.append(
+                    CoinSpend(
+                        coin, SerializedProgram.from_bytes(bytes(puzzle)), SerializedProgram.from_bytes(bytes(solution))
+                    )
+                )
+                break
+        else:
+            raise ValueError("origin_id is not in the set of selected coins")
+
+        # Process the non-origin coins now that we have the primary announcement hash
+        for coin in coins:
+            if coin.name() == origin_id:
+                continue
+
+            puzzle = self.puzzle_for_puzzle_hash[coin.puzzle_hash]
+            solution = self.make_solution(coin_announcements_to_assert={primary_announcement_hash}, primaries=[])
+            spends.append(
+                CoinSpend(
+                    coin, SerializedProgram.from_bytes(bytes(puzzle)), SerializedProgram.from_bytes(bytes(solution))
+                )
+            )
+
+        #self.log.debug(f"Spends is {spends}")
+        return spends
+
+    async def sign_transaction(self, coin_spends: List[CoinSpend]) -> SpendBundle:
+        return await sign_coin_spends(
+            coin_spends,
+            self.secret_key_store.secret_key_for_public_key,
+            DEFAULT_CONSTANTS.AGG_SIG_ME_ADDITIONAL_DATA,
+            DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM,
+        )
+        
+    async def hack_populate_secret_key_for_puzzle_hash(self, puzzle_hash: bytes32) -> G1Element:
+        secret_key = self.puzzlehash_to_privatekey[puzzle_hash]
+        public_key = self.puzzlehash_to_publickey[puzzle_hash]
+        # HACK
+        synthetic_secret_key = calculate_synthetic_secret_key(secret_key, DEFAULT_HIDDEN_PUZZLE_HASH)
+        self.secret_key_store.save_secret_key(synthetic_secret_key)
+        return public_key
+
+    async def hack_populate_secret_keys_for_coin_spends(self, coin_spends: List[CoinSpend]) -> None:
+        """
+        This hack forces secret keys into the `_pk2sk` lookup. This should eventually be replaced
+        by a persistent DB table that can do this look-up directly.
+        """
+        for coin_spend in coin_spends:
+            await self.hack_populate_secret_key_for_puzzle_hash(coin_spend.coin.puzzle_hash)
+        
+    async def generate_signed_transaction(
+        self,
+        amount: uint64,
+        puzzle_hash: bytes32,
+        fee: uint64 = uint64(0),
+        origin_id: bytes32 = None,
+        coins: Set[Coin] = None,
+        primaries: Optional[List[AmountWithPuzzlehash]] = None,
+        ignore_max_send_amount: bool = False,
+        coin_announcements_to_consume: Set[Announcement] = None,
+        puzzle_announcements_to_consume: Set[Announcement] = None,
+        memos: Optional[List[bytes]] = None,
+        negative_change_allowed: bool = False,
+    ) -> TransactionRecord:
+        """
+        Use this to generate transaction.
+        Note: this must be called under a wallet state manager lock
+        The first output is (amount, puzzle_hash, memos), and the rest of the outputs are in primaries.
+        """
+        if primaries is None:
+            non_change_amount = amount
+        else:
+            non_change_amount = uint64(amount + sum(p["amount"] for p in primaries))
+
+        #self.log.debug("Generating transaction for: %s %s %s", puzzle_hash, amount, repr(coins))
+        transaction = await self._generate_unsigned_transaction(
+            amount,
+            puzzle_hash,
+            fee,
+            origin_id,
+            coins,
+            primaries,
+            ignore_max_send_amount,
+            coin_announcements_to_consume,
+            puzzle_announcements_to_consume,
+            memos,
+            negative_change_allowed,
+        )
+        if transaction is None:
+            return None
+        assert len(transaction) > 0
+        #self.log.info("About to sign a transaction: %s", transaction)
+        #合成密钥已经在初始化的时候生成,所以不需要调用此函数.
+        await self.hack_populate_secret_keys_for_coin_spends(transaction)
+        spend_bundle: SpendBundle = await sign_coin_spends(
+            transaction,
+            self.secret_key_store.secret_key_for_public_key,
+            DEFAULT_CONSTANTS.AGG_SIG_ME_ADDITIONAL_DATA,
+            DEFAULT_CONSTANTS.MAX_BLOCK_COST_CLVM,
+        )
+
+        now = uint64(int(time.time()))
+        add_list: List[Coin] = list(spend_bundle.additions())
+        rem_list: List[Coin] = list(spend_bundle.removals())
+
+        output_amount = sum(a.amount for a in add_list) + fee
+        input_amount = sum(r.amount for r in rem_list)
+        if negative_change_allowed:
+            assert output_amount >= input_amount
+        else:
+            assert output_amount == input_amount
+        
+        return spend_bundle
+    
+    async def select_coins(self, amount: int) -> Tuple[Coin, Program]:
+        # check that wallet_balance is greater than amount
+        # assert await self.available_balance() > amount
+        select_coins = []
+        for k in self.key_dict.keys():
+            puzzle = puzzle_for_pk(k)
+            my_coins = await self.node_client.get_coin_records_by_puzzle_hash(
+                puzzle.get_tree_hash(), include_spent_coins=False
+            )
+            if my_coins:
+                #coin_record = next((cr for cr in my_coins if (cr.coin.amount >= amount) and (not cr.spent)), None)
+                for coin_record in my_coins:
+                    if coin_record.spent == False and coin_record.coin.puzzle_hash == puzzle.get_tree_hash():
+                        if True:
+                            synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
+                            self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
+                            select_coins.append(coin_record.coin)
+                            if self.get_max_send_amount >= amount:
+                                return select_coins
+        print(f"No spendable coins found !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Need Select: {amount}")
+        print(f"select_coins:{select_coins}")
+        return None
+    
 
 
 #Driver Section

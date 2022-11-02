@@ -467,8 +467,8 @@ async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerpr
     mojo_per_unit = get_mojo_per_unit(wallet_type=wallet_type)
     
     balances = await wallet_client.get_wallet_balance(wallet_id)
-    max_send_amount = Decimal(balances["max_send_amount"]/mojo_per_unit)
-    confirmed_wallet_balance = Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit)
+    max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
+    confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
     fee = 1
     override = False
     memo = "Merge coin for MasterNode"
@@ -506,9 +506,8 @@ async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerpr
     
     #取消质押
     if isHaveStakingCoin is True:
-        wt = WalletStaking(DEFAULT_CONSTANTS)
         print("Cancel staking coin for MasterNode Submitting transaction...")
-        await wt.cancel_staking_coins(keypair=get_staking_address_result, coin_records=get_target_xcc_coin_result)
+        await cancel_staking_coins(keypair=get_staking_address_result, coin_records=get_target_xcc_coin_result)
         print("Canncel staking coins for MasterNode have submitted to nodes")
         print("You have canncel staking coins. Waiting 1-3 minutes, will see your coins.");
         print("")

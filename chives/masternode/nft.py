@@ -94,6 +94,17 @@ async def launch_cmd(ctx) -> None:
     await manager.close()
 
 
+@cli.command("cancel", short_help="Cancel Masternode Staking Amount.")
+@click.pass_context
+@coro
+async def launch_cmd(ctx) -> None:
+    manager = MasterNodeManager()
+    await manager.connect()
+    tx_id = await manager.cancel_masternode_staking_coins()
+    print(f"Transaction id: {tx_id}")
+    print("\n\n cancel_masternode_staking_coins!!")
+    await manager.close()
+
 @cli.command("update", short_help="Update one of your NFTs")
 @click.option("-n", "--nft-id", required=True, type=str)
 @click.option("-p", "--price", required=True, type=int)
