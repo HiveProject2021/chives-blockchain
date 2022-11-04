@@ -98,9 +98,9 @@ MELT_CONDITION = [ConditionOpcode.CREATE_COIN, 0, ESCAPE_VALUE]
 
 config = load_config(Path(DEFAULT_ROOT_PATH), "config.yaml")
 selected = config["selected_network"]
-testnet_agg_sig_data = config["network_overrides"]["constants"][selected]["AGG_SIG_ME_ADDITIONAL_DATA"]
-DEFAULT_CONSTANTS = DEFAULT_CONSTANTS.replace_str_to_bytes(**{"AGG_SIG_ME_ADDITIONAL_DATA": testnet_agg_sig_data})
-
+if config["selected_network"] =="testnet10":
+    testnet_agg_sig_data = config["network_overrides"]["constants"][config["selected_network"]]["AGG_SIG_ME_ADDITIONAL_DATA"]
+    DEFAULT_CONSTANTS = DEFAULT_CONSTANTS.replace_str_to_bytes(**{"AGG_SIG_ME_ADDITIONAL_DATA": testnet_agg_sig_data})
 
 class MasterNodeManager:
     def __init__(
@@ -142,10 +142,12 @@ class MasterNodeManager:
         await self.derive_unhardened_keys()
 
     async def checkSyncedStatus(self) -> None:
+        checkSyncedStatus = 0
         blockchain_state = await self.node_client.get_blockchain_state()
         if blockchain_state is None:
             print("There is no blockchain found yet. Try again shortly")
-            return None
+            await self.close()
+            return checkSyncedStatus
         peak: Optional[BlockRecord] = blockchain_state["peak"]
         node_id = blockchain_state["node_id"]
         difficulty = blockchain_state["difficulty"]
@@ -163,6 +165,7 @@ class MasterNodeManager:
         print(f"Node ID: {node_id}")
         if synced:
             print("Chives Blockchain Status: Full Node Synced")
+            checkSyncedStatus += 1
         elif peak is not None and sync_mode:
             sync_max_block = blockchain_state["sync"]["sync_tip_height"]
             sync_current_block = blockchain_state["sync"]["sync_progress_height"]
@@ -171,14 +174,18 @@ class MasterNodeManager:
                 f"({sync_max_block - sync_current_block} behind)."
             )
             print("Peak: Hash:", peak.header_hash if peak is not None else "")
-            return None
+            print("Masternode require blockchain synced.")
+            await self.close()
+            return checkSyncedStatus
         elif peak is not None:
             print(f"Chives Blockchain Status: Not Synced. Peak height: {peak.height}")
-            return None
+            await self.close()
+            return checkSyncedStatus
         else:
             print("\nSearching for an initial chain\n")
             print("You may be able to expedite with 'chives show -a host:port' using a known node.\n")
-            return None
+            await self.close()
+            return checkSyncedStatus
         
         #######################################################
         is_synced: bool = await self.wallet_client.get_synced()
@@ -187,13 +194,17 @@ class MasterNodeManager:
         print(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
         if is_syncing:
             print("Chives Wallet Sync Status: Syncing...")
-            return None
+            await self.close()
+            return checkSyncedStatus
         elif is_synced:
             print("Chives Wallet Sync Status: Synced")
+            checkSyncedStatus += 1
         else:
             print("Chives Wallet Sync Status: Not synced")
-            return None
+            await self.close()
+            return checkSyncedStatus
         print('-'*64)
+        return checkSyncedStatus
 
 
     async def close(self) -> None:
@@ -363,8 +374,14 @@ class MasterNodeManager:
         wallet_id: int = 1
         mojo_per_unit = self.mojo_per_unit
         balances = await wallet_client.get_wallet_balance(wallet_id)
-        max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
-        confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        if balances["max_send_amount"]>0:
+            max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
+        else:
+            max_send_amount = 0
+        if balances["confirmed_wallet_balance"]>0:
+            confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        else:
+            confirmed_wallet_balance = 0
         fee = 1
         override = False
         memo = "Merge coin for MasterNode"
@@ -459,8 +476,14 @@ class MasterNodeManager:
         wallet_id: int = 1
         mojo_per_unit = self.mojo_per_unit
         balances = await wallet_client.get_wallet_balance(wallet_id)
-        max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
-        confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        if balances["max_send_amount"]>0:
+            max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
+        else:
+            max_send_amount = 0
+        if balances["confirmed_wallet_balance"]>0:
+            confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        else:
+            confirmed_wallet_balance = 0
         fee = 1
         override = False
         memo = "Merge coin for MasterNode"
@@ -533,7 +556,7 @@ class MasterNodeManager:
             
         #Wallet balance must more than 100000 XCC
         if confirmed_wallet_balance < (stakingCoinAmount+fee):
-            print("Wallet confirmed balance must more than {(stakingCoinAmount+fee)} XCC");
+            print(f"Wallet confirmed balance must more than {(stakingCoinAmount+fee)} XCC");
             print("")
             return None
             
@@ -589,8 +612,14 @@ class MasterNodeManager:
         wallet_id: int = 1
         mojo_per_unit = self.mojo_per_unit        
         balances = await wallet_client.get_wallet_balance(wallet_id)
-        max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
-        confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        if balances["max_send_amount"]>0:
+            max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
+        else:
+            max_send_amount = 0
+        if balances["confirmed_wallet_balance"]>0:
+            confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        else:
+            confirmed_wallet_balance = 0
         fee = 1
         override = False
         memo = "Merge coin for MasterNode"
@@ -677,8 +706,14 @@ class MasterNodeManager:
     async def masternode_show(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
-        max_send_amount = round(Decimal(balances["max_send_amount"]/self.mojo_per_unit),8)
-        confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/self.mojo_per_unit),8)
+        if balances["max_send_amount"]>0:
+            max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
+        else:
+            max_send_amount = 0
+        if balances["confirmed_wallet_balance"]>0:
+            confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
+        else:
+            confirmed_wallet_balance = 0
         fee = 1
         override = False
         get_staking_address_result = self.masternode_wallet.get_staking_address()
