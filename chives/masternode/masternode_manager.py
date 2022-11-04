@@ -7,6 +7,8 @@ import sqlite3
 import json
 import logging
 import time
+import pathlib
+import importlib
 from decimal import Decimal
 from typing import Dict, List, Set, Tuple, Optional, Union, Any
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
@@ -80,15 +82,17 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
 
     sp = SerializedProgram.from_bytes(clvm_blob)
     return Program.from_bytes(bytes(sp))
-    
-    
+
+
+ROOT = pathlib.Path(importlib.import_module("chives").__file__).absolute().parent.parent
+
 log = logging.getLogger(__name__)
 SINGLETON_MOD = load_clvm("singleton_top_layer.clvm")
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
-LAUNCHER_PUZZLE = load_clsp_relative("chives/masternode/clsp/nft_launcher.clsp")
+LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 
-INNER_MOD = load_clsp_relative("chives/masternode/clsp/creator_nft.clsp")
+INNER_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/creator_nft.clsp")
 ESCAPE_VALUE = -113
 MELT_CONDITION = [ConditionOpcode.CREATE_COIN, 0, ESCAPE_VALUE]
 
@@ -136,6 +140,61 @@ class MasterNodeManager:
         await self.derive_nft_keys()
         await self.derive_wallet_keys()
         await self.derive_unhardened_keys()
+
+    async def checkSyncedStatus(self) -> None:
+        blockchain_state = await self.node_client.get_blockchain_state()
+        if blockchain_state is None:
+            print("There is no blockchain found yet. Try again shortly")
+            return None
+        peak: Optional[BlockRecord] = blockchain_state["peak"]
+        node_id = blockchain_state["node_id"]
+        difficulty = blockchain_state["difficulty"]
+        sub_slot_iters = blockchain_state["sub_slot_iters"]
+        synced = blockchain_state["sync"]["synced"]
+        sync_mode = blockchain_state["sync"]["sync_mode"]
+        total_iters = peak.total_iters if peak is not None else 0
+        num_blocks: int = 10
+        network_name = config["selected_network"]
+        genesis_challenge = config["farmer"]["network_overrides"]["constants"][network_name]["GENESIS_CHALLENGE"]
+        full_node_port = config["full_node"]["port"]
+        full_node_rpc_port = config["full_node"]["rpc_port"]
+
+        print(f"Network: {network_name}    Port: {full_node_port}   RPC Port: {full_node_rpc_port}")
+        print(f"Node ID: {node_id}")
+        if synced:
+            print("Chives Blockchain Status: Full Node Synced")
+        elif peak is not None and sync_mode:
+            sync_max_block = blockchain_state["sync"]["sync_tip_height"]
+            sync_current_block = blockchain_state["sync"]["sync_progress_height"]
+            print(
+                f"Chives Blockchain Status: Syncing {sync_current_block}/{sync_max_block} "
+                f"({sync_max_block - sync_current_block} behind)."
+            )
+            print("Peak: Hash:", peak.header_hash if peak is not None else "")
+            return None
+        elif peak is not None:
+            print(f"Chives Blockchain Status: Not Synced. Peak height: {peak.height}")
+            return None
+        else:
+            print("\nSearching for an initial chain\n")
+            print("You may be able to expedite with 'chives show -a host:port' using a known node.\n")
+            return None
+        
+        #######################################################
+        is_synced: bool = await self.wallet_client.get_synced()
+        is_syncing: bool = await self.wallet_client.get_sync_status()
+
+        print(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
+        if is_syncing:
+            print("Chives Wallet Sync Status: Syncing...")
+            return None
+        elif is_synced:
+            print("Chives Wallet Sync Status: Synced")
+        else:
+            print("Chives Wallet Sync Status: Not synced")
+            return None
+        print('-'*64)
+
 
     async def close(self) -> None:
         if self.node_client:

@@ -253,42 +253,49 @@ from chives.masternode.masternode_manager import MasterNodeManager
 async def masternode_merge(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.masternode_merge(args, wallet_client, fingerprint)
     await manager.close()
 
 async def masternode_staking(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.masternode_staking(args, wallet_client, fingerprint)
     await manager.close()
 
 async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.masternode_cancel(args, wallet_client, fingerprint)
     await manager.close()
 
 async def masternode_show(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.masternode_show(args, wallet_client, fingerprint)
     await manager.close()
 
 async def masternode_init(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.sync()
     await manager.close()
     
 async def masternode_list(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.masternode_list(args, wallet_client, fingerprint)
     await manager.close()
     
 async def masternode_register(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
+    await manager.checkSyncedStatus()
     await manager.masternode_register(args, wallet_client, fingerprint)
     await manager.close()
 
