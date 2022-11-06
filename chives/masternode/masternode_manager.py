@@ -680,13 +680,13 @@ class MasterNodeManager:
         rows = await cursor.fetchone()
         await cursor.close()
         staking_launcher_id = None
-        if len(rows)>0 and rows[0] is not None and 0:
+        if rows is not None and len(rows)>0 and rows[0] is not None and 0:
             staking_launcher_id = rows[0]
             await self.masternode_show(args, wallet_client, fingerprint)
         else:        
             #Second step: if staking address is not in database, will start a new nft mint process to finish the register
             tx_id, launcher_id = await self.launch_staking_storage()
-            if len(tx_id)>=32:
+            if tx_id is not None and len(tx_id)>=32:
                 print(f"Transaction id: {tx_id}")
                 print(f"launcher_id id: {launcher_id}")
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
