@@ -704,6 +704,7 @@ class MasterNodeManager:
             return None
 
     async def masternode_show(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        mojo_per_unit = self.mojo_per_unit
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
         if balances["max_send_amount"]>0:
