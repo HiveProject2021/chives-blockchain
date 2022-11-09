@@ -612,9 +612,15 @@ class MasterNodeManager:
                     jsonResult['data'].append({"":""})
                     jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}":""})
                     jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
-                    jsonResult['data'].append({f"finish to submit blockchain":""})
+                    jsonResult['data'].append({"Waiting for block (180s).Do not quit...":""})                    
                     self.printJsonResult(jsonResult)
-                    await asyncio.sleep(30)                    
+                    await asyncio.sleep(180)  
+                    jsonResult = {}
+                    jsonResult['status'] = "success"
+                    jsonResult['title'] = "Chvies Masternode Staking Information:"
+                    jsonResult['data'] = []
+                    jsonResult['data'].append({f"finish to submit blockchain":""})
+                    return jsonResult                
                 else:
                     jsonResult = {}
                     jsonResult['status'] = "success"
