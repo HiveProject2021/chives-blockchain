@@ -357,7 +357,11 @@ class MasterNodeManager:
         StakingData = nft.StakingData
         StakingAmount = StakingData['stakingAmount']
         print(f"StakingAddress:  {StakingData['StakingAddress']}")
-        print(f"StakingAmount:   {round(Decimal(StakingAmount/self.mojo_per_unit),8)}")
+        if StakingAmount>0:
+            print(f"StakingAmount:   {round(Decimal(StakingAmount/self.mojo_per_unit),8)}")
+        else:
+            print(f"StakingAmount:   0")
+
         print(f"ReceivedAddress: {StakingData['ReceivedAddress']}")
         #print(f"All Data:")
         print("-" * 64)
@@ -473,6 +477,10 @@ class MasterNodeManager:
             print("")
     
     async def masternode_staking(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        jsonResult = await self.masternode_staking_json(args, wallet_client, fingerprint)
+        self.printJsonResult(jsonResult)
+
+    async def masternode_staking_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1
         mojo_per_unit = self.mojo_per_unit
         balances = await wallet_client.get_wallet_balance(wallet_id)
@@ -538,27 +546,30 @@ class MasterNodeManager:
                         isHaveStakingCoin = True
                 StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
         #print(balances);
-        print(f"")
-        print(f"Wallet Balance:             {confirmed_wallet_balance}");
-        print(f"Wallet Max Sent:            {max_send_amount}");
-        print(f"Wallet Address:             {get_staking_address_result['first_address']}");
-        print(f"")
-        print(f"Staking Address:            {get_staking_address_result['address']}");
-        print(f"Staking Account Balance:    {StakingAccountAmountCoin}");
-        print(f"Staking Account Status:     {isHaveStakingCoin}");
-        print(f"Staking Cancel Address:     {get_staking_address_result['first_address']}");
-        print(f"")
-        
+        jsonResult = {}
+        jsonResult['status'] = "success"
+        jsonResult['title'] = "Chvies Masternode Staking Information:"
+        jsonResult['data'] = []
+        jsonResult['data'].append({"":""})
+        jsonResult['data'].append({"Wallet Balance":confirmed_wallet_balance})
+        jsonResult['data'].append({"Wallet Max Sent":max_send_amount})
+        jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"":""})
+        jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
+        jsonResult['data'].append({"Staking Account Balance":StakingAccountAmount/self.mojo_per_unit})
+        jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+
         if isHaveStakingCoin is True:
-            print("You have staking coins. Not need to stake coin again.");
-            print("")
-            return None
+            jsonResult['data'].append({"You have staking coins. Not need to stake coin again.":""})
+            jsonResult['data'].append({"":""})
+            return jsonResult
             
         #Wallet balance must more than 100000 XCC
         if confirmed_wallet_balance < (stakingCoinAmount+fee):
-            print(f"Wallet confirmed balance must more than {(stakingCoinAmount+fee)} XCC");
-            print("")
-            return None
+            jsonResult['data'].append({"Wallet confirmed balance must more than":{(stakingCoinAmount+fee)}})
+            jsonResult['data'].append({"":""})
+            return jsonResult
             
         #Merge small amount coins
         #print(f"max_send_amount:{max_send_amount}")
@@ -571,44 +582,50 @@ class MasterNodeManager:
             address = get_staking_address_result['address']
             memos = ["Staking coin for MasterNode"]
             if not override and self.check_unusual_transaction(amount, fee):
-                print(
-                    f"A transaction of amount {amount} and fee {fee} is unusual.\n"
-                    f"Pass in --override if you are sure you mean to do this."
-                )
-                return
+                jsonResult['data'].append({"":""})
+                jsonResult['data'].append({f"A transaction of amount {amount} and fee {fee} is unusual":""})
+                jsonResult['data'].append({"Pass in --override if you are sure you mean to do this.":""})
+                return jsonResult
             try:
                 typ = await self.get_wallet_type(wallet_id=wallet_id, wallet_client=wallet_client)
             except LookupError:
-                print(f"Wallet id: {wallet_id} not found.")
-                return
+                jsonResult['data'].append({"":""})
+                jsonResult['data'].append({f"Wallet id: {wallet_id} not found.":""})
+                return jsonResult
             final_fee = uint64(int(fee * units["chives"]))
             final_amount: uint64
             if typ == WalletType.STANDARD_WALLET:
                 final_amount = uint64(int(amount * units["chives"]))
-                print("Staking coin for MasterNode Submitting transaction...")
+                jsonResult['data'].append({"Staking coin for MasterNode Submitting transaction...":""})
                 res = await wallet_client.send_transaction(str(wallet_id), final_amount, address, final_fee, memos)
             else:
-                print("Only standard wallet is supported")
-                print("")
-                return
+                jsonResult['data'].append({"":""})
+                jsonResult['data'].append({"Only standard wallet is supported":""})
+                return jsonResult
+
             tx_id = res.name
             start = time.time()
             while time.time() - start < 10:
                 await asyncio.sleep(0.1)
                 tx = await wallet_client.get_transaction(str(wallet_id), tx_id)
                 if len(tx.sent_to) > 0:
-                    print(f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}")
-                    print(f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}")
-                    print("Waiting for block (180s).Do not quit.")
+                    jsonResult['data'].append({"":""})
+                    jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}":""})
+                    jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
+                    jsonResult['data'].append({"Waiting for block (180s).Do not quit.":""})
                     await asyncio.sleep(180)
-                    print(f"finish to submit blockchain")
-                    print("")
-                    return None
-            print("Staking coin for MasterNode not yet submitted to nodes")
-            print(f"tx 0x{tx_id} ")
-            print("")
+                    jsonResult['data'].append({f"finish to submit blockchain":""})
+                    return jsonResult
+
+            jsonResult['data'].append({"Staking coin for MasterNode not yet submitted to nodes":""})
+            jsonResult['data'].append({"tx":{tx_id}})
+            return jsonResult
 
     async def masternode_cancel(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        jsonResult = await self.masternode_cancel_json(args, wallet_client, fingerprint)
+        self.printJsonResult(jsonResult)
+
+    async def masternode_cancel_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1
         mojo_per_unit = self.mojo_per_unit        
         balances = await wallet_client.get_wallet_balance(wallet_id)
@@ -643,33 +660,39 @@ class MasterNodeManager:
                 StakingAccountAmount += target_xcc_coin.coin.amount
                 if target_xcc_coin.coin.amount == stakingCoinAmount * mojo_per_unit:
                     isHaveStakingCoin = True;
-        #print(balances);
-        print(f"")
-        print(f"Wallet Balance:             {confirmed_wallet_balance}");
-        print(f"Wallet Max Sent:            {max_send_amount}");
-        print(f"Wallet Address:             {get_staking_address_result['first_address']}");
-        print(f"")
-        print(f"Staking Address:            {get_staking_address_result['address']}");
-        print(f"Staking Account Balance:    {StakingAccountAmount/mojo_per_unit}");
-        print(f"Staking Account Status:     {isHaveStakingCoin}");
-        print(f"Staking Cancel Address:     {get_staking_address_result['first_address']}");
-        print(f"")
+        
+        jsonResult = {}
+        jsonResult['status'] = "success"
+        jsonResult['title'] = "Chvies Masternode Cancel Information:"
+        jsonResult['data'] = []
+        jsonResult['data'].append({"":""})
+        jsonResult['data'].append({"Wallet Balance":confirmed_wallet_balance})
+        jsonResult['data'].append({"Wallet Max Sent":max_send_amount})
+        jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"":""})
+        jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
+        jsonResult['data'].append({"Staking Account Balance":StakingAccountAmount/self.mojo_per_unit})
+        jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"":""})
         
         #取消质押
         if isHaveStakingCoin is True:
-            print("Cancel staking coin for MasterNode Submitting transaction...")
+            jsonResult['data'].append({"Cancel staking coin for MasterNode Submitting transaction...":""})
             await self.cancel_masternode_staking_coins()
-            print("")
-            print("Canncel staking coins for MasterNode have submitted to nodes")
-            print("You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.");
-            print("")
-            return None
+            jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes":""})
+            jsonResult['data'].append({"You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.":""})
+            jsonResult['data'].append({"":""})
         else:
-            print("You have not staking coins")
-            print("")
-            return None
-            
+            jsonResult['data'].append({"You have not staking coins":""})
+            jsonResult['data'].append({"":""})
+        return jsonResult
+
     async def masternode_register(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        jsonResult = await self.masternode_register_json(args, wallet_client, fingerprint)
+        self.printJsonResult(jsonResult)
+
+    async def masternode_register_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         #First step to check staking address is or not in database
         get_staking_address_result = self.masternode_wallet.get_staking_address()
         staking_address = get_staking_address_result['address']
@@ -687,13 +710,26 @@ class MasterNodeManager:
             #Second step: if staking address is not in database, will start a new nft mint process to finish the register
             tx_id, launcher_id = await self.launch_staking_storage()
             if len(tx_id)>=32:
-                print(f"Transaction id: {tx_id}")
-                print(f"launcher_id id: {launcher_id}")
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
-                print("\n\n stake NFT Launched!!")
                 self.print_masternode(nft,0)
+                jsonResult = {}
+                jsonResult['status'] = "success"
+                jsonResult['title'] = "Chvies Masternode Register Success"
+                jsonResult['data'] = []
+                jsonResult['data'].append({"":""})
+                jsonResult['data'].append({"Transaction id":tx_id})
+                jsonResult['data'].append({"launcher_id":launcher_id})
+                jsonResult['data'].append({"result":"stake NFT Launched!!"})
+                return jsonResult
             else:
                 print(f"Error: {tx_id}")
+                jsonResult = {}
+                jsonResult['status'] = "error"
+                jsonResult['title'] = "Chvies Masternode Register Trip"
+                jsonResult['data'] = []
+                jsonResult['data'].append({"":""})
+                jsonResult['data'].append({"Error":tx_id})
+                return jsonResult
 
     async def get_target_xcc_coin(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int, mojo_per_unit: int, address: str) -> None:
         get_staking_address_result = self.masternode_wallet.get_staking_address()
@@ -704,6 +740,10 @@ class MasterNodeManager:
             return None
 
     async def masternode_show(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        jsonResult = await self.masternode_show_json(args, wallet_client, fingerprint)
+        self.printJsonResult(jsonResult)
+
+    async def masternode_show_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
         if balances["max_send_amount"]>0:
@@ -737,19 +777,36 @@ class MasterNodeManager:
                 if target_xcc_coin.coin.amount == stakingCoinAmount * self.mojo_per_unit:
                     isHaveStakingCoin = True
         #print(balances);
-        print(f"")
-        print(f"Chvies Masternode Staking Information:")
-        print(f"")
-        print(f"Wallet Balance:             {confirmed_wallet_balance}")
-        print(f"Wallet Max Sent:            {max_send_amount}")
-        print(f"Wallet Address:             {get_staking_address_result['first_address']}")
-        print(f"")
-        print(f"Staking Address:            {get_staking_address_result['address']}")
-        print(f"Staking Account Balance:    {StakingAccountAmount/self.mojo_per_unit}")
-        print(f"Staking Account Status:     {isHaveStakingCoin}")
-        print(f"Staking Cancel Address:     {get_staking_address_result['first_address']}")
-        print(f"")
-            
+
+        jsonResult = {}
+        jsonResult['status'] = "success"
+        jsonResult['title'] = "Chvies Masternode Staking Information:"
+        jsonResult['data'] = []
+        jsonResult['data'].append({"":""})
+        jsonResult['data'].append({"Wallet Balance":confirmed_wallet_balance})
+        jsonResult['data'].append({"Wallet Max Sent":max_send_amount})
+        jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"":""})
+        jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
+        jsonResult['data'].append({"Staking Account Balance":StakingAccountAmount/self.mojo_per_unit})
+        jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+        return jsonResult
+    
+    def printJsonResult(self,jsonResult):
+        if jsonResult:
+            print("")
+            print("Status:"+jsonResult['status'])
+            print(jsonResult['title'])
+            for left,right in jsonResult['data'].items():
+                if right == "":
+                    print(left)
+                elif right == "" and left == "":
+                    print("")
+                else:
+                    print(left+" : "+right)
+            print("")
+
     async def wait_for_confirmation(self, tx_id, launcher_id):
         while True:
             item = await self.node_client.get_mempool_item_by_tx_id(tx_id)
@@ -941,7 +998,7 @@ class MasterNodeWallet:
         
     async def filter_singletons(self, singletons: List):
         print(f"Updating {len(singletons)} CreatorNFTs")
-        print(Path(DEFAULT_ROOT_PATH))
+        #print(Path(DEFAULT_ROOT_PATH))
         for cr in singletons:
             await self.get_nft_by_launcher_id(cr.coin.name())
                         
