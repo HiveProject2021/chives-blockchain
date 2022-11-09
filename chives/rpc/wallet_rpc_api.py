@@ -157,13 +157,6 @@ class WalletRpcApi:
             "/pw_self_pool": self.pw_self_pool,
             "/pw_absorb_rewards": self.pw_absorb_rewards,
             "/pw_status": self.pw_status,
-            "/masternode_show": self.masternode_show,
-            "/masternode_merge": self.masternode_merge,
-            "/masternode_staking": self.masternode_staking,
-            "/masternode_cancel": self.masternode_cancel,
-            "/masternode_list": self.masternode_list,
-            "/masternode_init": self.masternode_init,
-            "/masternode_register": self.masternode_register,
         }
 
     async def _state_changed(self, *args) -> List[WsRpcMessage]:
