@@ -703,13 +703,13 @@ class MasterNodeManager:
         rows = await cursor.fetchone()
         await cursor.close()
         staking_launcher_id = None
-        if len(rows)>0 and rows[0] is not None and 0:
+        if rows is not None and len(rows)>0 and rows[0] is not None and 0:
             staking_launcher_id = rows[0]
             await self.masternode_show(args, wallet_client, fingerprint)
         else:        
             #Second step: if staking address is not in database, will start a new nft mint process to finish the register
             tx_id, launcher_id = await self.launch_staking_storage()
-            if len(tx_id)>=32:
+            if tx_id is not None and len(tx_id)>=32:
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
                 self.print_masternode(nft,0)
                 jsonResult = {}
@@ -744,6 +744,7 @@ class MasterNodeManager:
         self.printJsonResult(jsonResult)
 
     async def masternode_show_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        mojo_per_unit = self.mojo_per_unit
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
         if balances["max_send_amount"]>0:
