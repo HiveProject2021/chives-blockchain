@@ -574,7 +574,7 @@ class MasterNodeManager:
         #Merge small amount coins
         #print(f"max_send_amount:{max_send_amount}")
         if max_send_amount < (stakingCoinAmount+fee) and isHaveStakingCoin == False and 1:
-            merge(args, wallet_client, fingerprint)
+            self.merge(args, wallet_client, fingerprint)
         
         #STAKING COIN
         if max_send_amount >= (stakingCoinAmount+fee) and isHaveStakingCoin == False and 1:
@@ -799,13 +799,14 @@ class MasterNodeManager:
             print("")
             print("Status:"+jsonResult['status'])
             print(jsonResult['title'])
-            for left,right in jsonResult['data'].items():
-                if right == "":
-                    print(left)
-                elif right == "" and left == "":
-                    print("")
-                else:
-                    print(left+" : "+right)
+            for item in jsonResult['data']:
+                for left,right in item.items():
+                    if right == "":
+                        print(left)
+                    elif right == "" and left == "":
+                        print("")
+                    else:
+                        print(str(left) +" : "+ str(right))
             print("")
 
     async def wait_for_confirmation(self, tx_id, launcher_id):
@@ -836,6 +837,7 @@ class MasterNodeManager:
     
     async def cancel_masternode_staking_coins(self) -> List:
         cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins()
+        print(f"cancel_staking_coins:{cancel_staking_coins}")
 
 
 class MasterNodeCoin(Coin):
@@ -1129,7 +1131,7 @@ class MasterNodeWallet:
         staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
             [get_staking_address['puzzle_hash']], include_spent_coins=False
         )
-        print(f"cancel_staking_select_coins: {staking_coins}")
+        #print(f"cancel_staking_select_coins: {staking_coins}")
         
         totalAmount = 0
         for coin in staking_coins:
@@ -1140,16 +1142,21 @@ class MasterNodeWallet:
         spend_bundle = await self.generate_signed_transaction(
             totalAmount, get_staking_address['first_puzzle_hash'], uint64(0), memos=[Memos]
         )
+        #print(spend_bundle)
         if spend_bundle is not None:
+            #print(f"res:{get_staking_address['first_puzzle_hash']}")
             res = await self.node_client.push_tx(spend_bundle)
+            #print(f"res:{res}")
             if res["success"]:
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
                 #print(f"coin name: {coin.coin.name()}")
-                print(f"Cancel Masternode Staking Amount Successful. tx_id: {tx_id}")
-                return tx_id
+                #print(f"Cancel Masternode Staking Amount Successful. tx_id: {tx_id}")
+                res["tx_id"] = tx_id
+                return res
             else:
-                print(f"Cancel Masternode Staking Amount Failed. push_tx res: {res}")
-                return None
+                #print(f"Cancel Masternode Staking Amount Failed. push_tx res: {res}")
+                return res
+        return None
 
     async def get_tx_from_mempool(self, sb_name):
         # get mempool txn
