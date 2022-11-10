@@ -213,7 +213,6 @@ class MasterNodeManager:
         print('-'*64)
         return checkSyncedStatus
 
-
     async def close(self) -> None:
         if self.node_client:
             self.node_client.close()
@@ -612,13 +611,11 @@ class MasterNodeManager:
 
             tx_id = res.name
             if tx_id is not None and len(tx_id)>=32:
-                await self.wait_tx_for_confirmation(tx_id)
                 jsonResult['data'].append({"":""})
-                jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}":""})
+                jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes.":""})
                 jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
-                jsonResult['data'].append({"Waiting for block (180s).Do not quit...":""})                    
                 self.printJsonResult(jsonResult)
-                await asyncio.sleep(180)  
+                await self.wait_tx_for_confirmation(tx_id)
                 jsonResult = {}
                 jsonResult['status'] = "success"
                 jsonResult['title'] = "Chvies Masternode Staking Information:"
@@ -832,8 +829,9 @@ class MasterNodeManager:
     async def wait_tx_for_confirmation(self, tx_id):
         while True:
             item = await self.node_client.get_mempool_item_by_tx_id(tx_id)
-            if not item:
-                print(f"wait_tx_for_confirmation: {item}")
+            if item is not None:
+                #print(f"wait_tx_for_confirmation: {item}")
+                return item
             else:
                 print("Waiting for block (30s)")
                 await asyncio.sleep(30)
@@ -849,7 +847,6 @@ class MasterNodeManager:
     async def cancel_masternode_staking_coins(self) -> List:
         cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins()
         print(f"cancel_staking_coins:{cancel_staking_coins}")
-
 
 class MasterNodeCoin(Coin):
     def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None, StakingData=None):
@@ -1465,8 +1462,6 @@ class MasterNodeWallet:
         print(f"No spendable coins found !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Need Select: {amount}")
         print(f"select_coins:{select_coins}")
         return None
-    
-
 
 #Driver Section
 def run_singleton(full_puzzle: Program, solution: Program) -> List:

@@ -54,6 +54,7 @@ from chives.wallet.util.wallet_types import AmountWithPuzzlehash, WalletType
 from chives.wallet.wallet_info import WalletInfo
 from chives.wallet.wallet_node import WalletNode
 
+
 # Timeout for response from wallet/full node for sending a transaction
 TIMEOUT = 30
 MAX_DERIVATION_INDEX_DELTA = 1000
@@ -157,6 +158,8 @@ class WalletRpcApi:
             "/pw_self_pool": self.pw_self_pool,
             "/pw_absorb_rewards": self.pw_absorb_rewards,
             "/pw_status": self.pw_status,
+            # MasterNode 
+            "/masternode_show": self.masternode_show,
         }
 
     async def _state_changed(self, *args) -> List[WsRpcMessage]:
@@ -673,6 +676,24 @@ class WalletRpcApi:
             pass
 
         return None
+
+    ##########################################################################################
+    # MasterNode
+    ##########################################################################################
+
+    async def masternode_show(self, request: Dict) -> Dict:
+        from chives.masternode.masternode_manager import MasterNodeManager
+        manager = MasterNodeManager()
+        #await manager.connect()
+        #masternode_show_json = await manager.masternode_show_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        #await manager.close()
+
+        wallet_id = uint32(int(request["wallet_id"]))
+        wallet_balance = {
+                    "masternode_show_json": manager.wallet_client,
+                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    }
+        return {"wallet_balance": wallet_balance}
 
     ##########################################################################################
     # Wallet
