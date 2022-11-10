@@ -68,6 +68,7 @@ from chives.util.ints import uint16, uint64, uint32
 from chives.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
 from chives.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import solution_for_conditions
 from chives.wallet.secret_key_store import SecretKeyStore
+from chives.wallet.wallet_puzzle_store import WalletPuzzleStore
 
 from clvm_tools.clvmc import compile_clvm
 
@@ -115,6 +116,8 @@ class MasterNodeManager:
         self.connection = None
         self.key_dict = {}
         self.mojo_per_unit = 100000000
+        self.puzzle_store = None
+        self.get_current_derivation_index = 30
 
     async def connect(self, wallet_index: int = 0) -> None:
         config = load_config(Path(DEFAULT_ROOT_PATH), "config.yaml")
@@ -139,7 +142,10 @@ class MasterNodeManager:
         self.master_sk = PrivateKey.from_bytes(sk_data)
         await self.derive_nft_keys()
         await self.derive_wallet_keys()
-        await self.derive_unhardened_keys()
+        #get the wallet max used keys index
+        self.puzzle_store = await WalletPuzzleStore.create(self.db_wrapper)
+        self.get_current_derivation_index = await self.wallet_client.get_current_derivation_index()
+        await self.derive_unhardened_keys(n=self.get_current_derivation_index)
 
     async def checkSyncedStatus(self) -> None:
         checkSyncedStatus = 0
@@ -198,6 +204,7 @@ class MasterNodeManager:
             return checkSyncedStatus
         elif is_synced:
             print("Chives Wallet Sync Status: Synced")
+            print(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
             checkSyncedStatus += 1
         else:
             print("Chives Wallet Sync Status: Not synced")
@@ -604,34 +611,25 @@ class MasterNodeManager:
                 return jsonResult
 
             tx_id = res.name
-            start = time.time()
-            while time.time() - start < 10:
-                await asyncio.sleep(0.1)
-                tx = await wallet_client.get_transaction(str(wallet_id), tx_id)
-                if len(tx.sent_to) > 0:
-                    jsonResult['data'].append({"":""})
-                    jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}":""})
-                    jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
-                    jsonResult['data'].append({"Waiting for block (180s).Do not quit...":""})                    
-                    self.printJsonResult(jsonResult)
-                    await asyncio.sleep(180)  
-                    jsonResult = {}
-                    jsonResult['status'] = "success"
-                    jsonResult['title'] = "Chvies Masternode Staking Information:"
-                    jsonResult['data'] = []
-                    jsonResult['data'].append({f"finish to submit blockchain":""})
-                    return jsonResult                
-                else:
-                    jsonResult = {}
-                    jsonResult['status'] = "success"
-                    jsonResult['title'] = "Chvies Masternode Staking Information:"
-                    jsonResult['data'] = []
-                    jsonResult['data'].append({"Waiting for block (180s).Do not quit...":""})
-                    return jsonResult
-
-            jsonResult['data'].append({"Staking coin for MasterNode not yet submitted to nodes":""})
-            jsonResult['data'].append({"tx":{tx_id}})
-            return jsonResult
+            if tx_id is not None and len(tx_id)>=32:
+                await self.wait_tx_for_confirmation(tx_id)
+                jsonResult['data'].append({"":""})
+                jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes: {tx.sent_to}":""})
+                jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
+                jsonResult['data'].append({"Waiting for block (180s).Do not quit...":""})                    
+                self.printJsonResult(jsonResult)
+                await asyncio.sleep(180)  
+                jsonResult = {}
+                jsonResult['status'] = "success"
+                jsonResult['title'] = "Chvies Masternode Staking Information:"
+                jsonResult['data'] = []
+                jsonResult['data'].append({f"finish to submit blockchain":""})
+                return jsonResult  
+            else:
+                jsonResult['data'].append({"Staking coin for MasterNode not yet submitted to nodes":""})
+                jsonResult['data'].append({"tx":{tx_id}})
+                return jsonResult 
+                    
 
     async def masternode_cancel(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         jsonResult = await self.masternode_cancel_json(args, wallet_client, fingerprint)
@@ -709,13 +707,14 @@ class MasterNodeManager:
         get_staking_address_result = self.masternode_wallet.get_staking_address()
         staking_address = get_staking_address_result['address']
 
-        print(staking_address)
+        #print(staking_address)
         query = f"SELECT launcher_id FROM masternode_list WHERE StakingAddress = ?"
         cursor = await self.masternode_wallet.db_connection.execute(query, (staking_address,))
         rows = await cursor.fetchone()
         await cursor.close()
+        #print(f"rows:{rows}")
         staking_launcher_id = None
-        if rows is not None and len(rows)>0 and rows[0] is not None and 0:
+        if rows is not None and len(rows)>0 and rows[0] is not None:
             staking_launcher_id = rows[0]
             await self.masternode_show(args, wallet_client, fingerprint)
         else:        
