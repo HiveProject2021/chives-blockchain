@@ -1059,8 +1059,7 @@ class MasterNodeWallet:
             for coin_record in all_staking_coins:
                 stakingAmount += coin_record.coin.amount
         #print(f"stakingAmount:{stakingAmount}")
-        #print(f"stakingAmount:{StakingData['StakingAddress']}")
-        
+        #print(f"stakingAmount:{StakingData['StakingAddress']}")        
         cursor = await self.db_connection.execute(
             "INSERT OR REPLACE INTO masternode_list (launcher_id, owner_pk, Height, ReceivedAddress, StakingAddress, StakingAmount, NodeName) VALUES (?,?,?,?,?,?,?)", (
             str(bytes(launcher_id).hex()), 
@@ -1139,8 +1138,7 @@ class MasterNodeWallet:
         staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
             [get_staking_address['puzzle_hash']], include_spent_coins=False
         )
-        #print(f"cancel_staking_select_coins: {staking_coins}")
-        
+        #print(f"cancel_staking_select_coins: {staking_coins}")        
         totalAmount = 0
         for coin in staking_coins:
             totalAmount += coin.coin.amount
