@@ -684,16 +684,17 @@ class WalletRpcApi:
     async def masternode_show(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
-        #await manager.connect()
-        #masternode_show_json = await manager.masternode_show_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
-        #await manager.close()
+        await manager.connect()
+        masternode_show_json = await manager.masternode_show_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        await manager.close()
 
         wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
-                    "masternode_show_json": manager.wallet_client,
+                    "wallet_id": wallet_id,
+                    "masternode_show_json": masternode_show_json,
                     "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
                     }
-        return {"wallet_balance": wallet_balance}
+        return {"masternode_show": masternode_show_json}
 
     ##########################################################################################
     # Wallet
