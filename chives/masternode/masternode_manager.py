@@ -149,11 +149,12 @@ class MasterNodeManager:
 
     async def checkSyncedStatus(self) -> None:
         checkSyncedStatus = 0
+        checkSyncedStatusText = []
         blockchain_state = await self.node_client.get_blockchain_state()
         if blockchain_state is None:
-            print("There is no blockchain found yet. Try again shortly")
+            checkSyncedStatusText.append("There is no blockchain found yet. Try again shortly")
             await self.close()
-            return checkSyncedStatus
+            return checkSyncedStatus,checkSyncedStatusText
         peak: Optional[BlockRecord] = blockchain_state["peak"]
         node_id = blockchain_state["node_id"]
         difficulty = blockchain_state["difficulty"]
@@ -167,51 +168,52 @@ class MasterNodeManager:
         full_node_port = config["full_node"]["port"]
         full_node_rpc_port = config["full_node"]["rpc_port"]
 
-        print(f"Network: {network_name}    Port: {full_node_port}   RPC Port: {full_node_rpc_port}")
-        print(f"Node ID: {node_id}")
+        checkSyncedStatusText.append(f"Network: {network_name}    Port: {full_node_port}   RPC Port: {full_node_rpc_port}")
+        checkSyncedStatusText.append(f"Node ID: {node_id}")
         if synced:
-            print("Chives Blockchain Status: Full Node Synced")
+            checkSyncedStatusText.append("Chives Blockchain Status: Full Node Synced")
             checkSyncedStatus += 1
         elif peak is not None and sync_mode:
             sync_max_block = blockchain_state["sync"]["sync_tip_height"]
             sync_current_block = blockchain_state["sync"]["sync_progress_height"]
-            print(
-                f"Chives Blockchain Status: Syncing {sync_current_block}/{sync_max_block} "
-                f"({sync_max_block - sync_current_block} behind)."
-            )
-            print("Peak: Hash:", peak.header_hash if peak is not None else "")
-            print("Masternode require blockchain synced.")
+            checkSyncedStatusText.append(f"Chives Blockchain Status: Syncing {sync_current_block}/{sync_max_block} ")
+            checkSyncedStatusText.append(f"({sync_max_block - sync_current_block} behind).")
+            if peak is not None:
+                checkSyncedStatusText.append(f"Peak: Hash:{peak.header_hash}")
+            else:
+                checkSyncedStatusText.append(f"Peak: Hash:------")
+            checkSyncedStatusText.append("Masternode require blockchain synced.")
             await self.close()
-            return checkSyncedStatus
+            return checkSyncedStatus,checkSyncedStatusText
         elif peak is not None:
-            print(f"Chives Blockchain Status: Not Synced. Peak height: {peak.height}")
+            checkSyncedStatusText.append(f"Chives Blockchain Status: Not Synced. Peak height: {peak.height}")
             await self.close()
-            return checkSyncedStatus
+            return checkSyncedStatus,checkSyncedStatusText
         else:
-            print("\nSearching for an initial chain\n")
-            print("You may be able to expedite with 'chives show -a host:port' using a known node.\n")
+            checkSyncedStatusText.append("\nSearching for an initial chain\n")
+            checkSyncedStatusText.append("You may be able to expedite with 'chives show -a host:port' using a known node.\n")
             await self.close()
-            return checkSyncedStatus
+            return checkSyncedStatus,checkSyncedStatusText
         
         #######################################################
         is_synced: bool = await self.wallet_client.get_synced()
         is_syncing: bool = await self.wallet_client.get_sync_status()
 
-        print(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
+        checkSyncedStatusText.append(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
         if is_syncing:
-            print("Chives Wallet Sync Status: Syncing...")
+            checkSyncedStatusText.append("Chives Wallet Sync Status: Syncing...")
             await self.close()
-            return checkSyncedStatus
+            return checkSyncedStatus,checkSyncedStatusText
         elif is_synced:
-            print("Chives Wallet Sync Status: Synced")
-            print(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
+            checkSyncedStatusText.append("Chives Wallet Sync Status: Synced")
+            checkSyncedStatusText.append(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
             checkSyncedStatus += 1
         else:
-            print("Chives Wallet Sync Status: Not synced")
+            checkSyncedStatusText.append("Chives Wallet Sync Status: Not synced")
             await self.close()
-            return checkSyncedStatus
-        print('-'*64)
-        return checkSyncedStatus
+            return checkSyncedStatus,checkSyncedStatusText
+        checkSyncedStatusText.append('-'*64)
+        return checkSyncedStatus,checkSyncedStatusText
 
     async def close(self) -> None:
         if self.node_client:
@@ -557,12 +559,12 @@ class MasterNodeManager:
         jsonResult['title'] = "Chvies Masternode Staking Information:"
         jsonResult['data'] = []
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Wallet Balance":confirmed_wallet_balance})
-        jsonResult['data'].append({"Wallet Max Sent":max_send_amount})
+        jsonResult['data'].append({"Wallet Balance":str(confirmed_wallet_balance)})
+        jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
         jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
-        jsonResult['data'].append({"Staking Account Balance":StakingAccountAmount/self.mojo_per_unit})
+        jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
 
@@ -673,12 +675,12 @@ class MasterNodeManager:
         jsonResult['title'] = "Chvies Masternode Cancel Information:"
         jsonResult['data'] = []
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Wallet Balance":confirmed_wallet_balance})
-        jsonResult['data'].append({"Wallet Max Sent":max_send_amount})
+        jsonResult['data'].append({"Wallet Balance":str(confirmed_wallet_balance)})
+        jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
         jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
-        jsonResult['data'].append({"Staking Account Balance":StakingAccountAmount/self.mojo_per_unit})
+        jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
@@ -792,12 +794,12 @@ class MasterNodeManager:
         jsonResult['title'] = "Chvies Masternode Staking Information:"
         jsonResult['data'] = []
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Wallet Balance":confirmed_wallet_balance})
-        jsonResult['data'].append({"Wallet Max Sent":max_send_amount})
+        jsonResult['data'].append({"Wallet Balance":str(confirmed_wallet_balance)})
+        jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
         jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
-        jsonResult['data'].append({"Staking Account Balance":StakingAccountAmount/self.mojo_per_unit})
+        jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
         return jsonResult
