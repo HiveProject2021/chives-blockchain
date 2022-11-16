@@ -575,7 +575,7 @@ class MasterNodeManager:
             
         #Wallet balance must more than 100000 XCC
         if confirmed_wallet_balance < (stakingCoinAmount+fee):
-            jsonResult['data'].append({"Wallet confirmed balance must more than":{(stakingCoinAmount+fee)}})
+            jsonResult['data'].append({"Wallet confirmed balance must more than":(stakingCoinAmount+fee)}})
             jsonResult['data'].append({"":""})
             return jsonResult
             
@@ -688,10 +688,16 @@ class MasterNodeManager:
         #取消质押
         if isHaveStakingCoin is True:
             jsonResult['data'].append({"Cancel staking coin for MasterNode Submitting transaction...":""})
-            await self.cancel_masternode_staking_coins()
-            jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes":""})
-            jsonResult['data'].append({"You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.":""})
-            jsonResult['data'].append({"":""})
+            cancel_masternode_staking_coins = await self.cancel_masternode_staking_coins()
+            if cancel_masternode_staking_coins is not None and "tx_id" in cancel_masternode_staking_coins:
+                jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes":""})
+                jsonResult['data'].append({"You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.":""})
+                jsonResult['data'].append({"":""})
+            elif cancel_masternode_staking_coins is not None and "error" in cancel_masternode_staking_coins:
+                jsonResult['data'].append({"status":"Masternode cancel failed!!!"})
+                jsonResult['data'].append({"error":cancel_masternode_staking_coins})
+            else:
+                jsonResult['data'].append({"status":"Masternode cancel failed!!!"})
         else:
             jsonResult['data'].append({"You have not staking coins":""})
             jsonResult['data'].append({"":""})
@@ -848,7 +854,8 @@ class MasterNodeManager:
     
     async def cancel_masternode_staking_coins(self) -> List:
         cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins()
-        print(f"cancel_staking_coins:{cancel_staking_coins}")
+        return cancel_staking_coins
+        #print(f"cancel_staking_coins:{cancel_staking_coins}")
 
 class MasterNodeCoin(Coin):
     def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None, StakingData=None):
@@ -1153,7 +1160,10 @@ class MasterNodeWallet:
         #print(spend_bundle)
         if spend_bundle is not None:
             #print(f"res:{get_staking_address['first_puzzle_hash']}")
-            res = await self.node_client.push_tx(spend_bundle)
+            try:
+                res = await self.node_client.push_tx(spend_bundle)
+            except Exception as e:
+                return str(e)
             #print(f"res:{res}")
             if res["success"]:
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
