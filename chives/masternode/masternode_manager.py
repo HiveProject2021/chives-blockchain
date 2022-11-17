@@ -150,11 +150,12 @@ class MasterNodeManager:
     async def checkSyncedStatus(self) -> None:
         checkSyncedStatus = 0
         checkSyncedStatusText = []
+        logged_in_fingerprint = None
         blockchain_state = await self.node_client.get_blockchain_state()
         if blockchain_state is None:
             checkSyncedStatusText.append("There is no blockchain found yet. Try again shortly")
             await self.close()
-            return checkSyncedStatus,checkSyncedStatusText
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
         peak: Optional[BlockRecord] = blockchain_state["peak"]
         node_id = blockchain_state["node_id"]
         difficulty = blockchain_state["difficulty"]
@@ -184,26 +185,31 @@ class MasterNodeManager:
                 checkSyncedStatusText.append(f"Peak: Hash:------")
             checkSyncedStatusText.append("Masternode require blockchain synced.")
             await self.close()
-            return checkSyncedStatus,checkSyncedStatusText
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
         elif peak is not None:
             checkSyncedStatusText.append(f"Chives Blockchain Status: Not Synced. Peak height: {peak.height}")
             await self.close()
-            return checkSyncedStatus,checkSyncedStatusText
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
         else:
             checkSyncedStatusText.append("\nSearching for an initial chain\n")
             checkSyncedStatusText.append("You may be able to expedite with 'chives show -a host:port' using a known node.\n")
             await self.close()
-            return checkSyncedStatus,checkSyncedStatusText
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
         
         #######################################################
         is_synced: bool = await self.wallet_client.get_synced()
         is_syncing: bool = await self.wallet_client.get_sync_status()
+        logged_in_fingerprint: Optional[int] = await self.wallet_client.get_logged_in_fingerprint()
+        if logged_in_fingerprint is None:
+            checkSyncedStatusText.append("Not selected which chives wallet")
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
+        log_in_response = await self.wallet_client.log_in(logged_in_fingerprint)
 
         checkSyncedStatusText.append(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
         if is_syncing:
             checkSyncedStatusText.append("Chives Wallet Sync Status: Syncing...")
             await self.close()
-            return checkSyncedStatus,checkSyncedStatusText
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
         elif is_synced:
             checkSyncedStatusText.append("Chives Wallet Sync Status: Synced")
             checkSyncedStatusText.append(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
@@ -211,9 +217,9 @@ class MasterNodeManager:
         else:
             checkSyncedStatusText.append("Chives Wallet Sync Status: Not synced")
             await self.close()
-            return checkSyncedStatus,checkSyncedStatusText
+            return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
         checkSyncedStatusText.append('-'*64)
-        return checkSyncedStatus,checkSyncedStatusText
+        return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
 
     async def close(self) -> None:
         if self.node_client:
@@ -226,7 +232,7 @@ class MasterNodeManager:
             await self.connection.close()
 
     async def sync(self) -> None:
-        await self.masternode_wallet.sync_masternode()
+        return await self.masternode_wallet.sync_masternode()
 
     async def derive_nft_keys(self, index: int = 0) -> None:
         _sk = master_sk_to_singleton_owner_sk(self.master_sk, index)
@@ -575,7 +581,7 @@ class MasterNodeManager:
             
         #Wallet balance must more than 100000 XCC
         if confirmed_wallet_balance < (stakingCoinAmount+fee):
-            jsonResult['data'].append({"Wallet confirmed balance must more than":(stakingCoinAmount+fee)}})
+            jsonResult['data'].append({"Wallet confirmed balance must more than":(stakingCoinAmount+fee)})
             jsonResult['data'].append({"":""})
             return jsonResult
             
@@ -1017,10 +1023,10 @@ class MasterNodeWallet:
         return new_height
         
     async def filter_singletons(self, singletons: List):
-        print(f"Updating {len(singletons)} CreatorNFTs")
         #print(Path(DEFAULT_ROOT_PATH))
         for cr in singletons:
             await self.get_nft_by_launcher_id(cr.coin.name())
+        return (f"Updating {len(singletons)} Masternodes NFTs")
                         
     async def get_nft_by_launcher_id(self, launcher_id: bytes32):
         eve_cr = await self.node_client.get_coin_records_by_parent_ids([launcher_id])
@@ -1059,7 +1065,7 @@ class MasterNodeWallet:
  
     async def sync_masternode(self):
         all_nfts = await self.node_client.get_coin_records_by_puzzle_hash(LAUNCHER_PUZZLE_HASH)
-        await self.filter_singletons(all_nfts)
+        return await self.filter_singletons(all_nfts)
 
     async def save_launcher(self, launcher_id, pk, Height, StakingData):
         if "StakingAddress" in StakingData and StakingData['StakingAddress'] is not None:
