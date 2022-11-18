@@ -134,10 +134,18 @@ class MasterNodeManager:
             )
         self.connection = await aiosqlite.connect(Path(self.db_name))
         self.db_wrapper = DBWrapper(self.connection)
-        self.masternode_wallet = await MasterNodeWallet.create(self.db_wrapper, self.node_client)
         self.fingerprints = await self.wallet_client.get_public_keys()
-        fp = self.fingerprints[wallet_index]
-        private_key = await self.wallet_client.get_private_key(fp)
+
+    async def chooseWallet(self, fingerprint: int = 0) -> None:
+        if fingerprint == 0:
+            fingerprint = 1
+        if fingerprint<10000:
+            fingerprint = fingerprint - 1
+            fingerprint = self.fingerprints[fingerprint]
+        self.fingerprint = fingerprint
+        self.masternode_wallet = await MasterNodeWallet.create(self.db_wrapper, self.node_client, self.fingerprint)
+        log_in_response = await self.wallet_client.log_in(fingerprint)
+        private_key = await self.wallet_client.get_private_key(fingerprint)
         sk_data = binascii.unhexlify(private_key["sk"])
         self.master_sk = PrivateKey.from_bytes(sk_data)
         await self.derive_nft_keys()
@@ -203,6 +211,7 @@ class MasterNodeManager:
         if logged_in_fingerprint is None:
             checkSyncedStatusText.append("Not selected which chives wallet")
             return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
+        self.fingerprint = logged_in_fingerprint
         log_in_response = await self.wallet_client.log_in(logged_in_fingerprint)
 
         checkSyncedStatusText.append(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
@@ -581,6 +590,7 @@ class MasterNodeManager:
             
         #Wallet balance must more than 100000 XCC
         if confirmed_wallet_balance < (stakingCoinAmount+fee):
+            jsonResult['data'].append({"":""})
             jsonResult['data'].append({"Wallet confirmed balance must more than":(stakingCoinAmount+fee)})
             jsonResult['data'].append({"":""})
             return jsonResult
@@ -923,11 +933,12 @@ class MasterNodeWallet:
     puzzlehash_to_privatekey = {}
     puzzlehash_to_publickey = {}
     secret_key_store = SecretKeyStore()
+    fingerprint = 0
 
     @classmethod
-    async def create(cls, wrapper: DBWrapper, node_client):
+    async def create(cls, wrapper: DBWrapper, node_client, fingerprint: Optional[int]):
         self = cls()
-
+        self.fingerprint = fingerprint
         self.db_connection = wrapper.db
         self.db_wrapper = wrapper
         self.node_client = node_client
@@ -1120,33 +1131,35 @@ class MasterNodeWallet:
         result = {}
         # Standard wallet keys
         for sk, seed in private_keys:   
-            privateKey = _derive_path_unhardened(sk, [12381, 9699, 2, 0])
-            publicKey = privateKey.get_g1()
-            puzzle = puzzle_for_pk(bytes(publicKey))
-            puzzle_hash = puzzle.get_tree_hash()
-            #print(puzzle_hash)
-            first_address = encode_puzzle_hash(puzzle_hash, prefix)
-            result['first_address'] = first_address;      
-            result['first_puzzle_hash'] = puzzle_hash;   
+            if self.fingerprint == sk.get_g1().get_fingerprint():
+                privateKey = _derive_path_unhardened(sk, [12381, 9699, 2, 0])
+                publicKey = privateKey.get_g1()
+                puzzle = puzzle_for_pk(bytes(publicKey))
+                puzzle_hash = puzzle.get_tree_hash()
+                #print(puzzle_hash)
+                first_address = encode_puzzle_hash(puzzle_hash, prefix)
+                result['first_address'] = first_address;      
+                result['first_puzzle_hash'] = puzzle_hash;   
         # Masternode wallet keys   
         for sk, seed in private_keys:   
-            privateKey = _derive_path(sk, [12381, 9699, 99, 0])
-            publicKey = privateKey.get_g1()
-            puzzle = puzzle_for_pk(bytes(publicKey))
-            puzzle_hash = puzzle.get_tree_hash()
-            #print(puzzle_hash)
-            address = encode_puzzle_hash(puzzle_hash, prefix)
-            #print(address)        
-            result['privateKey'] = privateKey
-            result['publicKey'] = publicKey
-            result['puzzle_hash'] = puzzle_hash
-            result['address'] = address
-            result['StakingAmount'] = 100000
-            self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
-            self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
-            self.puzzlehash_to_publickey[puzzle_hash] = publicKey
-            self.key_dict[bytes(publicKey)] = privateKey
-            return result;
+            if self.fingerprint == sk.get_g1().get_fingerprint():
+                privateKey = _derive_path(sk, [12381, 9699, 99, 0])
+                publicKey = privateKey.get_g1()
+                puzzle = puzzle_for_pk(bytes(publicKey))
+                puzzle_hash = puzzle.get_tree_hash()
+                #print(puzzle_hash)
+                address = encode_puzzle_hash(puzzle_hash, prefix)
+                #print(address)        
+                result['privateKey'] = privateKey
+                result['publicKey'] = publicKey
+                result['puzzle_hash'] = puzzle_hash
+                result['address'] = address
+                result['StakingAmount'] = 100000
+                self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
+                self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
+                self.puzzlehash_to_publickey[puzzle_hash] = publicKey
+                self.key_dict[bytes(publicKey)] = privateKey
+        return result
 
     async def cancel_staking_coins(self) -> Tuple[Coin, Program]:
         get_staking_address = self.get_staking_address()

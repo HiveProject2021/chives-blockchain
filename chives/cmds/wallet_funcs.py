@@ -254,6 +254,7 @@ async def masternode_merge(args: dict, wallet_client: WalletRpcClient, fingerpri
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
@@ -264,6 +265,7 @@ async def masternode_staking(args: dict, wallet_client: WalletRpcClient, fingerp
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
@@ -274,6 +276,7 @@ async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerpr
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     print(checkSyncedStatus)
@@ -285,6 +288,7 @@ async def masternode_show(args: dict, wallet_client: WalletRpcClient, fingerprin
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
@@ -295,6 +299,7 @@ async def masternode_init(args: dict, wallet_client: WalletRpcClient, fingerprin
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
@@ -305,6 +310,7 @@ async def masternode_list(args: dict, wallet_client: WalletRpcClient, fingerprin
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
@@ -315,6 +321,7 @@ async def masternode_register(args: dict, wallet_client: WalletRpcClient, finger
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 

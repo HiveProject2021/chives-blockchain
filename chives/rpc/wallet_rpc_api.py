@@ -691,15 +691,16 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
         masternode_show_json = await manager.masternode_show_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         #masternode_show_json = {}
         await manager.close()
 
-        wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
                     "wallet_id": wallet_id,
                     "masternode_show_json": masternode_show_json,
-                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": self.service.logged_in_fingerprint,
                     }
         return {"masternode_result": wallet_balance}
     
@@ -708,14 +709,15 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
         masternode_cancel_json = await manager.masternode_cancel_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
                     "wallet_id": wallet_id,
                     "masternode_cancel_json": masternode_cancel_json,
-                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": self.service.logged_in_fingerprint,
                     }
         return {"masternode_result": wallet_balance}
     
@@ -724,14 +726,15 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
         masternode_staking_json = await manager.masternode_staking_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
                     "wallet_id": wallet_id,
                     "masternode_staking_json": masternode_staking_json,
-                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": self.service.logged_in_fingerprint,
                     }
         return {"masternode_result": wallet_balance}
     
@@ -740,14 +743,15 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
         masternode_register_json = await manager.masternode_register_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
                     "wallet_id": wallet_id,
                     "masternode_register_json": masternode_register_json,
-                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": self.service.logged_in_fingerprint,
                     }
         return {"masternode_result": wallet_balance}
     
@@ -756,14 +760,15 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
         get_all_masternodes = await manager.get_all_masternodes()
         await manager.close()
 
-        wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
                     "wallet_id": wallet_id,
                     "get_all_masternodes": get_all_masternodes,
-                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": self.service.logged_in_fingerprint,
                     }
         return {"masternode_result": wallet_balance}
     
@@ -772,15 +777,16 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
         masternode_init = await manager.sync()
         await manager.close()
 
-        wallet_id = uint32(int(request["wallet_id"]))
         wallet_balance = {
                     "wallet_id": wallet_id,
                     "masternode_init": masternode_init,
                     "checkSyncedStatus": checkSyncedStatus,
-                    "self.service.logged_in_fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": self.service.logged_in_fingerprint,
                     }
         return {"masternode_result": wallet_balance}
 
