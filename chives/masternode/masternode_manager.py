@@ -571,7 +571,7 @@ class MasterNodeManager:
         #print(balances);
         jsonResult = {}
         jsonResult['status'] = "success"
-        jsonResult['title'] = "Chvies Masternode Staking Information:"
+        jsonResult['title'] = "Chives Masternode Staking Information:"
         jsonResult['data'] = []
         jsonResult['data'].append({"":""})
         jsonResult['data'].append({"Wallet Balance":str(confirmed_wallet_balance)})
@@ -634,10 +634,10 @@ class MasterNodeManager:
                 jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
                 self.printJsonResult(jsonResult)
                 await self.wait_tx_for_confirmation(tx_id)
-                jsonResult = {}
+                #jsonResult = {}
                 jsonResult['status'] = "success"
-                jsonResult['title'] = "Chvies Masternode Staking Information:"
-                jsonResult['data'] = []
+                jsonResult['title'] = "Chives Masternode Staking Information:"
+                #jsonResult['data'] = []
                 jsonResult['data'].append({f"finish to submit blockchain":""})
                 return jsonResult  
             else:
@@ -688,7 +688,7 @@ class MasterNodeManager:
         
         jsonResult = {}
         jsonResult['status'] = "success"
-        jsonResult['title'] = "Chvies Masternode Cancel Information:"
+        jsonResult['title'] = "Chives Masternode Cancel Information:"
         jsonResult['data'] = []
         jsonResult['data'].append({"":""})
         jsonResult['data'].append({"Wallet Balance":str(confirmed_wallet_balance)})
@@ -746,7 +746,7 @@ class MasterNodeManager:
                 self.print_masternode(nft,0)
                 jsonResult = {}
                 jsonResult['status'] = "success"
-                jsonResult['title'] = "Chvies Masternode Register Success"
+                jsonResult['title'] = "Chives Masternode Register Success"
                 jsonResult['data'] = []
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Transaction id":tx_id})
@@ -757,7 +757,7 @@ class MasterNodeManager:
                 print(f"Error: {tx_id}")
                 jsonResult = {}
                 jsonResult['status'] = "error"
-                jsonResult['title'] = "Chvies Masternode Register Trip"
+                jsonResult['title'] = "Chives Masternode Register Trip"
                 jsonResult['data'] = []
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Error":tx_id})
@@ -813,7 +813,7 @@ class MasterNodeManager:
 
         jsonResult = {}
         jsonResult['status'] = "success"
-        jsonResult['title'] = "Chvies Masternode Staking Information:"
+        jsonResult['title'] = "Chives Masternode Staking Information:"
         jsonResult['data'] = []
         jsonResult['data'].append({"":""})
         jsonResult['data'].append({"Wallet Balance":str(confirmed_wallet_balance)})

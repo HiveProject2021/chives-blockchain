@@ -697,12 +697,13 @@ class WalletRpcApi:
         #masternode_show_json = {}
         await manager.close()
 
-        wallet_balance = {
-                    "wallet_id": wallet_id,
-                    "masternode_show_json": masternode_show_json,
+        masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
+                    "status": masternode_show_json['status'],
+                    "title": masternode_show_json['title'],
+                    "data": masternode_show_json['data'],
                     }
-        return {"masternode_result": wallet_balance}
+        return {"masternode_result": masternode_result}
     
     async def masternode_cancel(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
@@ -714,12 +715,13 @@ class WalletRpcApi:
         masternode_cancel_json = await manager.masternode_cancel_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_balance = {
-                    "wallet_id": wallet_id,
-                    "masternode_cancel_json": masternode_cancel_json,
+        masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
+                    "status": masternode_cancel_json['status'],
+                    "title": masternode_cancel_json['title'],
+                    "data": masternode_cancel_json['data'],
                     }
-        return {"masternode_result": wallet_balance}
+        return {"masternode_result": masternode_result}
     
     async def masternode_staking(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
@@ -731,12 +733,13 @@ class WalletRpcApi:
         masternode_staking_json = await manager.masternode_staking_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_balance = {
-                    "wallet_id": wallet_id,
-                    "masternode_staking_json": masternode_staking_json,
+        masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
+                    "status": masternode_staking_json['status'],
+                    "title": masternode_staking_json['title'],
+                    "data": masternode_staking_json['data'],
                     }
-        return {"masternode_result": wallet_balance}
+        return {"masternode_result": masternode_result}
     
     async def masternode_register(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
@@ -748,12 +751,13 @@ class WalletRpcApi:
         masternode_register_json = await manager.masternode_register_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_balance = {
-                    "wallet_id": wallet_id,
-                    "masternode_register_json": masternode_register_json,
+        masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
+                    "status": masternode_register_json['status'],
+                    "title": masternode_register_json['title'],
+                    "data": masternode_register_json['data'],
                     }
-        return {"masternode_result": wallet_balance}
+        return {"masternode_result": masternode_result}
     
     async def masternode_list(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
@@ -782,13 +786,13 @@ class WalletRpcApi:
         masternode_init = await manager.sync()
         await manager.close()
 
-        wallet_balance = {
-                    "wallet_id": wallet_id,
-                    "masternode_init": masternode_init,
-                    "checkSyncedStatus": checkSyncedStatus,
+        masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
+                    "status": masternode_init,
+                    "title": "Chives Masternode Initial Process",
+                    "data": [],
                     }
-        return {"masternode_result": wallet_balance}
+        return {"masternode_result": masternode_result}
 
     ##########################################################################################
     # Wallet
