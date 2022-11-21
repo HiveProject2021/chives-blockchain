@@ -99,7 +99,7 @@ msgstr ""
 #~ msgid "Action"
 #~ msgstr "Action"
 
-#: src/components/WalletHeader.tsx:74
+#: src/components/WalletHeader.tsx:75
 msgid "Actions"
 msgstr "Acciones"
 
@@ -175,7 +175,7 @@ msgstr ""
 msgid "Address"
 msgstr "Dirección"
 
-#: src/components/WalletSend.tsx:154
+#: src/components/WalletSend.tsx:156
 #: src/components/cat/WalletCATSend.tsx:195
 #: src/components/rateLimited/WalletRateLimited.jsx:700
 msgid "Address / Puzzle hash"
@@ -194,7 +194,7 @@ msgstr "Direccion / Hash"
 #~ msgstr "Alternate tmpdir/tmpdir2"
 
 #: src/components/WalletHistory.tsx:228
-#: src/components/WalletSend.tsx:164
+#: src/components/WalletSend.tsx:166
 #: src/components/cat/WalletCATSend.tsx:206
 #: src/components/rateLimited/WalletRateLimited.jsx:719
 msgid "Amount"
@@ -366,10 +366,6 @@ msgstr ""
 #~ msgid "Buy"
 #~ msgstr "Buy"
 
-#: src/constants/WalletName.ts:23
-#~ msgid "Token Wallet"
-#~ msgstr "Token Wallet"
-
 #: src/components/wallet/Wallets.tsx:49
 #~ msgid "CC Wallet"
 #~ msgstr "CC Wallet"
@@ -401,7 +397,7 @@ msgstr "Cancelar"
 #~ msgid "Cancel on blockchain"
 #~ msgstr ""
 
-#: src/components/WalletSend.tsx:101
+#: src/components/WalletSend.tsx:103
 #: src/components/cat/WalletCATSend.tsx:118
 msgid "Cannot send chives to coloured address. Please enter a chives address."
 msgstr ""
@@ -437,9 +433,9 @@ msgstr ""
 #~ msgid "Chat on KeyBase"
 #~ msgstr "Chat on KeyBase"
 
-#: src/components/WalletsSidebar.tsx:157
-msgid "Check my snapshot balance"
-msgstr ""
+#: src/components/WalletsSidebar.tsx:165
+#~ msgid "Check my snapshot balance"
+#~ msgstr ""
 
 #: src/electron/main.tsx:430
 #~ msgid "Chives"
@@ -476,9 +472,9 @@ msgstr ""
 #~ msgid "Claim Rewards"
 #~ msgstr "Claim Rewards"
 
-#: src/components/WalletsSidebar.tsx:168
-msgid "Click here to download an older version of the wallet"
-msgstr ""
+#: src/components/WalletsSidebar.tsx:176
+#~ msgid "Click here to download an older version of the wallet"
+#~ msgstr ""
 
 #: src/components/offers/OfferManager.tsx:159
 #: src/components/offers/OfferShareDialog.tsx:379
@@ -559,7 +555,7 @@ msgstr "Confirmar"
 msgid "Confirmed"
 msgstr ""
 
-#: src/components/WalletHistory.tsx:357
+#: src/components/WalletHistory.tsx:358
 msgid "Confirmed at Height"
 msgstr ""
 
@@ -588,7 +584,7 @@ msgstr ""
 #~ msgid "Connected"
 #~ msgstr "Connected"
 
-#: src/components/WalletStatusHeader.tsx:38
+#: src/components/WalletStatusHeader.tsx:40
 msgid "Connected ({0})"
 msgstr ""
 
@@ -614,7 +610,7 @@ msgstr ""
 msgid "Connection type"
 msgstr "Tipo de Conexión"
 
-#: src/components/WalletConnections.tsx:78
+#: src/components/WalletConnections.tsx:80
 msgid "Connections"
 msgstr "Conexiones"
 
@@ -670,7 +666,7 @@ msgid "Create New Wallet"
 msgstr ""
 
 #: src/components/cat/WalletCAT.tsx:129
-#: src/components/standard/WalletStandard.tsx:54
+#: src/components/standard/WalletStandard.tsx:55
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -694,7 +690,7 @@ msgstr "Crear Monedero de Usuario con Tarifa Limitada"
 #~ msgid "Create Trade Offer"
 #~ msgstr "Create Trade Offer"
 
-#: src/components/WalletSend.tsx:136
+#: src/components/WalletSend.tsx:138
 #: src/components/cat/WalletCATSend.tsx:176
 #: src/components/rateLimited/WalletRateLimited.jsx:683
 msgid "Create Transaction"
@@ -843,7 +839,7 @@ msgstr "Eliminar"
 #~ msgid "Delete Plot"
 #~ msgstr "Delete Plot"
 
-#: src/components/WalletHeader.tsx:87
+#: src/components/WalletHeader.tsx:88
 msgid "Delete Unconfirmed Transactions"
 msgstr "Eliminar transacciones no confirmadas"
 
@@ -875,6 +871,14 @@ msgstr "Eliminar transacciones no confirmadas"
 #: src/components/plot/add/PlotAddChoosePlotter.tsx:92
 #~ msgid "Depending on your system configuration, you may find that an alternative plotter produces plots faster than the default Chives Proof of Space plotter. If unsure, use the default Chives Proof of Space plotter."
 #~ msgstr "Depending on your system configuration, you may find that an alternative plotter produces plots faster than the default Chives Proof of Space plotter. If unsure, use the default Chives Proof of Space plotter."
+
+#: src/components/card/MasterNodeCardTotalBalance.tsx:63
+msgid "Derivation Index MS: {0}"
+msgstr ""
+
+#: src/components/card/WalletCardTotalBalance.tsx:63
+msgid "Derivation Index: {0}"
+msgstr ""
 
 #: src/components/offers/OfferViewer.tsx:504
 #~ msgid "Details"
@@ -1071,7 +1075,7 @@ msgstr ""
 #~ msgid "Failed to update passphrase: {error}"
 #~ msgstr "Failed to update passphrase: {error}"
 
-#: src/components/WalletSend.tsx:184
+#: src/components/WalletSend.tsx:186
 #: src/components/cat/WalletCATSend.tsx:240
 msgid "Farm"
 msgstr "Granja"
@@ -1134,7 +1138,7 @@ msgstr "Granja"
 #~ msgstr "Farming Status"
 
 #: src/components/WalletHistory.tsx:240
-#: src/components/WalletSend.tsx:175
+#: src/components/WalletSend.tsx:177
 #: src/components/cat/WalletCATSend.tsx:219
 #: src/components/create/createRLAdmin.jsx:243
 #: src/components/create/createRLAdmin.jsx:271
@@ -1493,7 +1497,7 @@ msgstr "Intervalo"
 #~ msgid "Leaving Pool"
 #~ msgstr "Leaving Pool"
 
-#: src/components/WalletConnections.tsx:83
+#: src/components/WalletConnections.tsx:85
 msgid "List of connections is empty"
 msgstr ""
 
@@ -1590,12 +1594,16 @@ msgstr ""
 msgid "Manage token list"
 msgstr ""
 
+#: src/components/WalletHeader.tsx:61
+msgid "MasterNodeSummary"
+msgstr ""
+
 #: src/components/WalletHistory.tsx:172
 #: src/components/cat/WalletCATSend.tsx:231
 msgid "Memo"
 msgstr ""
 
-#: src/components/WalletHistory.tsx:366
+#: src/components/WalletHistory.tsx:367
 msgid "Memos"
 msgstr ""
 
@@ -1715,7 +1723,7 @@ msgstr "Apodo"
 #~ msgid "No current offers"
 #~ msgstr ""
 
-#: src/components/WalletHistory.tsx:402
+#: src/components/WalletHistory.tsx:403
 msgid "No previous transactions"
 msgstr "No hay transacciones previas"
 
@@ -1743,12 +1751,12 @@ msgstr "ID de Nodo"
 #~ msgid "None of your plots have passed the plot filter yet."
 #~ msgstr "None of your plots have passed the plot filter yet."
 
-#: src/components/WalletHistory.tsx:351
-#: src/components/WalletHistory.tsx:361
+#: src/components/WalletHistory.tsx:352
+#: src/components/WalletHistory.tsx:362
 msgid "Not Available"
 msgstr "No Disponible"
 
-#: src/components/WalletStatusHeader.tsx:36
+#: src/components/WalletStatusHeader.tsx:38
 msgid "Not Connected"
 msgstr ""
 
@@ -1853,7 +1861,7 @@ msgstr ""
 #~ msgid "Offers you created"
 #~ msgstr ""
 
-#: src/components/WalletSend.tsx:139
+#: src/components/WalletSend.tsx:141
 #: src/components/cat/WalletCATSend.tsx:179
 msgid "On average there is one minute between each transaction block. Unless there is congestion you can expect your transaction to be included in less than a minute."
 msgstr "Por término medio, hay un minuto entre cada bloque de transacción. A menos que haya congestión, puede esperar que su transacción sea incluida en menos de un minuto."
@@ -1960,16 +1968,19 @@ msgstr "Pegar Mnemotécnico"
 msgid "Pending"
 msgstr "Pendiente"
 
+#: src/components/card/MasterNodeCardPendingBalance.tsx:36
 #: src/components/card/WalletCardPendingBalance.tsx:36
 #: src/components/rateLimited/WalletRateLimited.jsx:572
 msgid "Pending Balance"
 msgstr "Balance pendiente"
 
+#: src/components/card/MasterNodeCardPendingChange.tsx:37
 #: src/components/card/WalletCardPendingChange.tsx:37
 #: src/components/rateLimited/WalletRateLimited.jsx:577
 msgid "Pending Change"
 msgstr "Cambio Pendiente"
 
+#: src/components/card/MasterNodeCardPendingTotalBalance.tsx:37
 #: src/components/card/WalletCardPendingTotalBalance.tsx:37
 #: src/components/rateLimited/WalletRateLimited.jsx:567
 msgid "Pending Total Balance"
@@ -2033,7 +2044,7 @@ msgstr "Por favor, introduzca una cantidad numérica válida"
 msgid "Please enter a valid integer of 0 or greater for the number of Backup IDs needed for recovery."
 msgstr ""
 
-#: src/components/WalletSend.tsx:91
+#: src/components/WalletSend.tsx:93
 #: src/components/cat/WalletCATSend.tsx:104
 #: src/components/rateLimited/WalletRateLimited.jsx:638
 msgid "Please enter a valid numeric amount"
@@ -2043,7 +2054,7 @@ msgstr "Por favor, introduzca una cantidad numérica válida"
 msgid "Please enter a valid numeric amount."
 msgstr ""
 
-#: src/components/WalletSend.tsx:96
+#: src/components/WalletSend.tsx:98
 #: src/components/cat/WalletCATSend.tsx:109
 #: src/components/create/createRLAdmin.jsx:149
 #: src/components/rateLimited/WalletRateLimited.jsx:648
@@ -2088,7 +2099,7 @@ msgstr ""
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/WalletSend.tsx:86
+#: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
 msgid "Please finish syncing before making a transaction"
@@ -2450,9 +2461,9 @@ msgstr "Info de tasa limitada"
 msgid "Rate Limited User Wallet Setup"
 msgstr "Configuración de Monedero de Usuario con Tarifa Limitada"
 
-#: src/components/WalletsSidebar.tsx:160
-msgid "Read the blog post for details"
-msgstr ""
+#: src/components/WalletsSidebar.tsx:168
+#~ msgid "Read the blog post for details"
+#~ msgstr ""
 
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
@@ -2696,7 +2707,7 @@ msgstr ""
 #~ msgstr "Sell"
 
 #: src/components/WalletHeader.tsx:59
-#: src/components/WalletSend.tsx:194
+#: src/components/WalletSend.tsx:196
 #: src/components/cat/WalletCATSend.tsx:250
 #: src/components/rateLimited/WalletRateLimited.jsx:747
 msgid "Send"
@@ -2827,6 +2838,7 @@ msgstr "Monto Gastable"
 msgid "Spendable Amount Per Interval"
 msgstr "Cantidad gastable por intervalo"
 
+#: src/components/card/MasterNodeCardSpendableBalance.tsx:37
 #: src/components/card/WalletCardSpendableBalance.tsx:37
 #: src/components/rateLimited/WalletRateLimited.jsx:547
 msgid "Spendable Balance"
@@ -2965,6 +2977,11 @@ msgstr "Sincronizando"
 #~ msgid "The application will stop working at block height 193536."
 #~ msgstr "The application will stop working at block height 193536."
 
+#: src/components/card/MasterNodeCardTotalBalance.tsx:65
+#: src/components/card/WalletCardTotalBalance.tsx:65
+msgid "The derivation index sets the range of wallet addresses that the wallet scans the blockchain for. This number is generally higher if you have a lot of transactions or canceled offers for XCC, CATs, or NFTs. If you believe your balance is incorrect because it’s missing coins, then increasing the derivation index could help the wallet include the missing coins in the balance total."
+msgstr ""
+
 #: src/components/farm/FarmFullNodeConnections.tsx:95
 #~ msgid "The full node that your farmer is connected to is below. <0>Learn more</0>"
 #~ msgstr "The full node that your farmer is connected to is below. <0>Learn more</0>"
@@ -3067,14 +3084,17 @@ msgstr ""
 msgid "This is not a valid address for sending funds to"
 msgstr ""
 
+#: src/components/standard/MasterNodeStandardCards.tsx:23
 #: src/components/standard/WalletStandardCards.tsx:23
 msgid "This is the amount of Chives that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Chives that you have just spent but is not yet in the blockchain."
 msgstr "Esta es la cantidad de chía que puede utilizar actualmente para realizar transacciones. No incluye recompensas de cultivo pendientes, transacciones entrantes pendientes y Chives que acaba de gastar pero que aún no está en la cadena de bloques."
 
+#: src/components/standard/MasterNodeStandardCards.tsx:44
 #: src/components/standard/WalletStandardCards.tsx:44
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
 msgstr "Esto es un cambio pendiente, los cuales son cambios de monedas que usted se ha enviado a si mismo, pero todavía no han sido confirmados."
 
+#: src/components/standard/MasterNodeStandardCards.tsx:37
 #: src/components/standard/WalletStandardCards.tsx:37
 msgid "This is the sum of the incoming and outgoing pending transactions (not yet included into the blockchain). This does not include farming rewards."
 msgstr "Esta es la suma de las transacciones pendientes entrantes y salientes (aún no incluidas en la cadena de bloques). Esto no incluye las recompensas de cultivo."
@@ -3087,6 +3107,7 @@ msgstr "Esta es la suma de las transacciones pendientes entrantes y salientes (a
 #~ msgid "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 #~ msgstr "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 
+#: src/components/standard/MasterNodeStandardCards.tsx:16
 #: src/components/standard/WalletStandardCards.tsx:16
 msgid "This is the total amount of chives in the blockchain at the current peak block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 msgstr "Esta es la cantidad total de chía en la cadena de bloques en el bloque máximo actual que está controlado por sus claves privadas. Incluye recompensas de cultivo congeladas, pero no transacciones entrantes y salientes pendientes."
@@ -3095,6 +3116,7 @@ msgstr "Esta es la cantidad total de chía en la cadena de bloques en el bloque 
 #~ msgid "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 #~ msgstr "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 
+#: src/components/standard/MasterNodeStandardCards.tsx:31
 #: src/components/standard/WalletStandardCards.tsx:31
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
 msgstr "Este es el saldo total + saldo pendiente: es lo que será su saldo después de que se confirmen todas las transacciones pendientes."
@@ -3181,6 +3203,10 @@ msgstr "Este es el saldo total + saldo pendiente: es lo que será su saldo despu
 msgid "To"
 msgstr "A"
 
+#: src/constants/WalletName.ts:23
+#~ msgid "Token Wallet"
+#~ msgstr "Token Wallet"
+
 #: src/components/cat/WalletCATCreateExisting.tsx:85
 msgid "Token and Asset Issuance Limitations"
 msgstr ""
@@ -3193,11 +3219,12 @@ msgstr ""
 msgid "Token has empty name"
 msgstr ""
 
-#: src/components/WalletsSidebar.tsx:223
+#: src/components/WalletsSidebar.tsx:203
 msgid "Tokens"
 msgstr ""
 
-#: src/components/card/WalletCardTotalBalance.tsx:45
+#: src/components/card/MasterNodeCardTotalBalance.tsx:56
+#: src/components/card/WalletCardTotalBalance.tsx:56
 #: src/components/rateLimited/WalletRateLimited.jsx:542
 msgid "Total Balance"
 msgstr "Balance Total"
@@ -3266,7 +3293,7 @@ msgstr "Balance Total"
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr ""
 
-#: src/components/WalletHistory.tsx:309
+#: src/components/WalletHistory.tsx:310
 msgid "Transactions"
 msgstr ""
 
@@ -3497,9 +3524,9 @@ msgstr ""
 #~ msgid "Want to have a delay before the next plot starts?"
 #~ msgstr "Want to have a delay before the next plot starts?"
 
-#: src/components/WalletsSidebar.tsx:165
-msgid "Want to see your old balance for yourself?"
-msgstr ""
+#: src/components/WalletsSidebar.tsx:173
+#~ msgid "Want to see your old balance for yourself?"
+#~ msgstr ""
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:252
 #~ msgid "Warm start"
@@ -3526,6 +3553,10 @@ msgstr ""
 #~ msgid "Warning: Verify that the offered CAT asset IDs match the asset IDs of the tokens you expect to receive."
 #~ msgstr ""
 
+#: src/components/WalletsSidebar.tsx:139
+msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/><2/>(Approximate time: July 26th, 2022 @ 17:00 UTC)"
+msgstr ""
+
 #: src/components/block/Block.jsx:194
 #~ msgid "Weight"
 #~ msgstr "Weight"
@@ -3547,8 +3578,8 @@ msgstr "¡Bienvenido! Las siguientes palabras se utilizan para la copia de segur
 #~ msgstr ""
 
 #: src/components/WalletsSidebar.tsx:135
-msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: <0/>"
-msgstr ""
+#~ msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: <0/>"
+#~ msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:315
 msgid "When you receive the setup info packet from your admin, enter it below to complete your Rate Limited Wallet setup:"
@@ -3645,7 +3676,7 @@ msgstr "Cuando reciba el paquete de información de configuración de su adminis
 #~ msgid "You will recieve <0/> to {address}"
 #~ msgstr "You will receive <0/> to {address}"
 
-#: src/components/WalletsSidebar.tsx:131
+#: src/components/WalletsSidebar.tsx:135
 msgid "Your CAT tokens have been upgraded!"
 msgstr ""
 

@@ -7,6 +7,7 @@ import { Offers as OffersIcon } from '@chives/icons';
 import { Box, Typography, ListItemIcon, MenuItem } from '@mui/material';
 import WalletHistory from '../WalletHistory';
 import WalletStandardCards from './WalletStandardCards';
+import MasterNodeStandardCards from './MasterNodeStandardCards';
 import WalletReceiveAddress from '../WalletReceiveAddress';
 import WalletSend from '../WalletSend';
 import WalletHeader from '../WalletHeader';
@@ -20,7 +21,7 @@ export default function StandardWallet(props: StandardWalletProps) {
   // const showDebugInformation = useShowDebugInformation();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<
-    'summary' | 'send' | 'receive'
+    'summary' | 'send' | 'receive' | 'masternodesummary'
   >('summary');
 
   function handleCreateOffer() {
@@ -61,6 +62,12 @@ export default function StandardWallet(props: StandardWalletProps) {
       <Box display={selectedTab === 'summary' ? 'block' : 'none'}>
         <Flex flexDirection="column" gap={4}>
           <WalletStandardCards walletId={walletId} />
+          <WalletHistory walletId={walletId} />
+        </Flex>
+      </Box>
+      <Box display={selectedTab === 'masternodesummary' ? 'block' : 'none'}>
+        <Flex flexDirection="column" gap={4}>
+          <MasterNodeStandardCards walletId={walletId} />
           <WalletHistory walletId={walletId} />
         </Flex>
       </Box>

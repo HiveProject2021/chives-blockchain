@@ -147,34 +147,6 @@ export default function WalletsSidebar() {
               (Approximate time: July 26th, 2022 @ 17:00 UTC)
             </Trans>
           </Typography>
-          <ActionsStyled>
-            <Flex gap={3} flexDirection="column" width="100%">
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={() =>
-                  openExternal(
-                    'https://cat1.chivescoin.org/#publicKey=' +
-                      privateKey.pk +
-                      '&fingerprint=' +
-                      fingerprint
-                  )
-                }
-                disabled={isLoadingFingerprint || isLoadingPrivateKey}
-              >
-                <Trans>Check my snapshot balance</Trans>
-              </Button>
-              <Button variant="outlined" size="large" onClick={handleOpenBlogPost}>
-                <Trans>Read the blog post for details</Trans>
-              </Button>
-            </Flex>
-          </ActionsStyled>
-          <p>
-            <Trans>Want to see your old balance for yourself?</Trans>
-          </p>
-          <Link target="_blank" href="https://www.chivescoin.org/download/">
-            <Trans>Click here to download an older version of the wallet</Trans>
-          </Link>
         </ContentStyled>
       </WalletEmptyDialog>
     );

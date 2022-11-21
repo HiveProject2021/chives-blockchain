@@ -825,7 +825,7 @@ msgstr "Hylkää"
 #~ msgid "Enter your passphrase:"
 #~ msgstr "Enter your passphrase:"
 
-#: src/components/CardSimple/CardSimple.tsx:58
+#: src/components/CardSimple/CardSimple.tsx:63
 #: src/hooks/useShowError.tsx:11
 msgid "Error"
 msgstr "Virhe"
@@ -2273,8 +2273,8 @@ msgstr "Valitse..."
 
 #: src/components/LayoutMain/LayoutFooter.tsx:53
 #: src/components/Settings/SettingsApp.tsx:108
-msgid "Send Feedback"
-msgstr "Lähetä palautetta"
+#~ msgid "Send Feedback"
+#~ msgstr "Lähetä palautetta"
 
 #: src/components/_wallet_old/rateLimited/WalletRateLimited.jsx:460
 #~ msgid "Send this info packet to your Rate Limited Wallet user who must use it to complete setup of their wallet:"

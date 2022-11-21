@@ -82,8 +82,8 @@ msgstr ""
 msgid "A value of {0} is recommended"
 msgstr ""
 
-#: src/electron/main.tsx:597
-#: src/electron/main.tsx:684
+#: src/electron/main.tsx:664
+#: src/electron/main.tsx:751
 msgid "About Chives Blockchain"
 msgstr "Chives Blokzinciri Hakkında"
 
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Base Farmer Reward Amount"
 msgstr "Temel Madenci Ödül Miktarı"
 
-#: src/components/offers/OfferShareDialog.tsx:1066
+#: src/components/offers/OfferShareDialog.tsx:1030
 msgid "Before posting an offer in Keybase to the #{channelName} channel, you must first join the {teamName} team. Please note that it might take a few moments to join the channel."
 msgstr ""
 
@@ -354,6 +354,10 @@ msgstr "Blok Hash {headerHash}"
 #: src/components/block/Block.jsx:141
 msgid "Block with hash {headerHash} does not exist."
 msgstr "{headerHash} Hash'li blok mevcut değil."
+
+#: src/electron/main.tsx:558
+msgid "Blockchain Explorer"
+msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:121
 msgid "Blocks"
@@ -402,8 +406,8 @@ msgstr "Göz at"
 #: src/components/offers/OfferAcceptConfirmationDialog.tsx:26
 #: src/components/offers/OfferDataEntryDialog.tsx:67
 #: src/components/offers/OfferEditorConfirmationDialog.tsx:18
-#: src/components/offers/OfferShareDialog.tsx:1098
-#: src/components/offers/OfferShareDialog.tsx:1271
+#: src/components/offers/OfferShareDialog.tsx:1062
+#: src/components/offers/OfferShareDialog.tsx:1235
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:127
 #: src/components/plotNFT/select/PlotNFTSelectBase.tsx:86
 #: src/components/plotNFT/select/PlotNFTSelectFaucet.tsx:29
@@ -454,7 +458,7 @@ msgstr "Değiştir"
 
 #: src/components/settings/ChangePassphrasePrompt.tsx:291
 #: src/components/settings/Settings.tsx:159
-#: src/components/settings/SettingsPanel.tsx:165
+#: src/components/settings/SettingsPanel.tsx:167
 msgid "Change Passphrase"
 msgstr ""
 
@@ -464,32 +468,44 @@ msgid "Change Pool"
 msgstr "Havuzu Değiştir"
 
 #: src/electron/main.tsx:576
-msgid "Chat on KeyBase"
-msgstr "Keybase'de Sohbet Et"
+#~ msgid "Chat on KeyBase"
+#~ msgstr "Keybase'de Sohbet Et"
 
 #: src/components/offers/NFTOfferPreview.tsx:177
-msgid "Check Provenance on MintGarden"
-msgstr ""
+#~ msgid "Check Provenance on MintGarden"
+#~ msgstr ""
 
-#: src/components/offers/NFTOfferPreview.tsx:187
+#: src/components/offers/NFTOfferPreview.tsx:177
 msgid "Check Provenance on SkyNFT"
 msgstr ""
 
 #: src/components/offers/NFTOfferPreview.tsx:197
-msgid "Check Provenance on Spacescan.io"
-msgstr ""
+#~ msgid "Check Provenance on Spacescan.io"
+#~ msgstr ""
 
-#: src/electron/main.tsx:594
+#: src/electron/main.tsx:661
 msgid "Chives"
 msgstr ""
 
 #: src/electron/main.tsx:533
-msgid "Chives Blockchain Wiki"
-msgstr "Chives Blokchain Wiki"
+#~ msgid "Chives Blockchain Wiki"
+#~ msgstr "Chives Blokchain Wiki"
+
+#: src/electron/main.tsx:576
+msgid "Chives Pool"
+msgstr ""
+
+#: src/electron/main.tsx:570
+msgid "Chives Swap"
+msgstr ""
 
 #: src/components/_wallet_old/standard/WalletStandard.tsx:642
 #~ msgid "Chives Wallet"
 #~ msgstr "Chives Wallet"
+
+#: src/electron/main.tsx:552
+msgid "Chives Website"
+msgstr ""
 
 #: src/components/app/AppSelectMode.tsx:163
 msgid "Choose Farming Mode"
@@ -519,13 +535,13 @@ msgstr "Ödülleri Al"
 #: src/components/nfts/NFTMoveToProfileDialog.tsx:446
 #: src/components/nfts/NFTTransferAction.tsx:265
 #: src/components/offers/OfferManager.tsx:194
-#: src/components/offers/OfferShareDialog.tsx:575
-#: src/components/offers/OfferShareDialog.tsx:656
-#: src/components/offers/OfferShareDialog.tsx:738
-#: src/components/offers/OfferShareDialog.tsx:840
-#: src/components/offers/OfferShareDialog.tsx:1031
-#: src/components/offers/OfferShareDialog.tsx:1163
-#: src/components/offers/OfferShareDialog.tsx:1453
+#: src/components/offers/OfferShareDialog.tsx:539
+#: src/components/offers/OfferShareDialog.tsx:620
+#: src/components/offers/OfferShareDialog.tsx:702
+#: src/components/offers/OfferShareDialog.tsx:804
+#: src/components/offers/OfferShareDialog.tsx:995
+#: src/components/offers/OfferShareDialog.tsx:1127
+#: src/components/offers/OfferShareDialog.tsx:1417
 #: src/components/plot/PlotAddDirectoryDialog.tsx:130
 #: src/components/plot/queue/PlotQueueLogDialog.tsx:81
 msgid "Close"
@@ -594,6 +610,10 @@ msgstr ""
 #: src/components/_wallet_old/create/WalletCreate.jsx:122
 #~ msgid "Coloured Coin Options"
 #~ msgstr "Colored Coin Options"
+
+#: src/electron/main.tsx:564
+msgid "Community Autonomy"
+msgstr ""
 
 #: src/components/plotNFT/PlotNFTAbsorbRewards.tsx:180
 #: src/electron/main.tsx:350
@@ -688,7 +708,7 @@ msgstr "Bağlantı tipi"
 msgid "Connections"
 msgstr "Bağlantılar"
 
-#: src/electron/main.tsx:557
+#: src/electron/main.tsx:533
 msgid "Contribute on GitHub"
 msgstr "GitHub'da Katkıda Bulun"
 
@@ -974,6 +994,14 @@ msgstr ""
 msgid "Depending on your system configuration, you may find that an alternative plotter produces plots faster than the default Chives Proof of Space plotter. If unsure, use the default Chives Proof of Space plotter."
 msgstr ""
 
+#: src/components/settings/SettingsPanel.tsx:219
+msgid "Derivation Index"
+msgstr ""
+
+#: src/components/settings/SettingsDerivationIndex.tsx:57
+msgid "Derivation index must be greater than {index}"
+msgstr ""
+
 #: src/components/nfts/detail/NFTDetail.tsx:73
 #: src/components/nfts/detail/NFTDetailV2.tsx:97
 msgid "Description"
@@ -1000,7 +1028,7 @@ msgstr "Geliştirici"
 msgid "Developer Tools"
 msgstr "Geliştirici araçları"
 
-#: src/components/offers/OfferShareDialog.tsx:550
+#: src/components/offers/OfferShareDialog.tsx:514
 msgid "Dexie URL"
 msgstr ""
 
@@ -1041,6 +1069,10 @@ msgstr "Bitfield arazi oluşturmayı kapat"
 msgid "Disconnect"
 msgstr "Bağlantıyı Kes"
 
+#: src/electron/main.tsx:606
+msgid "Discord"
+msgstr ""
+
 #: src/components/offers/OfferManager.tsx:465
 msgid "Display Offer Data"
 msgstr ""
@@ -1054,7 +1086,7 @@ msgstr ""
 #~ msgid "Distributed Identity Options"
 #~ msgstr "Distributed Identity Options"
 
-#: src/components/offers/OfferShareDialog.tsx:1446
+#: src/components/offers/OfferShareDialog.tsx:1410
 #: src/hooks/useOpenUnsafeLink.tsx:77
 msgid "Do not show this dialog again"
 msgstr ""
@@ -1098,6 +1130,10 @@ msgstr ""
 
 #: src/components/plot/card/PlotCardPlotsDuplicate.tsx:11
 msgid "Duplicate Plots"
+msgstr ""
+
+#: src/electron/main.tsx:588
+msgid "Eco Pool"
 msgstr ""
 
 #: src/electron/main.tsx:432
@@ -1187,6 +1223,10 @@ msgstr "Hedef klasörü hariç et"
 msgid "Explore the Chives ecosystem; discover and trade great NFTs"
 msgstr ""
 
+#: src/electron/main.tsx:612
+msgid "Facebook"
+msgstr ""
+
 #: src/components/offers/utils.ts:174
 #: src/components/plot/PlotHarvester.tsx:118
 msgid "Failed"
@@ -1196,7 +1236,7 @@ msgstr ""
 msgid "Failed to decode NFT identifier"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:420
+#: src/components/offers/OfferShareDialog.tsx:384
 msgid "Failed to execute Keybase command: {stderr}"
 msgstr ""
 
@@ -1339,7 +1379,7 @@ msgid "Fees included in offer:"
 msgstr ""
 
 #: src/electron/main.tsx:424
-#: src/electron/main.tsx:631
+#: src/electron/main.tsx:698
 msgid "File"
 msgstr "Dosya"
 
@@ -1364,12 +1404,16 @@ msgid "Finished"
 msgstr "Bitti"
 
 #: src/electron/main.tsx:582
-msgid "Follow on Twitter"
-msgstr "Twitter'da Takip Et"
+#~ msgid "Follow on Twitter"
+#~ msgstr "Twitter'da Takip Et"
+
+#: src/electron/main.tsx:582
+msgid "Foxy Pool"
+msgstr ""
 
 #: src/electron/main.tsx:541
-msgid "Frequently Asked Questions"
-msgstr "Sıkça Sorulan Sorular"
+#~ msgid "Frequently Asked Questions"
+#~ msgstr "Sıkça Sorulan Sorular"
 
 #: src/components/dashboard/DashboardSideBar.tsx:77
 #: src/components/fullNode/FullNode.jsx:132
@@ -1404,12 +1448,12 @@ msgstr ""
 msgid "Go collect some gems"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1028
-#: src/components/offers/OfferShareDialog.tsx:1089
+#: src/components/offers/OfferShareDialog.tsx:992
+#: src/components/offers/OfferShareDialog.tsx:1053
 msgid "Go to #{channelName}"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1160
+#: src/components/offers/OfferShareDialog.tsx:1124
 msgid "Go to Offerpool"
 msgstr ""
 
@@ -1433,7 +1477,7 @@ msgstr ""
 msgid "Harvesters"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:815
+#: src/components/offers/OfferShareDialog.tsx:779
 msgid "Hashgreen DEX URL"
 msgstr ""
 
@@ -1508,12 +1552,16 @@ msgstr "IP Adresi / Yönetici"
 msgid "If none selected, then it will default to the temporary directory."
 msgstr "Hiçbiri seçilmezse, varsayılan olarak geçici dizine ayarlanır."
 
-#: src/components/offers/OfferShareDialog.tsx:767
+#: src/components/offers/OfferShareDialog.tsx:731
 msgid "If selected, your offer will be not be shared publicly."
 msgstr ""
 
 #: src/components/offers/OfferManager.tsx:129
 msgid "If you have already shared your offer file, you may need to submit a transaction to cancel the pending offer. Click \"Cancel on blockchain\" to submit a cancellation transaction."
+msgstr ""
+
+#: src/electron/main.tsx:594
+msgid "Igi Pool"
 msgstr ""
 
 #: src/components/nfts/NFTPreview.tsx:88
@@ -1542,7 +1590,7 @@ msgstr "İşlem Sürüyor"
 msgid "In exchange for"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1254
+#: src/components/offers/OfferShareDialog.tsx:1218
 msgid "In exchange for:"
 msgstr ""
 
@@ -1592,7 +1640,11 @@ msgstr "Dizin"
 msgid "Initializing..."
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1061
+#: src/electron/main.tsx:636
+msgid "Instagram"
+msgstr ""
+
+#: src/components/offers/OfferShareDialog.tsx:1025
 msgid "Install Keybase"
 msgstr ""
 
@@ -1652,7 +1704,7 @@ msgstr ""
 msgid "Join farming pools"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1078
+#: src/components/offers/OfferShareDialog.tsx:1042
 msgid "Join {teamName}"
 msgstr ""
 
@@ -1661,11 +1713,11 @@ msgstr ""
 msgid "K-Size"
 msgstr "K-Ebadı"
 
-#: src/components/offers/OfferShareDialog.tsx:964
+#: src/components/offers/OfferShareDialog.tsx:928
 msgid "Keybase command failed {e}. If you haven't installed Keybase, you can download from https://keybase.io"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1053
+#: src/components/offers/OfferShareDialog.tsx:1017
 msgid "Keybase is a secure messaging and file sharing application. To share an offer in the Keybase {teamName} team, you must first have Keybase installed."
 msgstr ""
 
@@ -1709,6 +1761,10 @@ msgstr ""
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:294
 #: src/components/plotNFT/PlotNFTCard.tsx:346
 msgid "Launcher Id"
+msgstr ""
+
+#: src/electron/main.tsx:642
+msgid "Lbank Exchange"
 msgstr ""
 
 #: src/components/plotNFT/PlotNFTGetPoolLoginLinkDialog.tsx:76
@@ -1843,6 +1899,14 @@ msgstr ""
 msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "İşleme ödülleri için gönderim adreslerini yönet"
 
+#: src/components/dashboard/DashboardSideBar.tsx:61
+#~ msgid "MasterNode"
+#~ msgstr ""
+
+#: src/electron/main.tsx:630
+msgid "Medium"
+msgstr ""
+
 #: src/components/nfts/NFTDetails.tsx:195
 msgid "Metadata Hash"
 msgstr ""
@@ -1860,7 +1924,7 @@ msgstr "MiB Yukarı/Aşağı"
 #~ msgstr "Migrate"
 
 #: src/components/settings/Settings.tsx:182
-#: src/components/settings/SettingsPanel.tsx:186
+#: src/components/settings/SettingsPanel.tsx:188
 msgid "Migrate Keyring"
 msgstr ""
 
@@ -1873,7 +1937,7 @@ msgid "Migration required"
 msgstr ""
 
 #: src/components/settings/Settings.tsx:115
-#: src/components/settings/SettingsPanel.tsx:131
+#: src/components/settings/SettingsPanel.tsx:133
 msgid "Migration required to support passphrase protection"
 msgstr ""
 
@@ -1881,7 +1945,7 @@ msgstr ""
 msgid "Minimum Difficulty"
 msgstr "Zorluk Seviyesi"
 
-#: src/components/offers/OfferShareDialog.tsx:631
+#: src/components/offers/OfferShareDialog.tsx:595
 msgid "MintGarden URL"
 msgstr ""
 
@@ -2198,12 +2262,12 @@ msgstr ""
 msgid "Offer Identifier"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:545
-#: src/components/offers/OfferShareDialog.tsx:626
-#: src/components/offers/OfferShareDialog.tsx:708
-#: src/components/offers/OfferShareDialog.tsx:810
-#: src/components/offers/OfferShareDialog.tsx:1019
-#: src/components/offers/OfferShareDialog.tsx:1144
+#: src/components/offers/OfferShareDialog.tsx:509
+#: src/components/offers/OfferShareDialog.tsx:590
+#: src/components/offers/OfferShareDialog.tsx:672
+#: src/components/offers/OfferShareDialog.tsx:774
+#: src/components/offers/OfferShareDialog.tsx:983
+#: src/components/offers/OfferShareDialog.tsx:1108
 msgid "Offer Shared"
 msgstr ""
 
@@ -2215,7 +2279,7 @@ msgstr ""
 msgid "Offer has been accepted and is awaiting confirmation."
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:713
+#: src/components/offers/OfferShareDialog.tsx:677
 msgid "OfferBin URL"
 msgstr ""
 
@@ -2300,7 +2364,7 @@ msgstr ""
 #: src/components/app/AppPassPrompt.tsx:139
 #: src/components/settings/RemovePassphrasePrompt.tsx:129
 #: src/components/settings/SetPassphrasePrompt.tsx:169
-#: src/components/settings/SettingsPanel.tsx:217
+#: src/components/settings/SettingsPanel.tsx:236
 msgid "Passphrase"
 msgstr ""
 
@@ -2326,22 +2390,22 @@ msgstr ""
 #~ msgstr "Passphrase is incorrect"
 
 #: src/components/settings/Settings.tsx:86
-#: src/components/settings/SettingsPanel.tsx:102
+#: src/components/settings/SettingsPanel.tsx:104
 msgid "Passphrase protection has been disabled"
 msgstr ""
 
 #: src/components/settings/Settings.tsx:132
-#: src/components/settings/SettingsPanel.tsx:142
+#: src/components/settings/SettingsPanel.tsx:144
 msgid "Passphrase protection is disabled"
 msgstr ""
 
 #: src/components/settings/Settings.tsx:129
-#: src/components/settings/SettingsPanel.tsx:138
+#: src/components/settings/SettingsPanel.tsx:140
 msgid "Passphrase protection is enabled"
 msgstr ""
 
 #: src/components/settings/Settings.tsx:118
-#: src/components/settings/SettingsPanel.tsx:132
+#: src/components/settings/SettingsPanel.tsx:134
 msgid "Passphrase support requires migrating your keys to a new keyring"
 msgstr ""
 
@@ -2949,17 +3013,25 @@ msgstr ""
 #~ msgid "Recover Wallet"
 #~ msgstr "Recover Wallet"
 
+#: src/electron/main.tsx:624
+msgid "Reddit"
+msgstr ""
+
 #: src/components/plot/PlotHeader.tsx:75
 #: src/components/plot/overview/PlotOverviewHero.tsx:59
 #: src/components/plot/overview/PlotOverviewPlots.tsx:68
 msgid "Refresh Plots"
 msgstr "Arsaları Yenile"
 
+#: src/electron/main.tsx:648
+msgid "Register Lbank Account (Get 20% rebate)"
+msgstr ""
+
 #: src/components/pool/PoolInfo.tsx:32
 msgid "Relative Lock Height"
 msgstr ""
 
-#: src/electron/main.tsx:549
+#: src/electron/main.tsx:541
 msgid "Release Notes"
 msgstr "Sürüm notları"
 
@@ -2970,7 +3042,7 @@ msgstr ""
 #: src/components/settings/RemovePassphrasePrompt.tsx:117
 #: src/components/settings/RemovePassphrasePrompt.tsx:175
 #: src/components/settings/Settings.tsx:194
-#: src/components/settings/SettingsPanel.tsx:196
+#: src/components/settings/SettingsPanel.tsx:198
 msgid "Remove Passphrase"
 msgstr ""
 
@@ -2987,8 +3059,8 @@ msgstr "Kaldırılıyor"
 #~ msgstr "Rename"
 
 #: src/electron/main.tsx:568
-msgid "Report an Issue..."
-msgstr "Sorun Bildirin..."
+#~ msgid "Report an Issue..."
+#~ msgstr "Sorun Bildirin..."
 
 #: src/components/offers/OfferManager.tsx:392
 msgid "Requested"
@@ -3031,6 +3103,7 @@ msgstr "Geçmek için Güvenli"
 #: src/components/block/FarmManageFarmingRewards.tsx:178
 #: src/components/farm/FarmManageFarmingRewards.tsx:191
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:130
+#: src/components/settings/SettingsDerivationIndex.tsx:98
 msgid "Save"
 msgstr "Kaydet"
 
@@ -3066,7 +3139,7 @@ msgid "Second temporary folder location"
 msgstr "Geçiçi dosya konumu"
 
 #: src/components/settings/Settings.tsx:124
-#: src/components/settings/SettingsPanel.tsx:134
+#: src/components/settings/SettingsPanel.tsx:136
 msgid "Secure your keychain using a strong passphrase"
 msgstr ""
 
@@ -3189,7 +3262,7 @@ msgstr ""
 #: src/components/settings/SetPassphrasePrompt.tsx:154
 #: src/components/settings/SetPassphrasePrompt.tsx:258
 #: src/components/settings/Settings.tsx:205
-#: src/components/settings/SettingsPanel.tsx:205
+#: src/components/settings/SettingsPanel.tsx:207
 msgid "Set Passphrase"
 msgstr ""
 
@@ -3207,40 +3280,40 @@ msgstr ""
 #~ msgstr "Settings are located at the upper right corner"
 
 #: src/components/offers/OfferManager.tsx:426
-#: src/components/offers/OfferShareDialog.tsx:1105
-#: src/components/offers/OfferShareDialog.tsx:1278
+#: src/components/offers/OfferShareDialog.tsx:1069
+#: src/components/offers/OfferShareDialog.tsx:1242
 msgid "Share"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1405
+#: src/components/offers/OfferShareDialog.tsx:1369
 msgid "Share Offer"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:765
+#: src/components/offers/OfferShareDialog.tsx:729
 msgid "Share Privately"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:587
+#: src/components/offers/OfferShareDialog.tsx:551
 msgid "Share on Dexie"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:852
+#: src/components/offers/OfferShareDialog.tsx:816
 msgid "Share on Hashgreen DEX"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1048
+#: src/components/offers/OfferShareDialog.tsx:1012
 msgid "Share on Keybase"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:668
+#: src/components/offers/OfferShareDialog.tsx:632
 msgid "Share on MintGarden"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:750
+#: src/components/offers/OfferShareDialog.tsx:714
 msgid "Share on OfferBin"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1175
+#: src/components/offers/OfferShareDialog.tsx:1139
 msgid "Share on offerpool"
 msgstr ""
 
@@ -3302,7 +3375,7 @@ msgstr ""
 msgid "Specify a value of 0 to use all available threads"
 msgstr ""
 
-#: src/electron/main.tsx:645
+#: src/electron/main.tsx:712
 msgid "Speech"
 msgstr "Konuşma"
 
@@ -3403,6 +3476,10 @@ msgstr "Onayla"
 msgid "Success"
 msgstr ""
 
+#: src/components/settings/SettingsDerivationIndex.tsx:66
+msgid "Successfully updated the derivation index. Your balances may take a while to update."
+msgstr ""
+
 #: src/components/offers/OfferViewer.tsx:275
 msgid "Summary"
 msgstr ""
@@ -3449,6 +3526,10 @@ msgstr "Eşitleniyor"
 msgid "Target Puzzle Hash"
 msgstr ""
 
+#: src/electron/main.tsx:618
+msgid "Telegram"
+msgstr ""
+
 #: src/components/plot/add/PlotAddChooseSize.tsx:18
 #~ msgid "Temporary files are created during the plotting process which exceeds the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
 #~ msgstr ""
@@ -3486,6 +3567,10 @@ msgstr ""
 #: src/components/app/AppTimeBomb.tsx:28
 #~ msgid "The application will stop working at block height 193536."
 #~ msgstr "The application will stop working at block height 193536."
+
+#: src/components/settings/SettingsPanel.tsx:221
+msgid "The derivation index sets the range of wallet addresses that the wallet scans the blockchain for. This number is generally higher if you have a lot of transactions or canceled offers for XCC, CATs, or NFTs. If you believe your balance is incorrect because it’s missing coins, then increasing the derivation index could help the wallet include the missing coins in the balance total."
+msgstr ""
 
 #: src/components/farm/FarmFullNodeConnections.tsx:95
 msgid "The full node that your farmer is connected to is below. <0>Learn more</0>"
@@ -3854,6 +3939,10 @@ msgstr ""
 msgid "Transfer NFT"
 msgstr ""
 
+#: src/electron/main.tsx:600
+msgid "Twitter"
+msgstr ""
+
 #: src/components/_wallet_old/WalletHistory.tsx:25
 #~ msgid "Type"
 #~ msgstr "Type"
@@ -3878,11 +3967,11 @@ msgstr ""
 #~ msgid "Unable to create plot NFT"
 #~ msgstr "Unable to create plot NFT"
 
-#: src/components/offers/OfferShareDialog.tsx:979
+#: src/components/offers/OfferShareDialog.tsx:943
 msgid "Unable to open Keybase. Install Keybase from https://keybase.io"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:886
+#: src/components/offers/OfferShareDialog.tsx:850
 msgid "Unable to open browser. Install Keybase from https://keybase.io"
 msgstr ""
 
@@ -3991,30 +4080,29 @@ msgstr ""
 msgid "View an Offer"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:568
+#: src/components/offers/OfferShareDialog.tsx:532
 msgid "View on Dexie"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:833
+#: src/components/offers/OfferShareDialog.tsx:797
 msgid "View on Hashgreen DEX"
 msgstr ""
 
-#: src/components/nfts/NFTContextualActions.tsx:563
-#: src/components/offers/OfferShareDialog.tsx:649
+#: src/components/offers/OfferShareDialog.tsx:613
 msgid "View on MintGarden"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:731
+#: src/components/offers/OfferShareDialog.tsx:695
 msgid "View on OfferBin"
 msgstr ""
 
-#: src/components/nfts/NFTContextualActions.tsx:570
+#: src/components/nfts/NFTContextualActions.tsx:563
 msgid "View on SkyNFT"
 msgstr ""
 
 #: src/components/nfts/NFTContextualActions.tsx:577
-msgid "View on Spacescan.io"
-msgstr ""
+#~ msgid "View on Spacescan.io"
+#~ msgstr ""
 
 #: src/components/_wallet_old/rateLimited/WalletRateLimited.jsx:562
 #~ msgid "View pending balances"
@@ -4338,11 +4426,11 @@ msgstr ""
 msgid "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1023
+#: src/components/offers/OfferShareDialog.tsx:987
 msgid "Your offer has been successfully posted to Keybase."
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1249
+#: src/components/offers/OfferShareDialog.tsx:1213
 msgid "Your offer:"
 msgstr ""
 
@@ -4353,12 +4441,12 @@ msgid "Your passphrase can be stored in your system's secure credential store. C
 msgstr ""
 
 #: src/components/settings/Settings.tsx:77
-#: src/components/settings/SettingsPanel.tsx:91
+#: src/components/settings/SettingsPanel.tsx:93
 msgid "Your passphrase has been set"
 msgstr ""
 
 #: src/components/settings/Settings.tsx:68
-#: src/components/settings/SettingsPanel.tsx:80
+#: src/components/settings/SettingsPanel.tsx:82
 msgid "Your passphrase has been updated"
 msgstr ""
 
@@ -4427,7 +4515,7 @@ msgstr ""
 msgid "{0, plural, one {mojo} other {mojos}}"
 msgstr ""
 
-#: src/components/offers/OfferShareDialog.tsx:1148
+#: src/components/offers/OfferShareDialog.tsx:1112
 msgid "{0}"
 msgstr ""
 
