@@ -6,6 +6,7 @@ import { Flex } from '@chives/core';
 import { Offers as OffersIcon } from '@chives/icons';
 import { Box, Typography, ListItemIcon, MenuItem } from '@mui/material';
 import WalletHistory from '../WalletHistory';
+import MasterNodeList from '../MasterNodeList';
 import WalletStandardCards from './WalletStandardCards';
 import MasterNodeStandardCards from './MasterNodeStandardCards';
 import WalletReceiveAddress from '../WalletReceiveAddress';
@@ -68,7 +69,7 @@ export default function StandardWallet(props: StandardWalletProps) {
       <Box display={selectedTab === 'masternodesummary' ? 'block' : 'none'}>
         <Flex flexDirection="column" gap={4}>
           <MasterNodeStandardCards walletId={walletId} />
-          <WalletHistory walletId={walletId} />
+          <MasterNodeList walletId={walletId} />
         </Flex>
       </Box>
       <Box display={selectedTab === 'send' ? 'block' : 'none'}>

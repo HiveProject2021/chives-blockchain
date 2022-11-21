@@ -103,6 +103,8 @@ export const {
   useGetPrivateKeyQuery,
   useGetTransactionsQuery,
   useGetTransactionsCountQuery,
+  useGetMasterNodeListsQuery,
+  useGetMasterNodeListsCountQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useFarmBlockMutation,

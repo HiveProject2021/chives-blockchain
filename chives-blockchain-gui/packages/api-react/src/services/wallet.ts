@@ -785,6 +785,84 @@ export const walletApi = apiWithTag.injectEndpoints({
       ]),
     }),
 
+    getMasterNodeLists: build.query<
+      Transaction[],
+      {
+        walletId: number;
+        start?: number;
+        end?: number;
+        sortKey?: 'CONFIRMED_AT_HEIGHT' | 'RELEVANCE';
+        reverse?: boolean;
+      }
+    >({
+      query: ({ walletId, start, end, sortKey, reverse }) => ({
+        command: 'getTransactions',
+        service: Wallet,
+        args: [walletId, start, end, sortKey, reverse],
+      }),
+      transformResponse: (response: any) => response?.transactions,
+      providesTags(result) {
+        return result
+          ? [
+              ...result.map(
+                ({ name }) => ({ type: 'Transactions', id: name } as const)
+              ),
+              { type: 'Transactions', id: 'LIST' },
+            ]
+          : [{ type: 'Transactions', id: 'LIST' }];
+      },
+      onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
+        {
+          command: 'onCoinAdded',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeLists,
+        },
+        {
+          command: 'onCoinRemoved',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeLists,
+        },
+        {
+          command: 'onPendingTransaction',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeLists,
+        },
+      ]),
+    }),
+
+    getMasterNodeListsCount: build.query<
+      number,
+      {
+        walletId: number;
+      }
+    >({
+      query: ({ walletId }) => ({
+        command: 'getTransactionsCount',
+        service: Wallet,
+        args: [walletId],
+      }),
+      transformResponse: (response: any) => response?.count,
+      providesTags: (result, _error, { walletId }) =>
+        result ? [{ type: 'TransactionCount', id: walletId }] : [],
+      onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
+        {
+          command: 'onCoinAdded',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeListsCount,
+        },
+        {
+          command: 'onCoinRemoved',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeListsCount,
+        },
+        {
+          command: 'onPendingTransaction',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeListsCount,
+        },
+      ]),
+    }),
+
     getCurrentAddress: build.query<
       string,
       {
@@ -2160,6 +2238,8 @@ export const {
   useGetPrivateKeyQuery,
   useGetTransactionsQuery,
   useGetTransactionsCountQuery,
+  useGetMasterNodeListsQuery,
+  useGetMasterNodeListsCountQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useFarmBlockMutation,
