@@ -879,9 +879,10 @@ msgstr "Ta bort obekräftade transaktioner"
 #~ msgstr "Depending on your system configuration, you may find that an alternative plotter produces plots faster than the default Chives Proof of Space plotter. If unsure, use the default Chives Proof of Space plotter."
 
 #: src/components/card/MasterNodeCardTotalBalance.tsx:63
-msgid "Derivation Index MS: {0}"
-msgstr ""
+#~ msgid "Derivation Index MS: {0}"
+#~ msgstr ""
 
+#: src/components/card/MasterNodeCardTotalBalance.tsx:63
 #: src/components/card/WalletCardTotalBalance.tsx:63
 msgid "Derivation Index: {0}"
 msgstr ""

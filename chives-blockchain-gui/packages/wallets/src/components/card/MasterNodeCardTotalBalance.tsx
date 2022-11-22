@@ -60,7 +60,7 @@ export default function MasterNodeCardTotalBalance(props: Props) {
       actions={hasDerivationIndex && (
         <Typography variant="body2" color="textSecondary" onClick={handleDerivationIndex}>
           <Flex alignItems="center" gap={1}>
-            <Trans>Derivation Index MS: {data?.index}</Trans>
+            <Trans>Derivation Index: {data?.index}</Trans>
             <TooltipIcon>
               <Trans>
                 The derivation index sets the range of wallet addresses that the wallet scans the blockchain for.

@@ -389,6 +389,31 @@ class MasterNodeManager:
         #print(f"All Data:")
         print("-" * 64)
         print("\n")
+    
+    def json_masternode(self, nft,counter):
+        json_masternode = {}
+        json_masternode['counter'] = counter
+        json_masternode['MasterNode NFT'] = str(nft.data[0].decode('utf-8'))
+        StakingData = nft.StakingData
+        StakingAmount = StakingData['stakingAmount']
+        json_masternode['StakingData'] = StakingData
+        json_masternode['StakingAmount'] = StakingData['stakingAmount']
+        json_masternode['StakingAddress'] = StakingData['StakingAddress']
+        if StakingData['stakingAmount']>0:
+            StakingData['stakingAmount'] = str(round(Decimal(StakingAmount/self.mojo_per_unit),8))
+        else:
+            StakingData['stakingAmount'] = 0
+        json_masternode['ReceivedAddress'] = StakingData['ReceivedAddress']
+        return json_masternode
+
+    async def masternode_list_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        nfts = await self.get_all_masternodes()
+        counter = 0
+        masternode_list_json = []
+        for nft in nfts:
+            counter += 1
+            masternode_list_json.append(self.json_masternode(nft,counter))
+        return masternode_list_json
 
     async def masternode_list(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         nfts = await self.get_all_masternodes()
@@ -867,6 +892,10 @@ class MasterNodeManager:
             nft = await self.masternode_wallet.get_nft_by_launcher_id(hexstr_to_bytes(launcher_id))
             get_all_masternodes.append(nft)
         return get_all_masternodes
+    
+    async def get_all_masternodes_count(self) -> List:
+        launcher_ids = await self.masternode_wallet.get_all_nft_ids()
+        return len(launcher_ids)
     
     async def cancel_masternode_staking_coins(self) -> List:
         cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins()

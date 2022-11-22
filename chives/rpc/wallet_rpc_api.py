@@ -165,6 +165,7 @@ class WalletRpcApi:
             "/masternode_staking": self.masternode_staking,
             "/masternode_register": self.masternode_register,
             "/masternode_cancel": self.masternode_cancel,
+            "/masternode_list_count": self.masternode_list_count,
         }
 
     async def _state_changed(self, *args) -> List[WsRpcMessage]:
@@ -766,16 +767,31 @@ class WalletRpcApi:
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
         await manager.chooseWallet(wallet_id)
-        get_all_masternodes = await manager.get_all_masternodes()
+        masternode_list_json = await manager.masternode_list_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        wallet_balance = {
-                    "wallet_id": wallet_id,
-                    "get_all_masternodes": get_all_masternodes,
-                    "fingerprint": self.service.logged_in_fingerprint,
-                    }
-        return {"masternode_result": wallet_balance}
+        return {
+                "wallet_id": wallet_id,
+                "transactions": masternode_list_json,
+                "fingerprint": self.service.logged_in_fingerprint,
+                }
+
     
+    async def masternode_list_count(self, request: Dict) -> Dict:
+        from chives.masternode.masternode_manager import MasterNodeManager
+        manager = MasterNodeManager()
+        await manager.connect()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
+        get_all_masternodes_count = await manager.get_all_masternodes_count()
+        await manager.close()
+
+        return {
+            "count": get_all_masternodes_count,
+            "wallet_id": wallet_id,
+        }
+
     async def masternode_init(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()

@@ -42,6 +42,8 @@ const apiWithTag = api.enhanceEndpoints({
     'PoolWalletStatus',
     'TransactionCount',
     'Transactions',
+    'MasterNodeListsCount',
+    'MasterNodeLists',
     'WalletBalance',
     'WalletConnections',
     'Wallets',
@@ -796,7 +798,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       }
     >({
       query: ({ walletId, start, end, sortKey, reverse }) => ({
-        command: 'getTransactions',
+        command: 'getMasterNodeLists',
         service: Wallet,
         args: [walletId, start, end, sortKey, reverse],
       }),
@@ -837,7 +839,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       }
     >({
       query: ({ walletId }) => ({
-        command: 'getTransactionsCount',
+        command: 'getMasterNodeListsCount',
         service: Wallet,
         args: [walletId],
       }),

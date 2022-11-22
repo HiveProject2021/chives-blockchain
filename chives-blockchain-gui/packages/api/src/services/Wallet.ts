@@ -221,6 +221,28 @@ export default class Wallet extends Service {
     });
   }
 
+  async getMasterNodeLists(
+    walletId: number,
+    start?: number,
+    end?: number,
+    sortKey?: 'CONFIRMED_AT_HEIGHT' | 'RELEVANCE',
+    reverse?: boolean
+  ) {
+    return this.command('masternode_list', {
+      walletId,
+      start,
+      end,
+      sortKey,
+      reverse,
+    });
+  }
+
+  async getMasterNodeListCount(walletId: number) {
+    return this.command('masternode_list_count', {
+      walletId,
+    });
+  }
+
   async getNextAddress(walletId: number, newAddress: boolean) {
     return this.command('get_next_address', {
       walletId,
