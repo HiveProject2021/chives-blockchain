@@ -101,6 +101,7 @@ msgstr "-"
 #~ msgid "Action"
 #~ msgstr "Action"
 
+#: src/components/MasterNodeHeader.tsx:74
 #: src/components/WalletHeader.tsx:75
 msgid "Actions"
 msgstr "Действия"
@@ -228,6 +229,7 @@ msgstr "Сумма должна быть не менее %{count}"
 #~ msgid "Are you sure you want to delete the plot? The plot cannot be recovered."
 #~ msgstr "Are you sure you want to delete the plot? The plot cannot be recovered."
 
+#: src/components/MasterNodeHeader.tsx:42
 #: src/components/WalletHeader.tsx:42
 msgid "Are you sure you want to delete unconfirmed transactions?"
 msgstr "Вы действительно хотите удалить неподтвержденные транзакции?"
@@ -550,6 +552,7 @@ msgstr "Название токена"
 #~ msgid "Confirm Passphrase"
 #~ msgstr "Confirm Passphrase"
 
+#: src/components/MasterNodeHeader.tsx:37
 #: src/components/WalletHeader.tsx:37
 msgid "Confirmation"
 msgstr "Подтверждение"
@@ -671,6 +674,7 @@ msgid "Create New Wallet"
 msgstr "Создать новый кошелек"
 
 #: src/components/cat/WalletCAT.tsx:129
+#: src/components/masternode/MasterNodeStandard.tsx:54
 #: src/components/standard/WalletStandard.tsx:56
 msgid "Create Offer"
 msgstr "Create Offer"
@@ -826,6 +830,7 @@ msgstr "Дата"
 #~ msgid "Delay"
 #~ msgstr "Delay"
 
+#: src/components/MasterNodeHeader.tsx:38
 #: src/components/WalletHeader.tsx:38
 #: src/components/cat/WalletDID.tsx:448
 #: src/components/cat/WalletDID.tsx:862
@@ -845,6 +850,7 @@ msgstr "Удалить"
 #~ msgid "Delete Plot"
 #~ msgstr "Delete Plot"
 
+#: src/components/MasterNodeHeader.tsx:87
 #: src/components/WalletHeader.tsx:88
 msgid "Delete Unconfirmed Transactions"
 msgstr "Удалить неподтвержденные транзакции"
@@ -1604,8 +1610,12 @@ msgid "Manage token list"
 msgstr "Управление списком токенов"
 
 #: src/components/WalletHeader.tsx:61
-msgid "MasterNodeSummary"
+msgid "Master Node"
 msgstr ""
+
+#: src/components/WalletHeader.tsx:61
+#~ msgid "MasterNodeSummary"
+#~ msgstr ""
 
 #: src/components/MasterNodeList.tsx:172
 #: src/components/WalletHistory.tsx:172
@@ -2482,6 +2492,7 @@ msgstr "Настройка кошелька пользователя с огра
 #~ msgid "Read the blog post for details"
 #~ msgstr ""
 
+#: src/components/MasterNodeHeader.tsx:60
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
 msgstr ""
@@ -2724,6 +2735,7 @@ msgstr "Выбранный файл восстановления:"
 #~ msgid "Sell"
 #~ msgstr "Sell"
 
+#: src/components/MasterNodeHeader.tsx:59
 #: src/components/WalletHeader.tsx:59
 #: src/components/WalletSend.tsx:196
 #: src/components/cat/WalletCATSend.tsx:250
@@ -2939,6 +2951,7 @@ msgstr "Подтвердить"
 msgid "Success"
 msgstr "Успешно"
 
+#: src/components/MasterNodeHeader.tsx:58
 #: src/components/WalletHeader.tsx:58
 msgid "Summary"
 msgstr "Сводка"
@@ -3103,17 +3116,17 @@ msgstr "Этот токен доступа проверен"
 msgid "This is not a valid address for sending funds to"
 msgstr "Этот адрес невалидный для отправки на него средств"
 
-#: src/components/standard/MasterNodeStandardCards.tsx:23
+#: src/components/masternode/MasterNodeStandardCards.tsx:23
 #: src/components/standard/WalletStandardCards.tsx:23
 msgid "This is the amount of Chives that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Chives that you have just spent but is not yet in the blockchain."
 msgstr "Это количество монет Chives, которое в настоящее время вы можете использовать для совершения транзакций. Баланс не включает ожидающие вознаграждения за фармиг, ожидающие входящие транзакции и монеты, которые вы только что потратили, но они еще не попали в блокчейн."
 
-#: src/components/standard/MasterNodeStandardCards.tsx:44
+#: src/components/masternode/MasterNodeStandardCards.tsx:44
 #: src/components/standard/WalletStandardCards.tsx:44
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
 msgstr "Здесь рассчитан размер ожидаемой сдачи, которая осталась в качестве размена после отправки монет. Размен вы отправили себе, но транзакция еще не была подтверждена."
 
-#: src/components/standard/MasterNodeStandardCards.tsx:37
+#: src/components/masternode/MasterNodeStandardCards.tsx:37
 #: src/components/standard/WalletStandardCards.tsx:37
 msgid "This is the sum of the incoming and outgoing pending transactions (not yet included into the blockchain). This does not include farming rewards."
 msgstr "Здесь рассчитана сумма входящих и исходящих ожидающих транзакций (еще не включенных в цепь блоков). Награды за фарминг не включены в сумму."
@@ -3126,7 +3139,7 @@ msgstr "Здесь рассчитана сумма входящих и исхо�
 #~ msgid "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 #~ msgstr "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 
-#: src/components/standard/MasterNodeStandardCards.tsx:16
+#: src/components/masternode/MasterNodeStandardCards.tsx:16
 #: src/components/standard/WalletStandardCards.tsx:16
 msgid "This is the total amount of chives in the blockchain at the current peak block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 msgstr "Это общее количество монет чиа в блокчейне в текущем пиковом блоке, который контролируется вашими закрытыми ключами. Он включает в себя замороженные вознаграждения за фарминг, но не ожидающие входящие и исходящие транзакции."
@@ -3135,7 +3148,7 @@ msgstr "Это общее количество монет чиа в блокче
 #~ msgid "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 #~ msgstr "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 
-#: src/components/standard/MasterNodeStandardCards.tsx:31
+#: src/components/masternode/MasterNodeStandardCards.tsx:31
 #: src/components/standard/WalletStandardCards.tsx:31
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
 msgstr "Это общий баланс + отложенный баланс: это то, каким будет ваш баланс после подтверждения всех ожидающих транзакций."
@@ -3239,7 +3252,7 @@ msgstr "Токен имеет пустой id актива"
 msgid "Token has empty name"
 msgstr "Токен имеет пустое имя"
 
-#: src/components/WalletsSidebar.tsx:203
+#: src/components/WalletsSidebar.tsx:201
 msgid "Tokens"
 msgstr "Токены"
 
@@ -3489,10 +3502,12 @@ msgstr "Кошелек не существует"
 #~ msgid "Wallet is not defined"
 #~ msgstr "Wallet is not defined"
 
+#: src/components/MasterNode.tsx:36
 #: src/components/Wallet.tsx:50
 msgid "Wallet with type {0} not supported"
 msgstr "Кошелек с типом {0} не поддерживается"
 
+#: src/components/MasterNode.tsx:22
 #: src/components/Wallet.tsx:23
 msgid "Wallet {walletId} not found"
 msgstr "Кошелек {walletId} не найден"
@@ -3575,8 +3590,12 @@ msgstr "Кошелек {walletId} не найден"
 #~ msgstr "Предупреждение: Проверьте, что предлагаемые ID активов CAT совпадают с идентификаторами активов токенов, которые вы ожидаете получить."
 
 #: src/components/WalletsSidebar.tsx:139
-msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/><2/>(Approximate time: July 26th, 2022 @ 17:00 UTC)"
+msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/>"
 msgstr ""
+
+#: src/components/WalletsSidebar.tsx:139
+#~ msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/><2/>(Approximate time: July 26th, 2022 @ 17:00 UTC)"
+#~ msgstr ""
 
 #: src/components/block/Block.jsx:194
 #~ msgid "Weight"

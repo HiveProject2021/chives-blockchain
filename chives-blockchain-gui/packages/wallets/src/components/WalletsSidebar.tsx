@@ -143,8 +143,6 @@ export default function WalletsSidebar() {
               be based on the balance as of block height:
               <br />
               <FormatLargeNumber value={2311760} />
-              <br />
-              (Approximate time: July 26th, 2022 @ 17:00 UTC)
             </Trans>
           </Typography>
         </ContentStyled>

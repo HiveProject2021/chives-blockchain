@@ -1900,6 +1900,10 @@ msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "채굴 보상 타겟 경로 관리"
 
 #: src/components/dashboard/DashboardSideBar.tsx:61
+#~ msgid "Master Node"
+#~ msgstr ""
+
+#: src/components/dashboard/DashboardSideBar.tsx:61
 #~ msgid "MasterNode"
 #~ msgstr ""
 

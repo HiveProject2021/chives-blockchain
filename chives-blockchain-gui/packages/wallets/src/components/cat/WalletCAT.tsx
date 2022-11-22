@@ -33,7 +33,7 @@ export default function WalletCAT(props: Props) {
   const openDialog = useOpenDialog();
   const [setCATName] = useSetCATNameMutation();
   const [selectedTab, setSelectedTab] = useState<
-    'summary' | 'send' | 'receive' | 'masternodesummary'
+    'summary' | 'send' | 'receive'
   >('summary');
 
   function handleRename() {

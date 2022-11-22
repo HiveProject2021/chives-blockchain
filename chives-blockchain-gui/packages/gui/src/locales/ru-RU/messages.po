@@ -2072,6 +2072,10 @@ msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "Управление целевыми адресами для получения вознаграждений за фарминг"
 
 #: src/components/dashboard/DashboardSideBar.tsx:61
+#~ msgid "Master Node"
+#~ msgstr ""
+
+#: src/components/dashboard/DashboardSideBar.tsx:61
 #~ msgid "MasterNode"
 #~ msgstr ""
 

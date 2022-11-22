@@ -5,24 +5,22 @@ import { WalletType } from '@chives/api';
 import { Flex } from '@chives/core';
 import { Offers as OffersIcon } from '@chives/icons';
 import { Box, Typography, ListItemIcon, MenuItem } from '@mui/material';
-import WalletHistory from '../WalletHistory';
-import WalletStandardCards from './WalletStandardCards';
+import MasterNodeList from '../MasterNodeList';
+import MasterNodeStandardCards from './MasterNodeStandardCards';
 import WalletReceiveAddress from '../WalletReceiveAddress';
 import WalletSend from '../WalletSend';
 import WalletHeader from '../WalletHeader';
-import MasterNodeList from '../MasterNodeList';
-import MasterNodeStandardCards from '../masternode/MasterNodeStandardCards';
 
-type StandardWalletProps = {
+type WalletMasterNodeProps = {
   walletId: number;
 };
 
-export default function StandardWallet(props: StandardWalletProps) {
+export default function WalletMasterNode(props: WalletMasterNodeProps) {
   const { walletId } = props;
   // const showDebugInformation = useShowDebugInformation();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<
-    'summary' | 'send' | 'receive' | 'masternodesummary'
+    'summary' | 'send' | 'receive'
   >('summary');
 
   function handleCreateOffer() {
@@ -61,12 +59,6 @@ export default function StandardWallet(props: StandardWalletProps) {
       />
 
       <Box display={selectedTab === 'summary' ? 'block' : 'none'}>
-        <Flex flexDirection="column" gap={4}>
-          <WalletStandardCards walletId={walletId} />
-          <WalletHistory walletId={walletId} />
-        </Flex>
-      </Box>
-      <Box display={selectedTab === 'masternodesummary' ? 'block' : 'none'}>
         <Flex flexDirection="column" gap={4}>
           <MasterNodeStandardCards walletId={walletId} />
           <MasterNodeList walletId={walletId} />

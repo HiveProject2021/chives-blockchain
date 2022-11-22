@@ -1904,6 +1904,10 @@ msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "Manage Your Farming Rewards Target Addresses"
 
 #: src/components/dashboard/DashboardSideBar.tsx:61
+#~ msgid "Master Node"
+#~ msgstr "Master Node"
+
+#: src/components/dashboard/DashboardSideBar.tsx:61
 #~ msgid "MasterNode"
 #~ msgstr "MasterNode"
 

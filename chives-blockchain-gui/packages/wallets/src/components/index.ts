@@ -7,5 +7,7 @@ export { default as Wallets } from './Wallets';
 export { default as WalletStatus } from './WalletStatus';
 export { default as WalletStatusHeader } from './WalletStatusHeader';
 export { default as WalletReceiveAddressField } from './WalletReceiveAddressField';
+export { default as WalletMasterNode } from './masternode/MasterNodeStandard';
+export { default as MasterNodes } from './MasterNodes';
 
 

@@ -101,6 +101,7 @@ msgstr "-"
 #~ msgid "Action"
 #~ msgstr "Action"
 
+#: src/components/MasterNodeHeader.tsx:74
 #: src/components/WalletHeader.tsx:75
 msgid "Actions"
 msgstr "操作"
@@ -228,6 +229,7 @@ msgstr "金额必须相同"
 #~ msgid "Are you sure you want to delete the plot? The plot cannot be recovered."
 #~ msgstr "Are you sure you want to delete the plot? The plot cannot be recovered."
 
+#: src/components/MasterNodeHeader.tsx:42
 #: src/components/WalletHeader.tsx:42
 msgid "Are you sure you want to delete unconfirmed transactions?"
 msgstr "确定要删除未确认的交易吗？"
@@ -550,6 +552,7 @@ msgstr "代币名称"
 #~ msgid "Confirm Passphrase"
 #~ msgstr "Confirm Passphrase"
 
+#: src/components/MasterNodeHeader.tsx:37
 #: src/components/WalletHeader.tsx:37
 msgid "Confirmation"
 msgstr "确认"
@@ -671,6 +674,7 @@ msgid "Create New Wallet"
 msgstr "新建钱包"
 
 #: src/components/cat/WalletCAT.tsx:129
+#: src/components/masternode/MasterNodeStandard.tsx:54
 #: src/components/standard/WalletStandard.tsx:56
 msgid "Create Offer"
 msgstr "Create Offer"
@@ -826,6 +830,7 @@ msgstr "日期"
 #~ msgid "Delay"
 #~ msgstr "Delay"
 
+#: src/components/MasterNodeHeader.tsx:38
 #: src/components/WalletHeader.tsx:38
 #: src/components/cat/WalletDID.tsx:448
 #: src/components/cat/WalletDID.tsx:862
@@ -845,6 +850,7 @@ msgstr "删除"
 #~ msgid "Delete Plot"
 #~ msgstr "Delete Plot"
 
+#: src/components/MasterNodeHeader.tsx:87
 #: src/components/WalletHeader.tsx:88
 msgid "Delete Unconfirmed Transactions"
 msgstr "删除未确认的交易"
@@ -1604,8 +1610,12 @@ msgid "Manage token list"
 msgstr ""
 
 #: src/components/WalletHeader.tsx:61
-msgid "MasterNodeSummary"
+msgid "Master Node"
 msgstr ""
+
+#: src/components/WalletHeader.tsx:61
+#~ msgid "MasterNodeSummary"
+#~ msgstr ""
 
 #: src/components/MasterNodeList.tsx:172
 #: src/components/WalletHistory.tsx:172
@@ -2482,6 +2492,7 @@ msgstr "费用限定型用户钱包设置"
 #~ msgid "Read the blog post for details"
 #~ msgstr ""
 
+#: src/components/MasterNodeHeader.tsx:60
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
 msgstr ""
@@ -2724,6 +2735,7 @@ msgstr "选择恢复文件："
 #~ msgid "Sell"
 #~ msgstr "Sell"
 
+#: src/components/MasterNodeHeader.tsx:59
 #: src/components/WalletHeader.tsx:59
 #: src/components/WalletSend.tsx:196
 #: src/components/cat/WalletCATSend.tsx:250
@@ -2939,6 +2951,7 @@ msgstr "提交"
 msgid "Success"
 msgstr "成功"
 
+#: src/components/MasterNodeHeader.tsx:58
 #: src/components/WalletHeader.tsx:58
 msgid "Summary"
 msgstr "摘要"
@@ -3103,17 +3116,17 @@ msgstr ""
 msgid "This is not a valid address for sending funds to"
 msgstr ""
 
-#: src/components/standard/MasterNodeStandardCards.tsx:23
+#: src/components/masternode/MasterNodeStandardCards.tsx:23
 #: src/components/standard/WalletStandardCards.tsx:23
 msgid "This is the amount of Chives that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Chives that you have just spent but is not yet in the blockchain."
 msgstr "这是你目前可以交易的韭菜币数额。该数额不包含处理中的农场奖励、收入交易，以及未经区块链确认的支付交易。"
 
-#: src/components/standard/MasterNodeStandardCards.tsx:44
+#: src/components/masternode/MasterNodeStandardCards.tsx:44
 #: src/components/standard/WalletStandardCards.tsx:44
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
 msgstr "处理中的找零钱, 是你发送支出的找回, 但是没有被链上确认."
 
-#: src/components/standard/MasterNodeStandardCards.tsx:37
+#: src/components/masternode/MasterNodeStandardCards.tsx:37
 #: src/components/standard/WalletStandardCards.tsx:37
 msgid "This is the sum of the incoming and outgoing pending transactions (not yet included into the blockchain). This does not include farming rewards."
 msgstr "待处理的收入与支出总和(还未上链). 不包括农场耕种奖励."
@@ -3126,7 +3139,7 @@ msgstr "待处理的收入与支出总和(还未上链). 不包括农场耕种�
 #~ msgid "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 #~ msgstr "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 
-#: src/components/standard/MasterNodeStandardCards.tsx:16
+#: src/components/masternode/MasterNodeStandardCards.tsx:16
 #: src/components/standard/WalletStandardCards.tsx:16
 msgid "This is the total amount of chives in the blockchain at the current peak block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 msgstr "这里是你的私钥所控制的，到目前最新子块高度为止的全部韭菜数。包含被冻结的耕种奖励， 但不包含待处理的收入与支出。"
@@ -3135,7 +3148,7 @@ msgstr "这里是你的私钥所控制的，到目前最新子块高度为止的
 #~ msgid "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 #~ msgstr "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 
-#: src/components/standard/MasterNodeStandardCards.tsx:31
+#: src/components/masternode/MasterNodeStandardCards.tsx:31
 #: src/components/standard/WalletStandardCards.tsx:31
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
 msgstr "目前结余+待处理的结余: 在链上确认完成后就是你的最终总结余."
@@ -3239,7 +3252,7 @@ msgstr ""
 msgid "Token has empty name"
 msgstr ""
 
-#: src/components/WalletsSidebar.tsx:203
+#: src/components/WalletsSidebar.tsx:201
 msgid "Tokens"
 msgstr ""
 
@@ -3489,10 +3502,12 @@ msgstr "钱包不存在"
 #~ msgid "Wallet is not defined"
 #~ msgstr "Wallet is not defined"
 
+#: src/components/MasterNode.tsx:36
 #: src/components/Wallet.tsx:50
 msgid "Wallet with type {0} not supported"
 msgstr ""
 
+#: src/components/MasterNode.tsx:22
 #: src/components/Wallet.tsx:23
 msgid "Wallet {walletId} not found"
 msgstr ""
@@ -3575,8 +3590,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/WalletsSidebar.tsx:139
-msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/><2/>(Approximate time: July 26th, 2022 @ 17:00 UTC)"
+msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/>"
 msgstr ""
+
+#: src/components/WalletsSidebar.tsx:139
+#~ msgid "We've made an upgrade to the CAT standard which requires all CATs to be re-issued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height:<0/><1/><2/>(Approximate time: July 26th, 2022 @ 17:00 UTC)"
+#~ msgstr ""
 
 #: src/components/block/Block.jsx:194
 #~ msgid "Weight"
