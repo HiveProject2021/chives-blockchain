@@ -82,170 +82,60 @@ async function handleRowClick(
 
 const getCols = (type: WalletType, isSyncing, getOfferRecord, navigate) => [
   {
+    width: '100%',
     field: (row: Row) => {
-      const isOutgoing = [
-        TransactionType.OUTGOING,
-        TransactionType.OUTGOING_TRADE,
-      ].includes(row.type);
-
       return (
-        <Flex gap={1}>
-          <Tooltip
-            title={
-              isOutgoing ? <Trans>Outgoing</Trans> : <Trans>Incoming</Trans>
-            }
-          >
-            {isOutgoing ? (
-              <CallMadeIcon color="secondary" />
-            ) : (
-              <CallReceivedIcon color="primary" />
-            )}
-          </Tooltip>
-        </Flex>
+        <>
+          {row.counter}
+        </>
       );
     },
+    title: <Trans>ID</Trans>,
   },
   {
     width: '100%',
-    field: (row: Row, metadata) => {
-      const { confirmed: isConfirmed, memos } = row;
-      const hasMemos = !!memos && !!Object.values(memos).length;
-      const isRetire = row.toAddress === metadata.retireAddress;
-      const isOffer = row.toAddress === metadata.offerTakerAddress;
-      const shouldObscureAddress = isRetire || isOffer;
-
-      return (
-        <Flex
-          flexDirection="column"
-          gap={1}
-          onClick={event => {
-            if (!isSyncing) {
-              handleRowClick(event, row, getOfferRecord, navigate);
-            }
-          }}
-        >
-          <Tooltip
-            title={
-              <Flex flexDirection="column" gap={1}>
-                {shouldObscureAddress && (
-                  <StyledWarning>
-                    <Trans>
-                      This is not a valid address for sending funds to
-                    </Trans>
-                  </StyledWarning>
-                )}
-                <Flex flexDirection="row" alignItems="center" gap={1}>
-                  <Box maxWidth={200}>{row.toAddress}</Box>
-                  {!shouldObscureAddress && (
-                    <CopyToClipboard value={row.toAddress} fontSize="small" />
-                  )}
-                </Flex>
-              </Flex>
-            }
-            interactive
-          >
-            <span>
-              {shouldObscureAddress
-                ? row.toAddress.slice(0, 20) + '...'
-                : row.toAddress}
-            </span>
-          </Tooltip>
-          <Flex gap={0.5}>
-            {isConfirmed ? (
-              <Chip
-                size="small"
-                variant="outlined"
-                label={<Trans>Confirmed</Trans>}
-              />
-            ) : (
-              <Chip
-                size="small"
-                color="primary"
-                variant="outlined"
-                label={<Trans>Pending</Trans>}
-              />
-            )}
-            {hasMemos && (
-              <Chip
-                size="small"
-                variant="outlined"
-                label={<Trans>Memo</Trans>}
-              />
-            )}
-            {isRetire && (
-              <Chip
-                size="small"
-                variant="outlined"
-                label={<Trans>Retire</Trans>}
-              />
-            )}
-            {isOffer && (
-              <Chip
-                size="small"
-                variant="outlined"
-                label={<Trans>Offer Accepted</Trans>}
-              />
-            )}
-          </Flex>
-        </Flex>
-      );
-    },
-    title: <Trans>To</Trans>,
-  },
-  {
-    field: (row: Row) => (
-      <Typography color="textSecondary" variant="body2">
-        {moment(row.createdAtTime * 1000).format('LLL')}
-      </Typography>
-    ),
-    title: <Trans>Date</Trans>,
-  },
-  {
-    field: (row: Row, metadata) => {
-      const isOutgoing = [
-        TransactionType.OUTGOING,
-        TransactionType.OUTGOING_TRADE,
-      ].includes(row.type);
-
+    field: (row: Row) => {
       return (
         <>
-          <strong>{isOutgoing ? <Trans>-</Trans> : <Trans>+</Trans>}</strong>
-          &nbsp;
+          {row.MasterNodeID}
+        </>
+      );
+    },
+    title: <Trans>MasterNodeID</Trans>,
+  },
+  {
+    field: (row: Row, metadata) => {
+      return (
+        <>
           <strong>
-            <FormatLargeNumber
-              value={
-                type === WalletType.CAT
-                  ? mojoToCAT(row.amount)
-                  : mojoToChives(row.amount)
-              }
-            />
+            <FormatLargeNumber value={mojoToChives(row.StakingAmount)} />
           </strong>
           &nbsp;
           {metadata.unit}
         </>
       );
     },
-    title: <Trans>Amount</Trans>,
+    title: <Trans>StakingAmount</Trans>,
   },
   {
-    field: (row: Row, metadata) => (
-      <>
-        <strong>
-          <FormatLargeNumber value={mojoToChives(row.feeAmount)} />
-        </strong>
-        &nbsp;
-        {metadata.feeUnit}
-      </>
+    field: (row: Row) => (
+      <Typography color="textSecondary" variant="body2">
+        {moment(row.CreateTime * 1000).format('LLL')}
+      </Typography>
     ),
-    title: <Trans>Fee</Trans>,
+    title: <Trans>CreateTime</Trans>,
   },
   {
-    field: (row: Row, _metadata, isExpanded, toggleExpand) => (
-      <IconButton aria-label="expand row" size="small" onClick={toggleExpand}>
-        {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-      </IconButton>
-    ),
-  },
+    width: '100%',
+    field: (row: Row) => {
+      return (
+        <>
+          {row.Height}
+        </>
+      );
+    },
+    title: <Trans>Height</Trans>,
+  }
 ];
 
 type Props = {
@@ -267,6 +157,8 @@ export default function MasterNodeList(props: Props) {
     count,
     pageChange,
   } = useWalletMasterNodeLists(walletId, 10, 0, 'RELEVANCE');
+  console.log(transactions)
+
   const feeUnit = useCurrencyCode();
   const [getOfferRecord] = useGetOfferRecordMutation();
   const { navigate } = useSerializedNavigationState();
@@ -302,12 +194,11 @@ export default function MasterNodeList(props: Props) {
     if (!wallet) {
       return [];
     }
-
     return getCols(wallet.type, isSyncing, getOfferRecord, navigate);
   }, [wallet?.type]);
 
   return (
-    <Card title={<Trans>Transactions</Trans>} titleVariant="h6" transparent>
+    <Card title={<Trans>MasterNode List</Trans>} titleVariant="h6" transparent>
       <TableControlled
         cols={cols}
         rows={transactions ?? []}
@@ -320,87 +211,10 @@ export default function MasterNodeList(props: Props) {
         metadata={metadata}
         expandedCellShift={1}
         uniqueField="name"
-        expandedField={row => {
-          const { confirmedAtHeight, memos } = row;
-          const memoValues = memos ? Object.values(memos) : [];
-          const memoValuesDecoded = memoValues.map(memoHex => {
-            try {
-              const buf = new Buffer(memoHex, 'hex');
-              const decodedValue = buf.toString('utf8');
-
-              const bufCheck = Buffer.from(decodedValue, 'utf8');
-              if (bufCheck.toString('hex') !== memoHex) {
-                throw new Error('Memo is not valid utf8 string');
-              }
-
-              return decodedValue;
-            } catch (error: any) {
-              return memoHex;
-            }
-          });
-
-          const memosDescription =
-            memoValuesDecoded && memoValuesDecoded.length ? (
-              <Flex flexDirection="column">
-                {memoValuesDecoded.map((memo, index) => (
-                  <Typography variant="inherit" key={index}>
-                    {memo ?? ''}
-                  </Typography>
-                ))}
-              </Flex>
-            ) : (
-              <Trans>Not Available</Trans>
-            );
-
-          const rows = [
-            confirmedAtHeight && {
-              key: 'confirmedAtHeight',
-              label: <Trans>Confirmed at Height</Trans>,
-              value: confirmedAtHeight ? (
-                confirmedAtHeight
-              ) : (
-                <Trans>Not Available</Trans>
-              ),
-            },
-            {
-              key: 'memos',
-              label: <Trans>Memos</Trans>,
-              value: memosDescription,
-            },
-          ].filter(item => !!item);
-
-          return (
-            <TableBase size="small">
-              <TableBody>
-                {rows.map(row => (
-                  <TableRow key={row.key}>
-                    <StyledTableCellSmall>
-                      <Typography
-                        component="div"
-                        variant="body2"
-                        color="textSecondary"
-                        noWrap
-                      >
-                        {row.label}
-                      </Typography>
-                    </StyledTableCellSmall>
-                    <StyledTableCellSmallRight>
-                      <Box maxWidth="100%">
-                        <Typography component="div" variant="body2" noWrap>
-                          {row.value}
-                        </Typography>
-                      </Box>
-                    </StyledTableCellSmallRight>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </TableBase>
-          );
-        }}
         caption={
           !transactions?.length && (
             <Typography variant="body2" align="center">
-              <Trans>No previous transactions</Trans>
+              <Trans>No MasterNode Data</Trans>
             </Typography>
           )
         }

@@ -23,7 +23,7 @@ def coro(f):
 def print_nft(nft):
     print("\n")
     print("-" * 64)
-    print(f"MasterNode NFT:  {nft.launcher_id.hex()}")
+    print(f"MasterNode ID:  {nft.launcher_id.hex()}")
     print(f"Chialisp:        {str(nft.data[0].decode('utf-8'))}")
     StakingJson = json.loads(nft.data[1].decode("utf-8"))
     print(f"StakingAddress:  {StakingJson['StakingAddress']}")

@@ -34,7 +34,6 @@ msgstr ""
 #~ msgid "*Want to explore Chives’s blocks further? Check out <0>Chives Explorer</0> built by an open source developer."
 #~ msgstr "*Want to explore Chives’s blocks further? Check out <0>Chives Explorer</0> built by an open source developer."
 
-#: src/components/MasterNodeList.tsx:212
 #: src/components/WalletHistory.tsx:212
 msgid "+"
 msgstr "+"
@@ -51,7 +50,6 @@ msgstr "+"
 #~ msgid "+ Add Wallet"
 #~ msgstr "+ Add Wallet"
 
-#: src/components/MasterNodeList.tsx:212
 #: src/components/WalletHistory.tsx:212
 msgid "-"
 msgstr "-"
@@ -196,7 +194,6 @@ msgstr "Address / Puzzle hash"
 #~ msgid "Alternate tmpdir/tmpdir2"
 #~ msgstr "Alternate tmpdir/tmpdir2"
 
-#: src/components/MasterNodeList.tsx:228
 #: src/components/WalletHistory.tsx:228
 #: src/components/WalletSend.tsx:166
 #: src/components/cat/WalletCATSend.tsx:206
@@ -557,12 +554,10 @@ msgstr "Coin Name"
 msgid "Confirmation"
 msgstr "Confirmation"
 
-#: src/components/MasterNodeList.tsx:158
 #: src/components/WalletHistory.tsx:158
 msgid "Confirmed"
 msgstr "Confirmed"
 
-#: src/components/MasterNodeList.tsx:358
 #: src/components/WalletHistory.tsx:358
 msgid "Confirmed at Height"
 msgstr "Confirmed at Height"
@@ -750,6 +745,10 @@ msgstr "Create custom Token Wallet"
 #~ msgid "Create wallet for existing colour"
 #~ msgstr "Create wallet for existing color"
 
+#: src/components/MasterNodeList.tsx:126
+msgid "CreateTime"
+msgstr "CreateTime"
+
 #: src/components/wallet/Wallets.tsx:81
 #~ msgid "CreateWallet.addWallet"
 #~ msgstr ""
@@ -821,7 +820,6 @@ msgstr "DID Wallet"
 #~ msgid "DIDListItems.title"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:201
 #: src/components/WalletHistory.tsx:201
 msgid "Date"
 msgstr "Date"
@@ -1150,7 +1148,6 @@ msgstr "Farm"
 #~ msgid "Farming Status"
 #~ msgstr "Farming Status"
 
-#: src/components/MasterNodeList.tsx:240
 #: src/components/WalletHistory.tsx:240
 #: src/components/WalletSend.tsx:177
 #: src/components/cat/WalletCATSend.tsx:219
@@ -1281,11 +1278,9 @@ msgstr "HD or Hierarchical Deterministic keys are a type of public key/private k
 #~ msgid "Header hash"
 #~ msgstr "Header hash"
 
-#: src/components/block/Block.jsx:190
-#: src/components/fullNode/FullNode.jsx:78
-#: src/components/fullNode/FullNodeConnections.tsx:78
-#~ msgid "Height"
-#~ msgstr "Height"
+#: src/components/MasterNodeList.tsx:137
+msgid "Height"
+msgstr "Height"
 
 #: src/electron/main.tsx:365
 #~ msgid "Help"
@@ -1312,6 +1307,10 @@ msgstr "HD or Hierarchical Deterministic keys are a type of public key/private k
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:36
 #~ msgid "Host Name"
 #~ msgstr "Host Name"
+
+#: src/components/MasterNodeList.tsx:93
+msgid "ID"
+msgstr "ID"
 
 #: src/components/WalletConnections.tsx:27
 msgid "IP address"
@@ -1368,7 +1367,6 @@ msgstr "Import Wallet from Mnemonics"
 #~ msgid "Including a fee in the offer can help expedite the transaction when the offer is accepted."
 #~ msgstr "Including a fee in the offer can help expedite the transaction when the offer is accepted."
 
-#: src/components/MasterNodeList.tsx:95
 #: src/components/WalletHistory.tsx:95
 msgid "Incoming"
 msgstr "Incoming"
@@ -1617,17 +1615,27 @@ msgstr "Manage token list"
 msgid "Master Node"
 msgstr "Master Node"
 
+#: src/components/MasterNodeList.tsx:201
+msgid "MasterNode List"
+msgstr "MasterNode List"
+
+#: src/components/MasterNodeList.tsx:104
+msgid "MasterNodeID"
+msgstr "MasterNodeID"
+
+#: src/components/MasterNodeList.tsx:89
+#~ msgid "MasterNodeMark"
+#~ msgstr "MasterNodeMark"
+
 #: src/components/WalletHeader.tsx:61
 #~ msgid "MasterNodeSummary"
 #~ msgstr "MasterNodeSummary"
 
-#: src/components/MasterNodeList.tsx:172
 #: src/components/WalletHistory.tsx:172
 #: src/components/cat/WalletCATSend.tsx:231
 msgid "Memo"
 msgstr "Memo"
 
-#: src/components/MasterNodeList.tsx:367
 #: src/components/WalletHistory.tsx:367
 msgid "Memos"
 msgstr "Memos"
@@ -1740,6 +1748,10 @@ msgstr "Nickname"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
+#: src/components/MasterNodeList.tsx:217
+msgid "No MasterNode Data"
+msgstr "No MasterNode Data"
+
 #: src/components/farm/card/FarmCardLastHeightFarmed.tsx:16
 #~ msgid "No blocks farmed yet"
 #~ msgstr "No blocks farmed yet"
@@ -1748,7 +1760,6 @@ msgstr "Nickname"
 #~ msgid "No current offers"
 #~ msgstr "No current offers"
 
-#: src/components/MasterNodeList.tsx:403
 #: src/components/WalletHistory.tsx:403
 msgid "No previous transactions"
 msgstr "No previous transactions"
@@ -1777,8 +1788,6 @@ msgstr "Node ID"
 #~ msgid "None of your plots have passed the plot filter yet."
 #~ msgstr "None of your plots have passed the plot filter yet."
 
-#: src/components/MasterNodeList.tsx:352
-#: src/components/MasterNodeList.tsx:362
 #: src/components/WalletHistory.tsx:352
 #: src/components/WalletHistory.tsx:362
 msgid "Not Available"
@@ -1845,7 +1854,6 @@ msgstr "OK"
 #~ msgid "Offer"
 #~ msgstr "Offer"
 
-#: src/components/MasterNodeList.tsx:186
 #: src/components/WalletHistory.tsx:186
 msgid "Offer Accepted"
 msgstr "Offer Accepted"
@@ -1911,7 +1919,6 @@ msgstr "Only one backup file is allowed."
 #~ msgid "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
 #~ msgstr "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
 
-#: src/components/MasterNodeList.tsx:95
 #: src/components/WalletHistory.tsx:95
 msgid "Outgoing"
 msgstr "Outgoing"
@@ -1994,7 +2001,6 @@ msgstr ""
 #~ msgid "Peak Time"
 #~ msgstr "Peak Time"
 
-#: src/components/MasterNodeList.tsx:165
 #: src/components/WalletHistory.tsx:165
 msgid "Pending"
 msgstr "Pending"
@@ -2506,6 +2512,10 @@ msgstr "Receive"
 msgid "Receive Address"
 msgstr "Receive Address"
 
+#: src/components/MasterNodeList.tsx:105
+#~ msgid "ReceivedAddress"
+#~ msgstr "ReceivedAddress"
+
 #: src/components/cat/WalletCATSend.tsx:122
 msgid "Recipient address is not a coloured wallet address. Please enter a coloured wallet address"
 msgstr "Recipient address is not a coloured wallet address. Please enter a coloured wallet address"
@@ -2600,7 +2610,6 @@ msgstr "Rename Wallet"
 #~ msgid "Restore Smart Wallets From Backup"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:179
 #: src/components/WalletHistory.tsx:179
 msgid "Retire"
 msgstr "Retire"
@@ -2892,6 +2901,14 @@ msgstr "Spending Interval Length (number of blocks)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Spending Limit (chives per interval): {0}"
 
+#: src/components/MasterNodeList.tsx:94
+#~ msgid "StakingAddress"
+#~ msgstr "StakingAddress"
+
+#: src/components/MasterNodeList.tsx:118
+msgid "StakingAmount"
+msgstr "StakingAmount"
+
 #: src/constants/WalletName.ts:5
 msgid "Standard Wallet"
 msgstr "Standard Wallet"
@@ -3115,7 +3132,6 @@ msgstr "This access token is verified"
 #~ msgid "This feature is available only from the GUI."
 #~ msgstr "This feature is available only from the GUI."
 
-#: src/components/MasterNodeList.tsx:132
 #: src/components/WalletHistory.tsx:132
 msgid "This is not a valid address for sending funds to"
 msgstr "This is not a valid address for sending funds to"
@@ -3235,7 +3251,6 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 #~ msgid "Timestamp"
 #~ msgstr "Timestamp"
 
-#: src/components/MasterNodeList.tsx:193
 #: src/components/WalletHistory.tsx:193
 msgid "To"
 msgstr "To"
@@ -3330,7 +3345,6 @@ msgstr "Total Balance"
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr "Transaction has successfully been sent to a full node and included in the mempool."
 
-#: src/components/MasterNodeList.tsx:310
 #: src/components/WalletHistory.tsx:310
 msgid "Transactions"
 msgstr "Transactions"

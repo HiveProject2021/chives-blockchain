@@ -300,7 +300,7 @@ class MasterNodeManager:
         synced = blockchain_state["sync"]["synced"]
         sync_mode = blockchain_state["sync"]["sync_mode"]        
         
-        #Create MasterNode NFT Must Have Staking Coin.            
+        #Create MasterNode ID Must Have Staking Coin.            
         get_staking_address = self.masternode_wallet.get_staking_address();
         StakingData = {}
         StakingData['ReceivedAddress'] = get_staking_address['first_address'];
@@ -310,8 +310,8 @@ class MasterNodeManager:
         IsStakingCoin = False;
         all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(get_staking_address['puzzle_hash'],False)
         for coin_record in all_staking_coins:
-            stakingAmount = coin_record.coin.amount;
-            if stakingAmount == StakingData['StakingAmount'] * 100000000 :
+            StakingAmount = coin_record.coin.amount;
+            if StakingAmount == StakingData['StakingAmount'] * 100000000 :
                 IsStakingCoin = True;
         if IsStakingCoin == False:
             return ("No finish staking coin","No finish staking coin");
@@ -375,10 +375,12 @@ class MasterNodeManager:
         print("-" * 64)
         if counter>0:
             print(f"ID:  {counter}")
-        print(f"MasterNode NFT:  {nft.launcher_id.hex()}")
-        print(f"Chialisp:        {str(nft.data[0].decode('utf-8'))}")
-        StakingData = nft.StakingData
-        StakingAmount = StakingData['stakingAmount']
+        print(f"MasterNodeID:    {nft['launcher_id'].hex()}")
+        print(f"Chialisp:        {str(nft['nft_data'][0].decode('utf-8'))}")
+        print(f"Height:          {nft['launcher_rec'].spent_block_index}")
+        print(f"CreateTime:      {nft['launcher_rec'].timestamp}")
+        StakingData = nft['StakingData']
+        StakingAmount = StakingData['StakingAmount']
         print(f"StakingAddress:  {StakingData['StakingAddress']}")
         if StakingAmount>0:
             print(f"StakingAmount:   {round(Decimal(StakingAmount/self.mojo_per_unit),8)}")
@@ -389,21 +391,26 @@ class MasterNodeManager:
         #print(f"All Data:")
         print("-" * 64)
         print("\n")
+
     
     def json_masternode(self, nft,counter):
         json_masternode = {}
         json_masternode['counter'] = counter
-        json_masternode['MasterNode NFT'] = str(nft.data[0].decode('utf-8'))
-        StakingData = nft.StakingData
-        StakingAmount = StakingData['stakingAmount']
-        json_masternode['StakingData'] = StakingData
-        json_masternode['StakingAmount'] = StakingData['stakingAmount']
+        json_masternode['MasterNodeType'] = str(nft['nft_data'][0].decode('utf-8'))
+        json_masternode['MasterNodeID'] = nft['launcher_id'].hex()
+        json_masternode['Height'] = nft['launcher_rec'].spent_block_index
+        json_masternode['CreateTime'] = nft['launcher_rec'].timestamp
+        StakingData = nft['StakingData']
+        StakingAmount = StakingData['StakingAmount']
+        #json_masternode['StakingData'] = StakingData
+        json_masternode['StakingAmount'] = StakingData['StakingAmount']
         json_masternode['StakingAddress'] = StakingData['StakingAddress']
-        if StakingData['stakingAmount']>0:
-            StakingData['stakingAmount'] = str(round(Decimal(StakingAmount/self.mojo_per_unit),8))
+        if StakingData['StakingAmount']>0:
+            StakingData['StakingAmount'] = str(round(Decimal(StakingAmount/self.mojo_per_unit),8))
         else:
-            StakingData['stakingAmount'] = 0
+            StakingData['StakingAmount'] = 0
         json_masternode['ReceivedAddress'] = StakingData['ReceivedAddress']
+        json_masternode['NodeName'] = StakingData['NodeName']
         return json_masternode
 
     async def masternode_list_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -902,7 +909,7 @@ class MasterNodeManager:
         return cancel_staking_coins
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
 
-class MasterNodeCoin(Coin):
+class MasterNodeCoin:
     def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None, StakingData=None):
         super().__init__(coin.parent_coin_info, coin.puzzle_hash, coin.amount)
         self.launcher_id = launcher_id
@@ -1085,7 +1092,7 @@ class MasterNodeWallet:
                 #launcher_id = cr.coin.name()
                 launcher_rec = await self.node_client.get_coin_record_by_name(launcher_id)
                 if launcher_rec is None:
-                    return None;
+                    return None
                 launcher_spend = await self.node_client.get_puzzle_and_solution(
                     launcher_rec.coin.name(), launcher_rec.spent_block_index
                 )
@@ -1096,12 +1103,17 @@ class MasterNodeWallet:
                         #print(NftDataJson)
                         if "ReceivedAddress" in NftDataJson and "StakingAddress" in NftDataJson and "StakingAmount" in NftDataJson and "NodeName" in NftDataJson:
                             StakingData = await self.save_launcher(launcher_id, state[-1], eve_cr[0].spent_block_index, NftDataJson)
-                            MasterNode = MasterNodeCoin(launcher_id, launcher_rec.coin, launcher_spend, nft_data, 0, StakingData)
-                            return MasterNode
+                            nft_item = {}
+                            nft_item['launcher_id'] = launcher_id
+                            nft_item['launcher_rec'] = launcher_rec
+                            nft_item['nft_data'] = nft_data
+                            nft_item['StakingData'] = StakingData
+                            return nft_item
                         #else:
                         #    print("NftDataJson Json Format Error.")
                     except Exception as e:
                         print(e)
+                
  
     async def sync_masternode(self):
         all_nfts = await self.node_client.get_coin_records_by_puzzle_hash(LAUNCHER_PUZZLE_HASH)
@@ -1110,11 +1122,11 @@ class MasterNodeWallet:
     async def save_launcher(self, launcher_id, pk, Height, StakingData):
         if "StakingAddress" in StakingData and StakingData['StakingAddress'] is not None:
             all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingData['StakingAddress']),False)
-            stakingAmount = 0
+            StakingAmount = 0
             for coin_record in all_staking_coins:
-                stakingAmount += coin_record.coin.amount
-        #print(f"stakingAmount:{stakingAmount}")
-        #print(f"stakingAmount:{StakingData['StakingAddress']}")        
+                StakingAmount += coin_record.coin.amount
+        #print(f"StakingAmount:{StakingAmount}")
+        #print(f"StakingAmount:{StakingData['StakingAddress']}")        
         cursor = await self.db_connection.execute(
             "INSERT OR REPLACE INTO masternode_list (launcher_id, owner_pk, Height, ReceivedAddress, StakingAddress, StakingAmount, NodeName) VALUES (?,?,?,?,?,?,?)", (
             str(bytes(launcher_id).hex()), 
@@ -1122,7 +1134,7 @@ class MasterNodeWallet:
             int(Height),
             str(StakingData['ReceivedAddress']),
             str(StakingData['StakingAddress']),
-            int(stakingAmount),
+            int(StakingAmount),
             str(StakingData['NodeName'])
             )
         )
@@ -1130,7 +1142,7 @@ class MasterNodeWallet:
         await cursor.close()
         await self.db_connection.commit()
 
-        StakingData['stakingAmount'] = stakingAmount
+        StakingData['StakingAmount'] = StakingAmount
         return StakingData
 
     async def get_all_nft_ids(self):

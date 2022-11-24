@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGetTransactionsQuery, useGetTransactionsCountQuery } from '@chives/api-react';
+import { useGetMasterNodeListsQuery, useGetMasterNodeListsCountQuery } from '@chives/api-react';
 import type { Transaction } from '@chives/api';
 
 export default function useWalletMasterNodeLists(
@@ -20,7 +20,7 @@ export default function useWalletMasterNodeLists(
   const [rowsPerPage, setRowsPerPage] = useState<number>(defaultRowsPerPage);
   const [page, setPage] = useState<number>(defaultPage);
 
-  const { data: count, isLoading: isTransactionsCountLoading, error: transactionsCountError } = useGetTransactionsCountQuery({
+  const { data: count, isLoading: isTransactionsCountLoading, error: transactionsCountError } = useGetMasterNodeListsCountQuery({
     walletId,
   });
 
@@ -34,7 +34,7 @@ export default function useWalletMasterNodeLists(
     ? count ?? 0 
     : start + rowsPerPage;
 
-  const { data: transactions, isLoading: isTransactionsLoading, error: transactionsError } = useGetTransactionsQuery({
+  const { data: transactions, isLoading: isTransactionsLoading, error: transactionsError } = useGetMasterNodeListsQuery({
     walletId,
     start,
     end,

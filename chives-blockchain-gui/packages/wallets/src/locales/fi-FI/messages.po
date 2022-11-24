@@ -34,7 +34,6 @@ msgstr ""
 #~ msgid "*Want to explore Chives’s blocks further? Check out <0>Chives Explorer</0> built by an open source developer."
 #~ msgstr "*Want to explore Chives’s blocks further? Check out <0>Chives Explorer</0> built by an open source developer."
 
-#: src/components/MasterNodeList.tsx:212
 #: src/components/WalletHistory.tsx:212
 msgid "+"
 msgstr "+"
@@ -51,7 +50,6 @@ msgstr "+"
 #~ msgid "+ Add Wallet"
 #~ msgstr "+ Add Wallet"
 
-#: src/components/MasterNodeList.tsx:212
 #: src/components/WalletHistory.tsx:212
 msgid "-"
 msgstr "-"
@@ -196,7 +194,6 @@ msgstr "Osoite / Puzzle-tiiviste"
 #~ msgid "Alternate tmpdir/tmpdir2"
 #~ msgstr "Alternate tmpdir/tmpdir2"
 
-#: src/components/MasterNodeList.tsx:228
 #: src/components/WalletHistory.tsx:228
 #: src/components/WalletSend.tsx:166
 #: src/components/cat/WalletCATSend.tsx:206
@@ -557,12 +554,10 @@ msgstr "Kolikon Nimi"
 msgid "Confirmation"
 msgstr "Vahvista"
 
-#: src/components/MasterNodeList.tsx:158
 #: src/components/WalletHistory.tsx:158
 msgid "Confirmed"
 msgstr "Vahvistettu"
 
-#: src/components/MasterNodeList.tsx:358
 #: src/components/WalletHistory.tsx:358
 msgid "Confirmed at Height"
 msgstr "Vahvistettu korkeudessa"
@@ -750,6 +745,10 @@ msgstr "Luo kustomi CAT-lompakko"
 #~ msgid "Create wallet for existing colour"
 #~ msgstr "Create wallet for existing color"
 
+#: src/components/MasterNodeList.tsx:126
+msgid "CreateTime"
+msgstr ""
+
 #: src/components/wallet/Wallets.tsx:81
 #~ msgid "CreateWallet.addWallet"
 #~ msgstr ""
@@ -821,7 +820,6 @@ msgstr "DID-lompakko"
 #~ msgid "DIDListItems.title"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:201
 #: src/components/WalletHistory.tsx:201
 msgid "Date"
 msgstr "Päiväys"
@@ -1150,7 +1148,6 @@ msgstr "Farmi"
 #~ msgid "Farming Status"
 #~ msgstr "Farming Status"
 
-#: src/components/MasterNodeList.tsx:240
 #: src/components/WalletHistory.tsx:240
 #: src/components/WalletSend.tsx:177
 #: src/components/cat/WalletCATSend.tsx:219
@@ -1281,11 +1278,9 @@ msgstr "HD- eli hierarkis-deterministiset avaimet ovat julkisen ja salaisen avai
 #~ msgid "Header hash"
 #~ msgstr "Header hash"
 
-#: src/components/block/Block.jsx:190
-#: src/components/fullNode/FullNode.jsx:78
-#: src/components/fullNode/FullNodeConnections.tsx:78
-#~ msgid "Height"
-#~ msgstr "Height"
+#: src/components/MasterNodeList.tsx:137
+msgid "Height"
+msgstr "Height"
 
 #: src/electron/main.tsx:365
 #~ msgid "Help"
@@ -1312,6 +1307,10 @@ msgstr "HD- eli hierarkis-deterministiset avaimet ovat julkisen ja salaisen avai
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:36
 #~ msgid "Host Name"
 #~ msgstr "Host Name"
+
+#: src/components/MasterNodeList.tsx:93
+msgid "ID"
+msgstr ""
 
 #: src/components/WalletConnections.tsx:27
 msgid "IP address"
@@ -1368,7 +1367,6 @@ msgstr "Tuo Lompakko Muistisanoista"
 #~ msgid "Including a fee in the offer can help expedite the transaction when the offer is accepted."
 #~ msgstr "Maksun sisällyttäminen tarjoukseen voi auttaa nopeuttamaan kauppaa, kun tarjous on hyväksytty."
 
-#: src/components/MasterNodeList.tsx:95
 #: src/components/WalletHistory.tsx:95
 msgid "Incoming"
 msgstr "Saapuva"
@@ -1617,17 +1615,27 @@ msgstr "Hallitse tokenilistaa"
 msgid "Master Node"
 msgstr ""
 
+#: src/components/MasterNodeList.tsx:201
+msgid "MasterNode List"
+msgstr ""
+
+#: src/components/MasterNodeList.tsx:104
+msgid "MasterNodeID"
+msgstr ""
+
+#: src/components/MasterNodeList.tsx:89
+#~ msgid "MasterNodeMark"
+#~ msgstr ""
+
 #: src/components/WalletHeader.tsx:61
 #~ msgid "MasterNodeSummary"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:172
 #: src/components/WalletHistory.tsx:172
 #: src/components/cat/WalletCATSend.tsx:231
 msgid "Memo"
 msgstr "Muistio"
 
-#: src/components/MasterNodeList.tsx:367
 #: src/components/WalletHistory.tsx:367
 msgid "Memos"
 msgstr "Muistiot"
@@ -1740,6 +1748,10 @@ msgstr "Alias"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
+#: src/components/MasterNodeList.tsx:217
+msgid "No MasterNode Data"
+msgstr ""
+
 #: src/components/farm/card/FarmCardLastHeightFarmed.tsx:16
 #~ msgid "No blocks farmed yet"
 #~ msgstr "No blocks farmed yet"
@@ -1748,7 +1760,6 @@ msgstr "Alias"
 #~ msgid "No current offers"
 #~ msgstr "Ei tarjouksia"
 
-#: src/components/MasterNodeList.tsx:403
 #: src/components/WalletHistory.tsx:403
 msgid "No previous transactions"
 msgstr "Ei aiempia transaktioita"
@@ -1777,8 +1788,6 @@ msgstr "Noodin tunnus"
 #~ msgid "None of your plots have passed the plot filter yet."
 #~ msgstr "None of your plots have passed the plot filter yet."
 
-#: src/components/MasterNodeList.tsx:352
-#: src/components/MasterNodeList.tsx:362
 #: src/components/WalletHistory.tsx:352
 #: src/components/WalletHistory.tsx:362
 msgid "Not Available"
@@ -1845,7 +1854,6 @@ msgstr "OK"
 #~ msgid "Offer"
 #~ msgstr "Offer"
 
-#: src/components/MasterNodeList.tsx:186
 #: src/components/WalletHistory.tsx:186
 msgid "Offer Accepted"
 msgstr "Tarjous Hyväksytty"
@@ -1911,7 +1919,6 @@ msgstr "Vain yksi varmuuskopiotiedosto on sallittu."
 #~ msgid "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
 #~ msgstr "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
 
-#: src/components/MasterNodeList.tsx:95
 #: src/components/WalletHistory.tsx:95
 msgid "Outgoing"
 msgstr "Lähtevä"
@@ -1994,7 +2001,6 @@ msgstr ""
 #~ msgid "Peak Time"
 #~ msgstr "Peak Time"
 
-#: src/components/MasterNodeList.tsx:165
 #: src/components/WalletHistory.tsx:165
 msgid "Pending"
 msgstr "Odottaa"
@@ -2506,6 +2512,10 @@ msgstr "Vastaanota"
 msgid "Receive Address"
 msgstr "Vastaanottajan Osoite"
 
+#: src/components/MasterNodeList.tsx:105
+#~ msgid "ReceivedAddress"
+#~ msgstr ""
+
 #: src/components/cat/WalletCATSend.tsx:122
 msgid "Recipient address is not a coloured wallet address. Please enter a coloured wallet address"
 msgstr "Vastaanottajan osoite ei ole CAT-osoite. Syötä CAT-osoite"
@@ -2600,7 +2610,6 @@ msgstr "Uudelleennimeä Lompakko"
 #~ msgid "Restore Smart Wallets From Backup"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:179
 #: src/components/WalletHistory.tsx:179
 msgid "Retire"
 msgstr "Poista vanhentunut"
@@ -2892,6 +2901,14 @@ msgstr "Käyttöajanjakson pituus (lohkojen määrä)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Käyttöraja (Chivesa/ajanjakso):{0}"
 
+#: src/components/MasterNodeList.tsx:94
+#~ msgid "StakingAddress"
+#~ msgstr ""
+
+#: src/components/MasterNodeList.tsx:118
+msgid "StakingAmount"
+msgstr ""
+
 #: src/constants/WalletName.ts:5
 msgid "Standard Wallet"
 msgstr "Vakiolompakko"
@@ -3115,7 +3132,6 @@ msgstr "Tämä käyttöoikeustoken on vahvistettu"
 #~ msgid "This feature is available only from the GUI."
 #~ msgstr "This feature is available only from the GUI."
 
-#: src/components/MasterNodeList.tsx:132
 #: src/components/WalletHistory.tsx:132
 msgid "This is not a valid address for sending funds to"
 msgstr "Tämä ei ole kelvollinen osoite varojen lähettämiseen"
@@ -3235,7 +3251,6 @@ msgstr "Nykyinen saldo + avoin saldo, eli tuleva saldo avointen transaktioiden j
 #~ msgid "Timestamp"
 #~ msgstr "Timestamp"
 
-#: src/components/MasterNodeList.tsx:193
 #: src/components/WalletHistory.tsx:193
 msgid "To"
 msgstr "Osoitteeseen"
@@ -3330,7 +3345,6 @@ msgstr "Kokonaissaldo"
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr "Transaktio on onnistuneesti lähetetty noodille ja sisällytetty mempooliin."
 
-#: src/components/MasterNodeList.tsx:310
 #: src/components/WalletHistory.tsx:310
 msgid "Transactions"
 msgstr "Transaktiot"

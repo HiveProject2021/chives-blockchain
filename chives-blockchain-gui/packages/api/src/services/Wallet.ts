@@ -237,7 +237,7 @@ export default class Wallet extends Service {
     });
   }
 
-  async getMasterNodeListCount(walletId: number) {
+  async getMasterNodeListsCount(walletId: number) {
     return this.command('masternode_list_count', {
       walletId,
     });
