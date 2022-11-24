@@ -166,6 +166,8 @@ class WalletRpcApi:
             "/masternode_register": self.masternode_register,
             "/masternode_cancel": self.masternode_cancel,
             "/masternode_list_count": self.masternode_list_count,
+            "/masternode_received_transactions": self.masternode_received_transactions,
+            "/masternode_received_transaction_count": self.masternode_received_transaction_count,
         }
 
     async def _state_changed(self, *args) -> List[WsRpcMessage]:
@@ -809,6 +811,37 @@ class WalletRpcApi:
                     "data": [],
                     }
         return {"masternode_result": masternode_result}
+
+    async def masternode_received_transactions(self, request: Dict) -> Dict:
+        from chives.masternode.masternode_manager import MasterNodeManager
+        manager = MasterNodeManager()
+        await manager.connect()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
+        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        await manager.close()
+        #Add a address filter in here
+        request["to_address"] = get_staking_address['first_address']
+        return await self.get_transactions(request)
+    
+    async def masternode_received_transaction_count(self, request: Dict) -> Dict:
+        from chives.masternode.masternode_manager import MasterNodeManager
+        manager = MasterNodeManager()
+        await manager.connect()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
+        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        await manager.close()
+        #Add a address filter in here
+        to_address = get_staking_address['first_address']
+        to_puzzle_hash = decode_puzzle_hash(to_address)
+        count = await self.service.wallet_state_manager.tx_store.get_transaction_count_for_wallet_filter_by_puzzle_hash(wallet_id,to_puzzle_hash)
+        return {
+            "count": count,
+            "wallet_id": wallet_id,
+        }
 
     ##########################################################################################
     # Wallet

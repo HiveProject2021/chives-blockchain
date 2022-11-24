@@ -34,6 +34,7 @@ msgstr ""
 #~ msgid "*Want to explore Chives’s blocks further? Check out <0>Chives Explorer</0> built by an open source developer."
 #~ msgstr "*Want to explore Chives’s blocks further? Check out <0>Chives Explorer</0> built by an open source developer."
 
+#: src/components/MasterNodeReceivedList.tsx:212
 #: src/components/WalletHistory.tsx:212
 msgid "+"
 msgstr ""
@@ -50,6 +51,7 @@ msgstr ""
 #~ msgid "+ Add Wallet"
 #~ msgstr "+ Add Wallet"
 
+#: src/components/MasterNodeReceivedList.tsx:212
 #: src/components/WalletHistory.tsx:212
 msgid "-"
 msgstr ""
@@ -100,7 +102,7 @@ msgstr ""
 #~ msgstr "Action"
 
 #: src/components/MasterNodeHeader.tsx:74
-#: src/components/WalletHeader.tsx:75
+#: src/components/WalletHeader.tsx:76
 msgid "Actions"
 msgstr "Ações"
 
@@ -194,6 +196,7 @@ msgstr "Endereço/Puzzle hash"
 #~ msgid "Alternate tmpdir/tmpdir2"
 #~ msgstr "Alternate tmpdir/tmpdir2"
 
+#: src/components/MasterNodeReceivedList.tsx:228
 #: src/components/WalletHistory.tsx:228
 #: src/components/WalletSend.tsx:166
 #: src/components/cat/WalletCATSend.tsx:206
@@ -554,10 +557,12 @@ msgstr "Nome da Moeda"
 msgid "Confirmation"
 msgstr "Confirmação"
 
+#: src/components/MasterNodeReceivedList.tsx:158
 #: src/components/WalletHistory.tsx:158
 msgid "Confirmed"
 msgstr "Confirmado"
 
+#: src/components/MasterNodeReceivedList.tsx:358
 #: src/components/WalletHistory.tsx:358
 msgid "Confirmed at Height"
 msgstr ""
@@ -670,7 +675,7 @@ msgstr "Criar nova carteira"
 
 #: src/components/cat/WalletCAT.tsx:129
 #: src/components/masternode/MasterNodeStandard.tsx:54
-#: src/components/standard/WalletStandard.tsx:56
+#: src/components/standard/WalletStandard.tsx:57
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -820,6 +825,7 @@ msgstr ""
 #~ msgid "DIDListItems.title"
 #~ msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:201
 #: src/components/WalletHistory.tsx:201
 msgid "Date"
 msgstr "Data"
@@ -849,7 +855,7 @@ msgstr "Apagar"
 #~ msgstr "Delete Plot"
 
 #: src/components/MasterNodeHeader.tsx:87
-#: src/components/WalletHeader.tsx:88
+#: src/components/WalletHeader.tsx:89
 msgid "Delete Unconfirmed Transactions"
 msgstr "Apagar transações não confirmadas"
 
@@ -1148,6 +1154,7 @@ msgstr "Fazenda"
 #~ msgid "Farming Status"
 #~ msgstr "Farming Status"
 
+#: src/components/MasterNodeReceivedList.tsx:240
 #: src/components/WalletHistory.tsx:240
 #: src/components/WalletSend.tsx:177
 #: src/components/cat/WalletCATSend.tsx:219
@@ -1367,6 +1374,7 @@ msgstr "Importar carteira de Mnemônicos"
 #~ msgid "Including a fee in the offer can help expedite the transaction when the offer is accepted."
 #~ msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:95
 #: src/components/WalletHistory.tsx:95
 msgid "Incoming"
 msgstr "Entrada"
@@ -1611,6 +1619,10 @@ msgstr ""
 msgid "Master Node"
 msgstr ""
 
+#: src/components/WalletHeader.tsx:62
+msgid "Master Node Income"
+msgstr ""
+
 #: src/components/MasterNodeList.tsx:201
 msgid "MasterNode List"
 msgstr ""
@@ -1627,11 +1639,13 @@ msgstr ""
 #~ msgid "MasterNodeSummary"
 #~ msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:172
 #: src/components/WalletHistory.tsx:172
 #: src/components/cat/WalletCATSend.tsx:231
 msgid "Memo"
 msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:367
 #: src/components/WalletHistory.tsx:367
 msgid "Memos"
 msgstr ""
@@ -1756,6 +1770,7 @@ msgstr ""
 #~ msgid "No current offers"
 #~ msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:403
 #: src/components/WalletHistory.tsx:403
 msgid "No previous transactions"
 msgstr "Sem transações anteriores"
@@ -1784,6 +1799,8 @@ msgstr "ID do nó"
 #~ msgid "None of your plots have passed the plot filter yet."
 #~ msgstr "None of your plots have passed the plot filter yet."
 
+#: src/components/MasterNodeReceivedList.tsx:352
+#: src/components/MasterNodeReceivedList.tsx:362
 #: src/components/WalletHistory.tsx:352
 #: src/components/WalletHistory.tsx:362
 msgid "Not Available"
@@ -1850,6 +1867,7 @@ msgstr ""
 #~ msgid "Offer"
 #~ msgstr "Offer"
 
+#: src/components/MasterNodeReceivedList.tsx:186
 #: src/components/WalletHistory.tsx:186
 msgid "Offer Accepted"
 msgstr ""
@@ -1915,6 +1933,7 @@ msgstr "Somente um arquivo de backup é permitido."
 #~ msgid "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
 #~ msgstr "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
 
+#: src/components/MasterNodeReceivedList.tsx:95
 #: src/components/WalletHistory.tsx:95
 msgid "Outgoing"
 msgstr "Enviado"
@@ -1997,6 +2016,7 @@ msgstr ""
 #~ msgid "Peak Time"
 #~ msgstr "Peak Time"
 
+#: src/components/MasterNodeReceivedList.tsx:165
 #: src/components/WalletHistory.tsx:165
 msgid "Pending"
 msgstr "Pendente"
@@ -2606,6 +2626,7 @@ msgstr ""
 #~ msgid "Restore Smart Wallets From Backup"
 #~ msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:179
 #: src/components/WalletHistory.tsx:179
 msgid "Retire"
 msgstr ""
@@ -3128,6 +3149,7 @@ msgstr ""
 #~ msgid "This feature is available only from the GUI."
 #~ msgstr "This feature is available only from the GUI."
 
+#: src/components/MasterNodeReceivedList.tsx:132
 #: src/components/WalletHistory.tsx:132
 msgid "This is not a valid address for sending funds to"
 msgstr ""
@@ -3247,6 +3269,7 @@ msgstr "Este é o saldo total + saldo pendente: é isso que o seu saldo será de
 #~ msgid "Timestamp"
 #~ msgstr "Timestamp"
 
+#: src/components/MasterNodeReceivedList.tsx:193
 #: src/components/WalletHistory.tsx:193
 msgid "To"
 msgstr "Para"
@@ -3341,6 +3364,7 @@ msgstr "Balanço Total"
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr ""
 
+#: src/components/MasterNodeReceivedList.tsx:310
 #: src/components/WalletHistory.tsx:310
 msgid "Transactions"
 msgstr ""

@@ -419,6 +419,22 @@ class WalletTransactionStore:
             count = 0
         await cursor.close()
         return count
+    
+    async def get_transaction_count_for_wallet_filter_by_puzzle_hash(self, wallet_id, to_puzzle_hash: Optional[bytes32] = None) -> int:
+        if to_puzzle_hash is None:
+            puzz_hash_where = ""
+        else:
+            puzz_hash_where = f' and to_puzzle_hash="{to_puzzle_hash.hex()}"'
+        cursor = await self.db_connection.execute(
+            f"SELECT COUNT(*) FROM transaction_record where wallet_id=?{puzz_hash_where}", (wallet_id,)
+        )
+        count_result = await cursor.fetchone()
+        if count_result is not None:
+            count = count_result[0]
+        else:
+            count = 0
+        await cursor.close()
+        return count
 
     async def get_all_transactions_for_wallet(self, wallet_id: int, type: int = None) -> List[TransactionRecord]:
         """

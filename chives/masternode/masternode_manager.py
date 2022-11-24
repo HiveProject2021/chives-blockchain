@@ -535,6 +535,9 @@ class MasterNodeManager:
         jsonResult = await self.masternode_staking_json(args, wallet_client, fingerprint)
         self.printJsonResult(jsonResult)
 
+    def get_staking_address(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        return self.masternode_wallet.get_staking_address()
+
     async def masternode_staking_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1
         mojo_per_unit = self.mojo_per_unit
@@ -1181,6 +1184,19 @@ class MasterNodeWallet:
                 first_address = encode_puzzle_hash(puzzle_hash, prefix)
                 result['first_address'] = first_address;      
                 result['first_puzzle_hash'] = puzzle_hash;   
+
+        # Standard wallet keys
+        for sk, seed in private_keys:   
+            if self.fingerprint == sk.get_g1().get_fingerprint():
+                privateKey = _derive_path_unhardened(sk, [12381, 9699, 2, 10])
+                publicKey = privateKey.get_g1()
+                puzzle = puzzle_for_pk(bytes(publicKey))
+                puzzle_hash = puzzle.get_tree_hash()
+                #print(puzzle_hash)
+                first_address = encode_puzzle_hash(puzzle_hash, prefix)
+                result['ReceivedAddress'] = first_address;      
+                result['ReceivedAddressPuzzleHash'] = puzzle_hash;  
+                
         # Masternode wallet keys   
         for sk, seed in private_keys:   
             if self.fingerprint == sk.get_g1().get_fingerprint():

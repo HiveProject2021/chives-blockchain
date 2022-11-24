@@ -243,6 +243,28 @@ export default class Wallet extends Service {
     });
   }
 
+  async getMasterNodeReceivedLists(
+    walletId: number,
+    start?: number,
+    end?: number,
+    sortKey?: 'CONFIRMED_AT_HEIGHT' | 'RELEVANCE',
+    reverse?: boolean
+  ) {
+    return this.command('masternode_received_transactions', {
+      walletId,
+      start,
+      end,
+      sortKey,
+      reverse,
+    });
+  }
+
+  async getMasterNodeReceivedListsCount(walletId: number) {
+    return this.command('masternode_received_transaction_count', {
+      walletId,
+    });
+  }
+
   async getNextAddress(walletId: number, newAddress: boolean) {
     return this.command('get_next_address', {
       walletId,

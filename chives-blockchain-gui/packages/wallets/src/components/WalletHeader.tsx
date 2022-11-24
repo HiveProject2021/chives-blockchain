@@ -22,8 +22,8 @@ import WalletName from './WalletName';
 type StandardWalletProps = {
   walletId: number;
   actions?: ({ onClose } : { onClose: () => void } ) => ReactNode;
-  tab: 'summary' | 'send' | 'receive' | 'masternodesummary';
-  onTabChange: (tab: 'summary' | 'send' | 'receive' | 'masternodesummary') => void;
+  tab: 'summary' | 'send' | 'receive' | 'masternodesummary' | 'masternodereceived';
+  onTabChange: (tab: 'summary' | 'send' | 'receive' | 'masternodesummary' | 'masternodereceived') => void;
 };
 
 export default function WalletHeader(props: StandardWalletProps) {
@@ -59,6 +59,7 @@ export default function WalletHeader(props: StandardWalletProps) {
             <Tab value="send" label={<Trans>Send</Trans>} />
             <Tab value="receive" label={<Trans>Receive</Trans>} />
             <Tab value="masternodesummary" label={<Trans>Master Node</Trans>} />
+            <Tab value="masternodereceived" label={<Trans>Master Node Income</Trans>} />
           </Tabs>
         </Flex>
         <Flex gap={1} alignItems="center">

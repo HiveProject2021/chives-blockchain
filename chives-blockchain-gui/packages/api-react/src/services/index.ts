@@ -105,6 +105,8 @@ export const {
   useGetTransactionsCountQuery,
   useGetMasterNodeListsQuery,
   useGetMasterNodeListsCountQuery,
+  useGetMasterNodeReceivedListsQuery,
+  useGetMasterNodeReceivedListsCountQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useFarmBlockMutation,

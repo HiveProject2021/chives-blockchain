@@ -11,6 +11,7 @@ import WalletReceiveAddress from '../WalletReceiveAddress';
 import WalletSend from '../WalletSend';
 import WalletHeader from '../WalletHeader';
 import MasterNodeList from '../MasterNodeList';
+import MasterNodeReceivedList from '../MasterNodeReceivedList';
 import MasterNodeStandardCards from '../masternode/MasterNodeStandardCards';
 
 type StandardWalletProps = {
@@ -22,7 +23,7 @@ export default function StandardWallet(props: StandardWalletProps) {
   // const showDebugInformation = useShowDebugInformation();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<
-    'summary' | 'send' | 'receive' | 'masternodesummary'
+    'summary' | 'send' | 'receive' | 'masternodesummary' | 'masternodereceived'
   >('summary');
 
   function handleCreateOffer() {
@@ -70,6 +71,12 @@ export default function StandardWallet(props: StandardWalletProps) {
         <Flex flexDirection="column" gap={4}>
           <MasterNodeStandardCards walletId={walletId} />
           <MasterNodeList walletId={walletId} />
+        </Flex>
+      </Box>
+      <Box display={selectedTab === 'masternodereceived' ? 'block' : 'none'}>
+        <Flex flexDirection="column" gap={4}>
+          <MasterNodeStandardCards walletId={walletId} />
+          <MasterNodeReceivedList walletId={walletId} />
         </Flex>
       </Box>
       <Box display={selectedTab === 'send' ? 'block' : 'none'}>
