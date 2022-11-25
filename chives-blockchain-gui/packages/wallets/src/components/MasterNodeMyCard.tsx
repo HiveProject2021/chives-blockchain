@@ -42,6 +42,7 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
       </Flex>
 
       <Card>
+        
         <Grid item xs={12}>
           <Box display="flex">
             <Box flexGrow={1}>
@@ -65,6 +66,8 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
               )}
             </Box>
           </Box>
+        </Grid>
+        <Grid item xs={12}>
           <Box display="flex">
             <Box flexGrow={1}>
               {isLoading ? (
