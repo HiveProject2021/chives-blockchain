@@ -699,14 +699,12 @@ class WalletRpcApi:
         masternode_show_json = await manager.masternode_show_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         #masternode_show_json = {}
         await manager.close()
-
-        masternode_result = {
+        return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "status": masternode_show_json['status'],
                     "title": masternode_show_json['title'],
-                    "data": masternode_show_json['data'],
+                    "result": masternode_show_json['dictResult'],
                     }
-        return {"masternode_result": masternode_result}
     
     async def masternode_cancel(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager

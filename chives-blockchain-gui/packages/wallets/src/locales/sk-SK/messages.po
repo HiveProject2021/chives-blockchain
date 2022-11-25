@@ -95,6 +95,10 @@ msgstr "-"
 #~ msgid "Accepted on Date"
 #~ msgstr "Prijaté k dátumu"
 
+#: src/components/MasterNodeMyCard.tsx:131
+#~ msgid "Account Balance"
+#~ msgstr ""
+
 #: src/components/plot/PlotsFailed.tsx:18
 #: src/components/plot/PlotsNotFound.tsx:18
 #: src/components/plot/overview/PlotOverviewPlots.tsx:114
@@ -388,6 +392,10 @@ msgstr "Zostatok"
 msgid "Cancel"
 msgstr "Zrušiť"
 
+#: src/components/MasterNodeMyCard.tsx:104
+#~ msgid "Cancel Address"
+#~ msgstr ""
+
 #: src/components/offers/OfferManager.tsx:94
 #: src/components/offers/OfferManager.tsx:166
 #: src/components/offers/OfferManager.tsx:423
@@ -675,7 +683,7 @@ msgstr "Vytvoriť novú peňaženku"
 
 #: src/components/cat/WalletCAT.tsx:129
 #: src/components/masternode/MasterNodeStandard.tsx:54
-#: src/components/standard/WalletStandard.tsx:57
+#: src/components/standard/WalletStandard.tsx:58
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -1627,8 +1635,12 @@ msgstr ""
 msgid "Master Node Income"
 msgstr ""
 
-#: src/components/MasterNodeList.tsx:201
+#: src/components/MasterNodeList.tsx:200
 msgid "MasterNode List"
+msgstr ""
+
+#: src/components/MasterNodeReceivedList.tsx:310
+msgid "MasterNode Reward Records"
 msgstr ""
 
 #: src/components/MasterNodeList.tsx:104
@@ -1762,7 +1774,7 @@ msgstr "Prezývka"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
-#: src/components/MasterNodeList.tsx:217
+#: src/components/MasterNodeList.tsx:216
 msgid "No MasterNode Data"
 msgstr ""
 
@@ -2532,6 +2544,10 @@ msgstr "Prijať"
 msgid "Receive Address"
 msgstr "Adresa príjemcu"
 
+#: src/components/MasterNodeMyCard.tsx:77
+#~ msgid "Received Address"
+#~ msgstr ""
+
 #: src/components/MasterNodeList.tsx:105
 #~ msgid "ReceivedAddress"
 #~ msgstr ""
@@ -2922,6 +2938,18 @@ msgstr "Dĺžka disponibilného intervalu (počet blokov)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Limit výdavkov (chives na interval): {0}"
 
+#: src/components/MasterNodeMyCard.tsx:52
+msgid "Staking Address"
+msgstr ""
+
+#: src/components/MasterNodeMyCard.tsx:34
+msgid "Staking Information"
+msgstr ""
+
+#: src/components/MasterNodeMyCard.tsx:156
+#~ msgid "Staking Status"
+#~ msgstr ""
+
 #: src/components/MasterNodeList.tsx:94
 #~ msgid "StakingAddress"
 #~ msgstr ""
@@ -3278,6 +3306,10 @@ msgstr "Toto je celkový zostatok + nespracovaný zostatok alebo to, aký bude v
 msgid "To"
 msgstr "Príjemca"
 
+#: src/components/MasterNodeMyCard.tsx:37
+msgid "To view my masternode staking informations."
+msgstr ""
+
 #: src/constants/WalletName.ts:23
 #~ msgid "Token Wallet"
 #~ msgstr "Token Wallet"
@@ -3368,7 +3400,6 @@ msgstr "Celkový zostatok"
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr "Transakcia bola úspešne odoslaná úplnému uzlu a zahrnutá do pamäťového fondu."
 
-#: src/components/MasterNodeReceivedList.tsx:310
 #: src/components/WalletHistory.tsx:310
 msgid "Transactions"
 msgstr "Transakcie"

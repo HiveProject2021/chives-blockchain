@@ -95,6 +95,10 @@ msgstr "-"
 #~ msgid "Accepted on Date"
 #~ msgstr "Accepted on Date"
 
+#: src/components/MasterNodeMyCard.tsx:131
+#~ msgid "Account Balance"
+#~ msgstr "Account Balance"
+
 #: src/components/plot/PlotsFailed.tsx:18
 #: src/components/plot/PlotsNotFound.tsx:18
 #: src/components/plot/overview/PlotOverviewPlots.tsx:114
@@ -388,6 +392,10 @@ msgstr "Balance"
 msgid "Cancel"
 msgstr "Cancel"
 
+#: src/components/MasterNodeMyCard.tsx:104
+#~ msgid "Cancel Address"
+#~ msgstr "Cancel Address"
+
 #: src/components/offers/OfferManager.tsx:94
 #: src/components/offers/OfferManager.tsx:166
 #: src/components/offers/OfferManager.tsx:423
@@ -675,7 +683,7 @@ msgstr "Create New Wallet"
 
 #: src/components/cat/WalletCAT.tsx:129
 #: src/components/masternode/MasterNodeStandard.tsx:54
-#: src/components/standard/WalletStandard.tsx:57
+#: src/components/standard/WalletStandard.tsx:58
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -1627,9 +1635,13 @@ msgstr "Master Node"
 msgid "Master Node Income"
 msgstr "Master Node Income"
 
-#: src/components/MasterNodeList.tsx:201
+#: src/components/MasterNodeList.tsx:200
 msgid "MasterNode List"
 msgstr "MasterNode List"
+
+#: src/components/MasterNodeReceivedList.tsx:310
+msgid "MasterNode Reward Records"
+msgstr "MasterNode Reward Records"
 
 #: src/components/MasterNodeList.tsx:104
 msgid "MasterNodeID"
@@ -1762,7 +1774,7 @@ msgstr "Nickname"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
-#: src/components/MasterNodeList.tsx:217
+#: src/components/MasterNodeList.tsx:216
 msgid "No MasterNode Data"
 msgstr "No MasterNode Data"
 
@@ -2532,6 +2544,10 @@ msgstr "Receive"
 msgid "Receive Address"
 msgstr "Receive Address"
 
+#: src/components/MasterNodeMyCard.tsx:77
+#~ msgid "Received Address"
+#~ msgstr "Received Address"
+
 #: src/components/MasterNodeList.tsx:105
 #~ msgid "ReceivedAddress"
 #~ msgstr "ReceivedAddress"
@@ -2922,6 +2938,18 @@ msgstr "Spending Interval Length (number of blocks)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Spending Limit (chives per interval): {0}"
 
+#: src/components/MasterNodeMyCard.tsx:52
+msgid "Staking Address"
+msgstr "Staking Address"
+
+#: src/components/MasterNodeMyCard.tsx:34
+msgid "Staking Information"
+msgstr "Staking Information"
+
+#: src/components/MasterNodeMyCard.tsx:156
+#~ msgid "Staking Status"
+#~ msgstr "Staking Status"
+
 #: src/components/MasterNodeList.tsx:94
 #~ msgid "StakingAddress"
 #~ msgstr "StakingAddress"
@@ -3278,6 +3306,10 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 msgid "To"
 msgstr "To"
 
+#: src/components/MasterNodeMyCard.tsx:37
+msgid "To view my masternode staking informations."
+msgstr "To view my masternode staking informations."
+
 #: src/constants/WalletName.ts:23
 #~ msgid "Token Wallet"
 #~ msgstr "Token Wallet"
@@ -3368,7 +3400,6 @@ msgstr "Total Balance"
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr "Transaction has successfully been sent to a full node and included in the mempool."
 
-#: src/components/MasterNodeReceivedList.tsx:310
 #: src/components/WalletHistory.tsx:310
 msgid "Transactions"
 msgstr "Transactions"

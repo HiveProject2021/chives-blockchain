@@ -303,7 +303,7 @@ class MasterNodeManager:
         #Create MasterNode ID Must Have Staking Coin.            
         get_staking_address = self.masternode_wallet.get_staking_address();
         StakingData = {}
-        StakingData['ReceivedAddress'] = get_staking_address['first_address'];
+        StakingData['ReceivedAddress'] = get_staking_address['ReceivedAddress'];
         StakingData['StakingAddress'] = get_staking_address['address'];
         StakingData['StakingAmount'] = get_staking_address['StakingAmount'];
         StakingData['NodeName'] = blockchain_state["node_id"];      
@@ -617,6 +617,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
 
         if isHaveStakingCoin is True:
             jsonResult['data'].append({"You have staking coins. Not need to stake coin again.":""})
@@ -734,6 +735,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
         jsonResult['data'].append({"":""})
         
         #取消质押
@@ -859,6 +861,17 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
+        dictResult = {}
+        dictResult['WalletBalance'] = str(confirmed_wallet_balance)
+        dictResult['WalletMaxSent'] = str(max_send_amount)
+        dictResult['WalletAddress'] = get_staking_address_result['first_address']
+        dictResult['StakingAddress'] = get_staking_address_result['address']
+        dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
+        dictResult['StakingAccountStatus'] = isHaveStakingCoin
+        dictResult['StakingCancelAddress'] = get_staking_address_result['first_address']
+        dictResult['StakingReceivedAddress'] = get_staking_address_result['ReceivedAddress']
+        jsonResult['dictResult'] = dictResult
         return jsonResult
     
     def printJsonResult(self,jsonResult):
