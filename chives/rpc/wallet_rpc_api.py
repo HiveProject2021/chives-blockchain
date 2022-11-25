@@ -161,7 +161,7 @@ class WalletRpcApi:
             # MasterNode 
             "/masternode_init": self.masternode_init,
             "/masternode_list": self.masternode_list,
-            "/masternode_show": self.masternode_show,
+            "/masternode_mynode": self.masternode_mynode,
             "/masternode_staking": self.masternode_staking,
             "/masternode_register": self.masternode_register,
             "/masternode_cancel": self.masternode_cancel,
@@ -689,21 +689,21 @@ class WalletRpcApi:
     # MasterNode
     ##########################################################################################
 
-    async def masternode_show(self, request: Dict) -> Dict:
+    async def masternode_mynode(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
         await manager.chooseWallet(wallet_id)
-        masternode_show_json = await manager.masternode_show_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
-        #masternode_show_json = {}
+        masternode_mynode_json = await manager.masternode_mynode_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        #masternode_mynode_json = {}
         await manager.close()
         return {
                     "fingerprint": self.service.logged_in_fingerprint,
-                    "status": masternode_show_json['status'],
-                    "title": masternode_show_json['title'],
-                    "result": masternode_show_json['dictResult'],
+                    "status": masternode_mynode_json['status'],
+                    "title": masternode_mynode_json['title'],
+                    "result": masternode_mynode_json['dictResult'],
                     }
     
     async def masternode_cancel(self, request: Dict) -> Dict:

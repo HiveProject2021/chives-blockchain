@@ -88,8 +88,8 @@ class WalletRpcClient(RpcClient):
         return (await self.fetch("get_wallets", request))["wallets"]
 
     # MasterNode APIs
-    async def masternode_show(self, wallet_id: str) -> Dict:
-        return (await self.fetch("masternode_show", {"wallet_id": wallet_id}))["wallet_balance"]
+    async def masternode_mynode(self, wallet_id: str) -> Dict:
+        return (await self.fetch("masternode_mynode", {"wallet_id": wallet_id}))["wallet_balance"]
 
     # Wallet APIs
     async def get_wallet_balance(self, wallet_id: str) -> Dict:

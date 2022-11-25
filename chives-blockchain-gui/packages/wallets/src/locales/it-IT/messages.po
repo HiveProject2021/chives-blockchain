@@ -392,9 +392,9 @@ msgstr "Bilancio"
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/components/MasterNodeMyCard.tsx:104
-#~ msgid "Cancel Address"
-#~ msgstr ""
+#: src/components/MasterNodeMyCard.tsx:122
+msgid "Cancel Address"
+msgstr ""
 
 #: src/components/offers/OfferManager.tsx:94
 #: src/components/offers/OfferManager.tsx:166
@@ -2544,9 +2544,9 @@ msgstr "Ricevi"
 msgid "Receive Address"
 msgstr "Indirizzo per Ricevere"
 
-#: src/components/MasterNodeMyCard.tsx:77
-#~ msgid "Received Address"
-#~ msgstr ""
+#: src/components/MasterNodeMyCard.tsx:98
+msgid "Received Address"
+msgstr ""
 
 #: src/components/MasterNodeList.tsx:105
 #~ msgid "ReceivedAddress"
@@ -2938,17 +2938,21 @@ msgstr "Lunghezza Intervallo di Spesa (numero di blocchi)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Limite di Spesa (chives per intervallo): {0}"
 
-#: src/components/MasterNodeMyCard.tsx:52
+#: src/components/MasterNodeMyCard.tsx:146
 msgid "Staking Address"
+msgstr ""
+
+#: src/components/MasterNodeMyCard.tsx:52
+msgid "Staking Balance"
 msgstr ""
 
 #: src/components/MasterNodeMyCard.tsx:34
 msgid "Staking Information"
 msgstr ""
 
-#: src/components/MasterNodeMyCard.tsx:156
-#~ msgid "Staking Status"
-#~ msgstr ""
+#: src/components/MasterNodeMyCard.tsx:74
+msgid "Staking Status"
+msgstr ""
 
 #: src/components/MasterNodeList.tsx:94
 #~ msgid "StakingAddress"

@@ -240,7 +240,7 @@ def masternode_cancel_cmd(
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_cancel))
 
 #show the staking status for MasterNode
-@wallet_cmd.command("masternode_show", short_help="show your masternode information.")
+@wallet_cmd.command("masternode_mynode", short_help="show your masternode information.")
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -249,14 +249,14 @@ def masternode_cancel_cmd(
     default=None,
 )
 @click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
-def masternode_show_cmd(
+def masternode_mynode_cmd(
     wallet_rpc_port: Optional[int],
     fingerprint: int,
 ) -> None:
     extra_params = {}
     import asyncio
-    from .wallet_funcs import execute_with_wallet, masternode_show
-    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_show))
+    from .wallet_funcs import execute_with_wallet, masternode_mynode
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_mynode))
 
 
 #Initial all MasterNode on the blockchain

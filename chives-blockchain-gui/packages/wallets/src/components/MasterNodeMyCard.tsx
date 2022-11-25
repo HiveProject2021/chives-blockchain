@@ -49,14 +49,36 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
                 <Loading center />
               ) : (
                 <TextField
-                  label={<Trans>Staking Address</Trans>}
-                  value={StakingAddress}
+                  label={<Trans>Staking Balance</Trans>}
+                  value={StakingAccountBalance}
                   variant="filled"
                   InputProps={{
                     readOnly: true,
                     endAdornment: (
                       <InputAdornment position="end">
-                        <CopyToClipboard value={StakingAddress} />
+                        <CopyToClipboard value={StakingAccountBalance} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  fullWidth
+                />
+              )}
+            </Box>
+          </Box>
+          <Box display="flex">
+            <Box flexGrow={1}>
+              {isLoading ? (
+                <Loading center />
+              ) : (
+                <TextField
+                  label={<Trans>Staking Status</Trans>}
+                  value={StakingAccountStatus}
+                  variant="filled"
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CopyToClipboard value={StakingAccountStatus} />
                       </InputAdornment>
                     ),
                   }}
@@ -66,9 +88,6 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
             </Box>
           </Box>
         </Grid>
-      </Card>
-
-      <Card>
         <Grid item xs={12}>
           <Box display="flex">
             <Box flexGrow={1}>
@@ -93,9 +112,6 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
             </Box>
           </Box>
         </Grid>
-      </Card>
-
-      <Card>
         <Grid item xs={12}>
           <Box display="flex">
             <Box flexGrow={1}>
@@ -120,24 +136,21 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
             </Box>
           </Box>
         </Grid>
-      </Card>
-
-      <Card>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <Box display="flex">
             <Box flexGrow={1}>
               {isLoading ? (
                 <Loading center />
               ) : (
                 <TextField
-                  label={<Trans>Staking Balance</Trans>}
-                  value={StakingAccountBalance}
+                  label={<Trans>Staking Address</Trans>}
+                  value={StakingAddress}
                   variant="filled"
                   InputProps={{
                     readOnly: true,
                     endAdornment: (
                       <InputAdornment position="end">
-                        <CopyToClipboard value={StakingAccountBalance} />
+                        <CopyToClipboard value={StakingAddress} />
                       </InputAdornment>
                     ),
                   }}
@@ -147,33 +160,8 @@ export default function MasterNodeMyCard(props: MasterNodeMyCardProps) {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={6}>
-          <Box display="flex">
-            <Box flexGrow={1}>
-              {isLoading ? (
-                <Loading center />
-              ) : (
-                <TextField
-                  label={<Trans>Staking Status</Trans>}
-                  value={StakingAccountStatus}
-                  variant="filled"
-                  InputProps={{
-                    readOnly: true,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <CopyToClipboard value={StakingAccountStatus} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  fullWidth
-                />
-              )}
-            </Box>
-          </Box>
-        </Grid>
+
       </Card>
-
-
     </Flex>
   );
 }

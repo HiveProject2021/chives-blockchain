@@ -392,9 +392,9 @@ msgstr "余额"
 msgid "Cancel"
 msgstr "取消"
 
-#: src/components/MasterNodeMyCard.tsx:104
-#~ msgid "Cancel Address"
-#~ msgstr ""
+#: src/components/MasterNodeMyCard.tsx:122
+msgid "Cancel Address"
+msgstr ""
 
 #: src/components/offers/OfferManager.tsx:94
 #: src/components/offers/OfferManager.tsx:166
@@ -2540,9 +2540,9 @@ msgstr ""
 msgid "Receive Address"
 msgstr "接收地址"
 
-#: src/components/MasterNodeMyCard.tsx:77
-#~ msgid "Received Address"
-#~ msgstr ""
+#: src/components/MasterNodeMyCard.tsx:98
+msgid "Received Address"
+msgstr ""
 
 #: src/components/MasterNodeList.tsx:105
 #~ msgid "ReceivedAddress"
@@ -2934,17 +2934,21 @@ msgstr "支出迭代长度(区块数)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "消费限额（单位时间可消费的韭菜币）：{0}"
 
-#: src/components/MasterNodeMyCard.tsx:52
+#: src/components/MasterNodeMyCard.tsx:146
 msgid "Staking Address"
+msgstr ""
+
+#: src/components/MasterNodeMyCard.tsx:52
+msgid "Staking Balance"
 msgstr ""
 
 #: src/components/MasterNodeMyCard.tsx:34
 msgid "Staking Information"
 msgstr ""
 
-#: src/components/MasterNodeMyCard.tsx:156
-#~ msgid "Staking Status"
-#~ msgstr ""
+#: src/components/MasterNodeMyCard.tsx:74
+msgid "Staking Status"
+msgstr ""
 
 #: src/components/MasterNodeList.tsx:94
 #~ msgid "StakingAddress"

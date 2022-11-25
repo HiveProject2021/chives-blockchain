@@ -266,7 +266,7 @@ export default class Wallet extends Service {
   }
 
   async getMasterNodeMyCard(walletId: number) {
-    return this.command('masternode_show', {
+    return this.command('masternode_mynode', {
       walletId,
     });
   }

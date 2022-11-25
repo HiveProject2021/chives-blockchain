@@ -284,7 +284,7 @@ async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerpr
         await manager.masternode_cancel(args, wallet_client, fingerprint)
     await manager.close()
 
-async def masternode_show(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+async def masternode_mynode(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()
     checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
@@ -292,7 +292,7 @@ async def masternode_show(args: dict, wallet_client: WalletRpcClient, fingerprin
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
-        await manager.masternode_show(args, wallet_client, fingerprint)
+        await manager.masternode_mynode(args, wallet_client, fingerprint)
     await manager.close()
 
 async def masternode_init(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -837,7 +837,7 @@ async def print_balances(args: dict, wallet_client: WalletRpcClient, fingerprint
                 print(f"{indent}{'-Asset ID:'.ljust(23)} {asset_id}")
             print(f"{indent}{'-Wallet ID:'.ljust(23)} {wallet_id}")
 
-    await masternode_show(args, wallet_client, fingerprint)
+    await masternode_mynode(args, wallet_client, fingerprint)
 
     print(" ")
     trusted_peers: Dict = config["wallet"].get("trusted_peers", {})
