@@ -1,9 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Trans } from '@lingui/macro';
-import { useGetWalletBalanceQuery } from '@chives/api-react';
+import { useGetMasterNodeSummaryQuery } from '@chives/api-react';
 import { CardSimple } from '@chives/core';
-import useWallet from '../../hooks/useWallet';
-import useWalletHumanValue from '../../hooks/useWalletHumanValue';
 
 type Props = {
   walletId: number;
@@ -14,21 +12,16 @@ export default function MasterNodeCardSpendableBalance(props: Props) {
   const { walletId, tooltip } = props;
 
   const { 
-    data: walletBalance, 
-    isLoading: isLoadingWalletBalance,
-    error,
-  } = useGetWalletBalanceQuery({
+    data: MasterNodeSummary
+  } = useGetMasterNodeSummaryQuery({
     walletId,
   }, {
     pollingInterval: 10000,
   });
 
-  const { wallet, unit = '', loading } = useWallet(walletId);
-
-  const isLoading = loading || isLoadingWalletBalance;
-  const value = walletBalance?.spendableBalance;
-
-  const humanValue = useWalletHumanValue(wallet, value, unit);
+  const error = null;
+  const isLoading = false;
+  const value = MasterNodeSummary?.MasterNodeStakingAmount;
 
   return (
     <CardSimple
@@ -36,7 +29,7 @@ export default function MasterNodeCardSpendableBalance(props: Props) {
       valueColor="secondary"
       title={<Trans>Spendable Balance</Trans>}
       tooltip={tooltip}
-      value={humanValue}
+      value={value}
       error={error}
     />
   );

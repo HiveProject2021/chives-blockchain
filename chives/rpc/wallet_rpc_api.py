@@ -162,6 +162,7 @@ class WalletRpcApi:
             "/masternode_init": self.masternode_init,
             "/masternode_list": self.masternode_list,
             "/masternode_mynode": self.masternode_mynode,
+            "/masternode_summary": self.masternode_summary,
             "/masternode_staking": self.masternode_staking,
             "/masternode_register": self.masternode_register,
             "/masternode_cancel": self.masternode_cancel,
@@ -704,6 +705,22 @@ class WalletRpcApi:
                     "status": masternode_mynode_json['status'],
                     "title": masternode_mynode_json['title'],
                     "result": masternode_mynode_json['dictResult'],
+                    "wallet_id": wallet_id,
+                    }
+    async def masternode_summary(self, request: Dict) -> Dict:
+        from chives.masternode.masternode_manager import MasterNodeManager
+        manager = MasterNodeManager()
+        await manager.connect()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        wallet_id = uint32(int(request["wallet_id"]))
+        await manager.chooseWallet(wallet_id)
+        masternode_summary_json = await manager.masternode_summary_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        #masternode_mynode_json = {}
+        await manager.close()
+        return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "result": masternode_summary_json,
+                    "wallet_id": wallet_id,
                     }
     
     async def masternode_cancel(self, request: Dict) -> Dict:
@@ -721,6 +738,7 @@ class WalletRpcApi:
                     "status": masternode_cancel_json['status'],
                     "title": masternode_cancel_json['title'],
                     "data": masternode_cancel_json['data'],
+                    "wallet_id": wallet_id,
                     }
         return {"masternode_result": masternode_result}
     
@@ -739,6 +757,7 @@ class WalletRpcApi:
                     "status": masternode_staking_json['status'],
                     "title": masternode_staking_json['title'],
                     "data": masternode_staking_json['data'],
+                    "wallet_id": wallet_id,
                     }
         return {"masternode_result": masternode_result}
     
@@ -757,6 +776,7 @@ class WalletRpcApi:
                     "status": masternode_register_json['status'],
                     "title": masternode_register_json['title'],
                     "data": masternode_register_json['data'],
+                    "wallet_id": wallet_id,
                     }
         return {"masternode_result": masternode_result}
     
@@ -776,7 +796,6 @@ class WalletRpcApi:
                 "fingerprint": self.service.logged_in_fingerprint,
                 }
 
-    
     async def masternode_list_count(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
@@ -807,6 +826,7 @@ class WalletRpcApi:
                     "status": masternode_init,
                     "title": "Chives Masternode Initial Process",
                     "data": [],
+                    "wallet_id": wallet_id,
                     }
         return {"masternode_result": masternode_result}
 

@@ -392,7 +392,7 @@ msgstr "Bilancio"
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/components/MasterNodeMyCard.tsx:122
+#: src/components/MasterNodeMyCard.tsx:125
 msgid "Cancel Address"
 msgstr ""
 
@@ -1285,6 +1285,10 @@ msgstr "Le chivesvi HD (Hierarchical Deterministic) sono un tipo di schema a chi
 #~ msgid "Hashgreen DEX URL"
 #~ msgstr "Hashgreen DEX URL"
 
+#: src/components/MasterNodeCards.tsx:97
+msgid "Have Sent Amount"
+msgstr ""
+
 #: src/components/fullNode/FullNode.jsx:60
 #~ msgid "Header Hash"
 #~ msgstr "Header Hash"
@@ -1635,6 +1639,10 @@ msgstr ""
 msgid "Master Node Income"
 msgstr ""
 
+#: src/components/card/MasterNodeCardTotalBalance.tsx:44
+#~ msgid "MasterNode Count"
+#~ msgstr ""
+
 #: src/components/MasterNodeList.tsx:200
 msgid "MasterNode List"
 msgstr ""
@@ -1940,6 +1948,10 @@ msgstr "Il tempo medio che passa tra un blocco di transazioni e l'altro è di un
 #: src/components/offers/OfferViewer.tsx:300
 #~ msgid "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 #~ msgstr "Uno o più token sconosciuti sono stati offerti. Si prega di verificare che gli ID asset dei token elencati di seguito corrispondono agli ID asset dei token che ci si aspetta di ricevere."
+
+#: src/components/MasterNodeCards.tsx:87
+msgid "Online Nodes"
+msgstr ""
 
 #: src/components/did/WalletDIDRecovery.tsx:33
 msgid "Only one backup file is allowed."
@@ -2544,7 +2556,7 @@ msgstr "Ricevi"
 msgid "Receive Address"
 msgstr "Indirizzo per Ricevere"
 
-#: src/components/MasterNodeMyCard.tsx:98
+#: src/components/MasterNodeMyCard.tsx:101
 msgid "Received Address"
 msgstr ""
 
@@ -2650,6 +2662,10 @@ msgstr "Rinomina Portafoglio"
 #: src/components/WalletHistory.tsx:179
 msgid "Retire"
 msgstr "Ritira"
+
+#: src/components/MasterNodeCards.tsx:107
+msgid "Reward Pool Amount"
+msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:57
 #: src/components/fullNode/FullNodeConnections.jsx:107
@@ -2918,7 +2934,7 @@ msgstr "Ammontare Spendibile"
 msgid "Spendable Amount Per Interval"
 msgstr "Ammontare Spendibile Per Intervallo"
 
-#: src/components/card/MasterNodeCardSpendableBalance.tsx:37
+#: src/components/card/MasterNodeCardSpendableBalance.tsx:30
 #: src/components/card/WalletCardSpendableBalance.tsx:37
 #: src/components/rateLimited/WalletRateLimited.jsx:547
 msgid "Spendable Balance"
@@ -2938,11 +2954,15 @@ msgstr "Lunghezza Intervallo di Spesa (numero di blocchi)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Limite di Spesa (chives per intervallo): {0}"
 
-#: src/components/MasterNodeMyCard.tsx:146
+#: src/components/MasterNodeMyCard.tsx:149
 msgid "Staking Address"
 msgstr ""
 
-#: src/components/MasterNodeMyCard.tsx:52
+#: src/components/MasterNodeCards.tsx:60
+msgid "Staking Amount"
+msgstr ""
+
+#: src/components/MasterNodeMyCard.tsx:53
 msgid "Staking Balance"
 msgstr ""
 
@@ -2950,7 +2970,7 @@ msgstr ""
 msgid "Staking Information"
 msgstr ""
 
-#: src/components/MasterNodeMyCard.tsx:74
+#: src/components/MasterNodeMyCard.tsx:77
 msgid "Staking Status"
 msgstr ""
 
@@ -3351,6 +3371,10 @@ msgstr "Bilancio Totale"
 #: src/components/farm/card/FarmCardTotalNetworkSpace.tsx:13
 #~ msgid "Total Network Space"
 #~ msgstr "Total Network Space"
+
+#: src/components/MasterNodeCards.tsx:77
+msgid "Total Nodes"
+msgstr ""
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:146
 #~ msgid "Total Plot Size:"

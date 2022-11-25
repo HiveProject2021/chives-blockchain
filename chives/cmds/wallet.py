@@ -278,6 +278,25 @@ def masternode_init_cmd(
     from .wallet_funcs import execute_with_wallet, masternode_init
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_init))
 
+#list all MasterNode on the localhost database
+@wallet_cmd.command("masternode_summary", short_help="List masternode summary from blockchain.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_summary_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_summary
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_summary))
+
 
 #list all MasterNode on the localhost database
 @wallet_cmd.command("masternode_list", short_help="List all the masternodes from blockchain.")

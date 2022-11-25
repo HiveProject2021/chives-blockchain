@@ -317,6 +317,17 @@ async def masternode_list(args: dict, wallet_client: WalletRpcClient, fingerprin
         await manager.masternode_list(args, wallet_client, fingerprint)
     await manager.close()
 
+async def masternode_summary(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+    manager = MasterNodeManager()
+    await manager.connect()
+    checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    await manager.chooseWallet(fingerprint)
+    for item in checkSyncedStatusText:
+        print(item)
+    if checkSyncedStatus == 2: 
+        await manager.masternode_summary(args, wallet_client, fingerprint)
+    await manager.close()
+
 async def masternode_list_json(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()

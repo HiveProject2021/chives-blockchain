@@ -137,6 +137,8 @@ class MasterNodeManager:
         self.fingerprints = await self.wallet_client.get_public_keys()
 
     async def chooseWallet(self, fingerprint: int = 0) -> None:
+        if fingerprint is None:
+            return None
         if fingerprint == 0:
             fingerprint = 1
         if fingerprint<10000:
@@ -428,6 +430,28 @@ class MasterNodeManager:
         for nft in nfts:
             counter += 1
             self.print_masternode(nft,counter)
+    
+    async def masternode_summary_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        nfts = await self.get_all_masternodes()
+        MasterNodeStakingAmount = 0
+        MasterNodeCount = 0
+        for nft in nfts:
+            NftDataJson = json.loads(nft['nft_data'][1].decode("utf-8"))
+            if "StakingAmount" in NftDataJson:
+                MasterNodeStakingAmount += int(NftDataJson['StakingAmount'])
+                MasterNodeCount += 1
+        result = {}
+        result['MasterNodeCount'] = MasterNodeCount
+        result['MasterNodeStakingAmount'] = MasterNodeStakingAmount
+        result['MasterNodeRewardHaveSentAmount'] = 56789
+        result['MasterNodeRewardPoolAmount'] = 12345
+        result['MasterNodeOnlineCount'] = 2
+        return result
+
+    async def masternode_summary(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        result = await self.masternode_summary_json(args, wallet_client, fingerprint)
+        for key,value in result.items():
+            print(f"{key}: {str(value)}")
 
     async def masternode_merge(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1

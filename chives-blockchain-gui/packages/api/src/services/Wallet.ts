@@ -271,6 +271,12 @@ export default class Wallet extends Service {
     });
   }
 
+  async getMasterNodeSummary(walletId: number) {
+    return this.command('masternode_summary', {
+      walletId,
+    });
+  }
+
   async getNextAddress(walletId: number, newAddress: boolean) {
     return this.command('get_next_address', {
       walletId,

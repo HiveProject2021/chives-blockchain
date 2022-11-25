@@ -959,6 +959,20 @@ export const walletApi = apiWithTag.injectEndpoints({
       transformResponse: (response: any) => response?.result,
     }),
 
+    getMasterNodeSummary: build.query<
+      string,
+      {
+        walletId: number;
+      }
+    >({
+      query: ({ walletId }) => ({
+        command: 'getMasterNodeSummary',
+        service: Wallet,
+        args: [walletId, false],
+      }),
+      transformResponse: (response: any) => response?.result,
+    }),
+
     getCurrentAddress: build.query<
       string,
       {
@@ -2339,6 +2353,7 @@ export const {
   useGetMasterNodeReceivedListsQuery,
   useGetMasterNodeReceivedListsCountQuery,
   useGetMasterNodeMyCardQuery,
+  useGetMasterNodeSummaryQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useFarmBlockMutation,
