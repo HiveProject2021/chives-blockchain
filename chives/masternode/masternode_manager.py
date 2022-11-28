@@ -136,7 +136,7 @@ class MasterNodeManager:
         self.db_wrapper = DBWrapper(self.connection)
         self.fingerprints = await self.wallet_client.get_public_keys()
 
-    async def chooseWallet(self, fingerprint: int = 0) -> None:
+    async def chooseWallet(self, fingerprint: int = 0) -> bool:
         if fingerprint is None:
             return None
         if fingerprint == 0:
@@ -145,17 +145,22 @@ class MasterNodeManager:
             fingerprint = fingerprint - 1
             fingerprint = self.fingerprints[fingerprint]
         self.fingerprint = fingerprint
-        self.masternode_wallet = await MasterNodeWallet.create(self.db_wrapper, self.node_client, self.fingerprint)
-        log_in_response = await self.wallet_client.log_in(fingerprint)
-        private_key = await self.wallet_client.get_private_key(fingerprint)
-        sk_data = binascii.unhexlify(private_key["sk"])
-        self.master_sk = PrivateKey.from_bytes(sk_data)
-        await self.derive_nft_keys()
-        await self.derive_wallet_keys()
-        #get the wallet max used keys index
-        self.puzzle_store = await WalletPuzzleStore.create(self.db_wrapper)
-        self.get_current_derivation_index = await self.wallet_client.get_current_derivation_index()
-        await self.derive_unhardened_keys(n=self.get_current_derivation_index)
+        try:
+            self.masternode_wallet = await MasterNodeWallet.create(self.db_wrapper, self.node_client, self.fingerprint)
+            log_in_response = await self.wallet_client.log_in(fingerprint)
+            private_key = await self.wallet_client.get_private_key(fingerprint)
+            sk_data = binascii.unhexlify(private_key["sk"])
+            self.master_sk = PrivateKey.from_bytes(sk_data)
+            await self.derive_nft_keys()
+            await self.derive_wallet_keys()
+            #get the wallet max used keys index
+            self.puzzle_store = await WalletPuzzleStore.create(self.db_wrapper)
+            self.get_current_derivation_index = await self.wallet_client.get_current_derivation_index()
+            await self.derive_unhardened_keys(n=self.get_current_derivation_index)
+            return True
+        except Exception:
+            return False
+        
 
     async def checkSyncedStatus(self) -> None:
         checkSyncedStatus = 0

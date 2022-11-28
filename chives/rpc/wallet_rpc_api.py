@@ -689,14 +689,44 @@ class WalletRpcApi:
     ##########################################################################################
     # MasterNode
     ##########################################################################################
+    async def masternode_check_wallet_synced(self, request: Dict) -> Dict:
+        wallet_id = int(request["wallet_id"])
+        assert self.service.wallet_state_manager is not None
+        if await self.service.wallet_state_manager.synced() is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"Wallet needs to be fully synced before sending transactions"
+                    }
+        wallet = self.service.wallet_state_manager.wallets[wallet_id]
+        if wallet.type() == WalletType.CAT:
+            raise ValueError("")
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"send_transaction does not work for CAT wallets"
+                    }
+        return None
 
     async def masternode_mynode(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_mynode_json = await manager.masternode_mynode_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         #masternode_mynode_json = {}
         await manager.close()
@@ -707,13 +737,26 @@ class WalletRpcApi:
                     "result": masternode_mynode_json['dictResult'],
                     "wallet_id": wallet_id,
                     }
+
     async def masternode_summary(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_summary_json = await manager.masternode_summary_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         #masternode_mynode_json = {}
         await manager.close()
@@ -727,9 +770,21 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_cancel_json = await manager.masternode_cancel_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
@@ -746,9 +801,21 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_staking_json = await manager.masternode_staking_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
@@ -765,9 +832,21 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_register_json = await manager.masternode_register_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
@@ -784,9 +863,21 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_list_json = await manager.masternode_list_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
@@ -800,9 +891,23 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText,
+                    "count": 0
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section.",
+                    "count": 0
+                    }
         get_all_masternodes_count = await manager.get_all_masternodes_count()
         await manager.close()
 
@@ -815,9 +920,21 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         masternode_init = await manager.sync()
         await manager.close()
 
@@ -834,9 +951,21 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section."
+                    }
         get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
         #Add a address filter in here
@@ -847,9 +976,23 @@ class WalletRpcApi:
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         wallet_id = uint32(int(request["wallet_id"]))
-        await manager.chooseWallet(wallet_id)
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        if checkSyncedStatus < 2:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":checkSyncedStatusText,
+                    "count": 0
+                    }
+        chooseWallet = await manager.chooseWallet(wallet_id)
+        if chooseWallet is False:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"choose wallet failed in manager section.",
+                    "count": 0
+                    }
         get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
         #Add a address filter in here
