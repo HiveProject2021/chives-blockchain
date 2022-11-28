@@ -1,0 +1,8 @@
+(mod (STAKING_PUZZLE_HASH STAKING_REQUIRED_HEIGHT total_amount )
+	(include condition_codes.clib)	
+	(list
+        (list ASSERT_HEIGHT_RELATIVE STAKING_REQUIRED_HEIGHT)
+        (list ASSERT_MY_AMOUNT total_amount)
+        (list CREATE_COIN STAKING_PUZZLE_HASH total_amount )
+    )
+)
