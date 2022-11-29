@@ -314,20 +314,21 @@ class MasterNodeManager:
         sync_mode = blockchain_state["sync"]["sync_mode"]        
         
         #Create MasterNode ID Must Have Staking Coin.            
-        get_staking_address = self.masternode_wallet.get_staking_address();
+        get_staking_address = self.masternode_wallet.get_staking_address()
         StakingData = {}
-        StakingData['ReceivedAddress'] = get_staking_address['ReceivedAddress'];
-        StakingData['StakingAddress'] = get_staking_address['STAKING_ADDRESS_TEST'];
-        StakingData['StakingAmount'] = get_staking_address['StakingAmount'];
-        StakingData['NodeName'] = blockchain_state["node_id"];      
-        IsStakingCoin = False;
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(get_staking_address['puzzle_hash'],False)
+        StakingData['ReceivedAddress'] = get_staking_address['ReceivedAddress']
+        StakingData['StakingAddress'] = get_staking_address['STAKING_ADDRESS_TEST']
+        StakingData['StakingAmount'] = get_staking_address['StakingAmount']
+        StakingData['StakingHeight'] = get_staking_address['STAKING_HEIGHT_TEST']
+        StakingData['NodeName'] = blockchain_state["node_id"]
+        IsStakingCoin = False
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingData['StakingAddress']),False)
         for coin_record in all_staking_coins:
-            StakingAmount = coin_record.coin.amount;
+            StakingAmount = coin_record.coin.amount
             if StakingAmount == StakingData['StakingAmount'] * 100000000 :
-                IsStakingCoin = True;
+                IsStakingCoin = True
         if IsStakingCoin == False:
-            return ("No finish staking coin","No finish staking coin");
+            return ("No finish staking coin","No finish staking coin")
         
         dataJsonText = json.dumps(StakingData)       
         nft_data = ("MasterNodeNFT", dataJsonText)
@@ -658,6 +659,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
 
         if isHaveStakingCoin is True:
+            jsonResult['data'].append({"":""})
             jsonResult['data'].append({"You have staking coins. Not need to stake coin again.":""})
             jsonResult['data'].append({"":""})
             return jsonResult
@@ -768,7 +770,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
+        jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
@@ -786,6 +788,7 @@ class MasterNodeManager:
                 jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes":""})
                 jsonResult['data'].append({"You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.":""})
                 jsonResult['data'].append({"":""})
+                jsonResult['data'].append({"Tx id":cancel_masternode_staking_coins['tx_id']})
             elif cancel_masternode_staking_coins is not None and "error" in cancel_masternode_staking_coins:
                 jsonResult['data'].append({"status":"Masternode cancel failed!!!"})
                 jsonResult['data'].append({"error":cancel_masternode_staking_coins})
@@ -967,7 +970,7 @@ class MasterNodeManager:
         return len(launcher_ids)
     
     async def cancel_masternode_staking_coins(self) -> List:
-        cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins()
+        cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins_from_staking_coin()
         return cancel_staking_coins
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
 
@@ -1307,6 +1310,46 @@ class MasterNodeWallet:
         result['STAKING_ADDRESS_TWO_YEAR'] = STAKING_ADDRESS
         result['STAKING_HEIGHT_TWO_YEAR'] = STAKING_REQUIRED_HEIGHT
         return result
+
+    def print_json(self,dict):
+        print(json.dumps(dict, sort_keys=True, indent=4))
+
+    async def cancel_staking_coins_from_staking_coin(self) -> Tuple[Coin, Program]:
+        get_staking_address = self.get_staking_address()
+        STAKING_PUZZLE_HASH = decode_puzzle_hash(get_staking_address['STAKING_ADDRESS_TEST'])
+        STAKING_PUZZLE = get_staking_address['STAKING_PUZZLE_TEST']
+        #get all unspent staking coins
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+        #print(f"all_staking_coins:{all_staking_coins}")
+        for coin_record in all_staking_coins:
+            coin_record = await self.node_client.get_coin_record_by_name(coin_record.coin.name())
+            #print(f"unspend coin_record:{coin_record}")        
+            coin_spend = CoinSpend(
+                coin_record.coin,
+                STAKING_PUZZLE,
+                Program.to([coin_record.coin.amount])
+            )
+            signature = G2Element()
+            spend_bundle = SpendBundle(
+                    [coin_spend],
+                    signature,
+                )
+            #self.print_json(spend_bundle.to_json_dict())
+            res = await self.node_client.push_tx(spend_bundle)
+            self.print_json(res["status"])  
+            if res["status"] == "SUCCESS":
+                tx_id = await self.get_tx_from_mempool(spend_bundle.name())
+                #print(f"coin name: {coin.coin.name()}")
+                #print(f"Cancel Masternode Staking Amount Successful. tx_id: {tx_id}")
+                res["tx_id"] = tx_id
+                return res
+            elif res["status"] == "PENDING":
+                res['success'] = False
+                res["error"] = "Cancel Staking Coin Failed. Maybe it can only be canceled after reaching the specified block height."
+                return res
+            else:
+                return res
+        return None
 
     async def cancel_staking_coins(self) -> Tuple[Coin, Program]:
         get_staking_address = self.get_staking_address()
