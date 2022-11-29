@@ -93,6 +93,8 @@ SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
 LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 
+STAKING_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/staking_fixed_height.clsp")
+
 INNER_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/creator_nft.clsp")
 ESCAPE_VALUE = -113
 MELT_CONDITION = [ConditionOpcode.CREATE_COIN, 0, ESCAPE_VALUE]
@@ -102,6 +104,10 @@ selected = config["selected_network"]
 if config["selected_network"] =="testnet10":
     testnet_agg_sig_data = config["network_overrides"]["constants"][config["selected_network"]]["AGG_SIG_ME_ADDITIONAL_DATA"]
     DEFAULT_CONSTANTS = DEFAULT_CONSTANTS.replace_str_to_bytes(**{"AGG_SIG_ME_ADDITIONAL_DATA": testnet_agg_sig_data})
+
+self_hostname = config["self_hostname"]
+rpc_port = config["full_node"]["rpc_port"]
+prefix = config["network_overrides"]["config"][selected]["address_prefix"]
 
 class MasterNodeManager:
     def __init__(
@@ -311,7 +317,7 @@ class MasterNodeManager:
         get_staking_address = self.masternode_wallet.get_staking_address();
         StakingData = {}
         StakingData['ReceivedAddress'] = get_staking_address['ReceivedAddress'];
-        StakingData['StakingAddress'] = get_staking_address['address'];
+        StakingData['StakingAddress'] = get_staking_address['STAKING_ADDRESS_TEST'];
         StakingData['StakingAmount'] = get_staking_address['StakingAmount'];
         StakingData['NodeName'] = blockchain_state["node_id"];      
         IsStakingCoin = False;
@@ -583,8 +589,8 @@ class MasterNodeManager:
         override = False
         memo = "Merge coin for MasterNode"
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        address = get_staking_address_result['address']
-        StakingAddress = address
+        # to choose staking period from three options
+        StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
         amount = max_send_amount
         #Staking Amount
         stakingCoinAmount = 100000
@@ -624,8 +630,8 @@ class MasterNodeManager:
             StakingAccountAmountCoin = "Wait block to generate..."
 
         if isHaveStakingCoin is False:
-            get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,address)
-            #print(get_target_xcc_coin_result)
+            get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,StakingAddress)
+            print(get_target_xcc_coin_result)
             if get_target_xcc_coin_result is not None:
                 for target_xcc_coin in get_target_xcc_coin_result:
                     StakingAccountAmount += target_xcc_coin.coin.amount
@@ -642,11 +648,14 @@ class MasterNodeManager:
         jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
+        jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
+        jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
+        jsonResult['data'].append({"Staking Address One Year":get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']})
+        jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
 
         if isHaveStakingCoin is True:
             jsonResult['data'].append({"You have staking coins. Not need to stake coin again.":""})
@@ -668,7 +677,6 @@ class MasterNodeManager:
         #STAKING COIN
         if max_send_amount >= (stakingCoinAmount+fee) and isHaveStakingCoin == False and 1:
             amount = stakingCoinAmount
-            address = get_staking_address_result['address']
             memos = ["Staking coin for MasterNode"]
             if not override and self.check_unusual_transaction(amount, fee):
                 jsonResult['data'].append({"":""})
@@ -686,7 +694,7 @@ class MasterNodeManager:
             if typ == WalletType.STANDARD_WALLET:
                 final_amount = uint64(int(amount * units["chives"]))
                 jsonResult['data'].append({"Staking coin for MasterNode Submitting transaction...":""})
-                res = await wallet_client.send_transaction(str(wallet_id), final_amount, address, final_fee, memos)
+                res = await wallet_client.send_transaction(str(wallet_id), final_amount, StakingAddress, final_fee, memos)
             else:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Only standard wallet is supported":""})
@@ -696,7 +704,7 @@ class MasterNodeManager:
             if tx_id is not None and len(tx_id)>=32:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes.":""})
-                jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}":""})
+                jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to StakingAddress: {StakingAddress}":""})
                 self.printJsonResult(jsonResult)
                 await self.wait_tx_for_confirmation(tx_id)
                 #jsonResult = {}
@@ -731,7 +739,7 @@ class MasterNodeManager:
         override = False
         memo = "Merge coin for MasterNode"
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        address = get_staking_address_result['address']
+        StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
         amount = max_send_amount
         
         #Staking Amount
@@ -743,7 +751,7 @@ class MasterNodeManager:
         #To check is or not have this staking coin record
         isHaveStakingCoin = False
         StakingAccountAmount = 0
-        get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,address)
+        get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,StakingAddress)
         #print(get_target_xcc_coin_result)
         if get_target_xcc_coin_result is not None:
             for target_xcc_coin in get_target_xcc_coin_result:
@@ -765,6 +773,9 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
+        jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
+        jsonResult['data'].append({"Staking Address One Year":get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']})
+        jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
         jsonResult['data'].append({"":""})
         
         #取消质押
@@ -792,7 +803,7 @@ class MasterNodeManager:
     async def masternode_register_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         #First step to check staking address is or not in database
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        staking_address = get_staking_address_result['address']
+        staking_address = get_staking_address_result['STAKING_ADDRESS_TEST']
 
         #print(staking_address)
         query = f"SELECT launcher_id FROM masternode_list WHERE StakingAddress = ?"
@@ -830,8 +841,7 @@ class MasterNodeManager:
                 return jsonResult
 
     async def get_target_xcc_coin(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int, mojo_per_unit: int, address: str) -> None:
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
-        staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(get_staking_address_result['puzzle_hash'], include_spent_coins=False)       
+        staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(address), include_spent_coins=False)       
         if staking_coins:
             return staking_coins
         else:
@@ -856,7 +866,7 @@ class MasterNodeManager:
         fee = 1
         override = False
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        address = get_staking_address_result['address']
+        address = get_staking_address_result['STAKING_ADDRESS_TEST']
         amount = max_send_amount
         
         #Staking Amount
@@ -886,22 +896,29 @@ class MasterNodeManager:
         jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Staking Address":get_staking_address_result['address']})
+        jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
-        jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
+        jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
+        jsonResult['data'].append({"Staking Address One Year":get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']})
+        jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
         dictResult = {}
         dictResult['WalletBalance'] = str(confirmed_wallet_balance)
         dictResult['WalletMaxSent'] = str(max_send_amount)
         dictResult['WalletAddress'] = get_staking_address_result['first_address']
-        dictResult['StakingAddress'] = get_staking_address_result['address']
+        dictResult['StakingAddressNotUse'] = get_staking_address_result['address']
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
         dictResult['StakingCancelAddress'] = get_staking_address_result['first_address']
         dictResult['StakingReceivedAddress'] = get_staking_address_result['ReceivedAddress']
+        dictResult['StakingAddressForTest'] = get_staking_address_result['STAKING_ADDRESS_TEST']
+        dictResult['StakingAddressOneYear'] = get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']
+        dictResult['StakingAddressTwoYear'] = get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']
         jsonResult['dictResult'] = dictResult
+        jsonResult['get_staking_address_result'] = get_staking_address_result
         return jsonResult
+
     
     def printJsonResult(self,jsonResult):
         if jsonResult:
@@ -1203,7 +1220,17 @@ class MasterNodeWallet:
         rows = await cursor.fetchall()
         await cursor.close()
         return list(map(lambda x: x[0], rows))
-        
+    
+    def MakeUserStakingAddressBaseOnStaking(self,FIRST_ADDRESS, STAKING_REQUIRED_HEIGHT): 
+        #print(f"decode_puzzle_hash(FIRST_ADDRESS):{decode_puzzle_hash(FIRST_ADDRESS)}")
+        STAKING_PUZZLE = STAKING_MOD.curry(decode_puzzle_hash(FIRST_ADDRESS), STAKING_REQUIRED_HEIGHT)
+        STAKING_PUZZLE_HASH = STAKING_PUZZLE.get_tree_hash()
+        STAKING_ADDRESS = encode_puzzle_hash(STAKING_PUZZLE_HASH,prefix)
+        #print(f"STAKING_PUZZLE:{STAKING_PUZZLE}")
+        #print(f"STAKING_PUZZLE_HASH: {STAKING_PUZZLE_HASH}\n")
+        #print(f"STAKING_ADDRESS: {STAKING_ADDRESS}\n")
+        return STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS
+
     def get_staking_address(self):
         non_observer_derivation = False
         root_path = DEFAULT_ROOT_PATH
@@ -1258,6 +1285,27 @@ class MasterNodeWallet:
                 self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
                 self.puzzlehash_to_publickey[puzzle_hash] = publicKey
                 self.key_dict[bytes(publicKey)] = privateKey
+        # Staking fixed height smart coin for test
+        STAKING_REQUIRED_HEIGHT = 5
+        STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS = self.MakeUserStakingAddressBaseOnStaking(result['first_address'], STAKING_REQUIRED_HEIGHT)
+        result['STAKING_PUZZLE_HASH_TEST'] = STAKING_PUZZLE_HASH
+        result['STAKING_PUZZLE_TEST'] = STAKING_PUZZLE
+        result['STAKING_ADDRESS_TEST'] = STAKING_ADDRESS
+        result['STAKING_HEIGHT_TEST'] = STAKING_REQUIRED_HEIGHT
+        # Staking fixed height smart coin for one year
+        STAKING_REQUIRED_HEIGHT = 1681920
+        STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS = self.MakeUserStakingAddressBaseOnStaking(result['first_address'], STAKING_REQUIRED_HEIGHT)
+        result['STAKING_PUZZLE_HASH_ONE_YEAR'] = STAKING_PUZZLE_HASH
+        result['STAKING_PUZZLE_ONE_YEAR'] = STAKING_PUZZLE
+        result['STAKING_ADDRESS_ONE_YEAR'] = STAKING_ADDRESS
+        result['STAKING_HEIGHT_ONE_YEAR'] = STAKING_REQUIRED_HEIGHT
+        # Staking fixed height smart coin for one year
+        STAKING_REQUIRED_HEIGHT = 3363840
+        STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS = self.MakeUserStakingAddressBaseOnStaking(result['first_address'], STAKING_REQUIRED_HEIGHT)
+        result['STAKING_PUZZLE_HASH_TWO_YEAR'] = STAKING_PUZZLE_HASH
+        result['STAKING_PUZZLE_TWO_YEAR'] = STAKING_PUZZLE
+        result['STAKING_ADDRESS_TWO_YEAR'] = STAKING_ADDRESS
+        result['STAKING_HEIGHT_TWO_YEAR'] = STAKING_REQUIRED_HEIGHT
         return result
 
     async def cancel_staking_coins(self) -> Tuple[Coin, Program]:

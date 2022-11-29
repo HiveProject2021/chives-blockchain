@@ -279,7 +279,6 @@ async def masternode_cancel(args: dict, wallet_client: WalletRpcClient, fingerpr
     await manager.chooseWallet(fingerprint)
     for item in checkSyncedStatusText:
         print(item)
-    print(checkSyncedStatus)
     if checkSyncedStatus == 2: 
         await manager.masternode_cancel(args, wallet_client, fingerprint)
     await manager.close()
