@@ -202,7 +202,9 @@ def masternode_merge_cmd(
 
 
 #Begin staking for MasterNode
-@wallet_cmd.command("masternode_staking", short_help="Begin staking coins for MasterNode. Your coins still in your wallet, just not show them.")
+@wallet_cmd.command("masternode_staking", short_help="Begin staking coins for MasterNode. Your coins will stake in a smart coin, can cancel only after some block height.")
+@click.option("-y", "--year", help="pls input 0, 1 or 2. 1: one year, 2: two year, 0: just for test.", type=int, default=0)
+@click.option("-a", "--amount", help="pls input 100000, 300000, 500000. Other amount just for test.", type=int, default=100000)
 @click.option(
     "-wp",
     "--wallet-rpc-port",
@@ -212,13 +214,15 @@ def masternode_merge_cmd(
 )
 @click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
 def masternode_staking_cmd(
+    year: int,
+    amount: int,
     wallet_rpc_port: Optional[int],
     fingerprint: int,
 ) -> None:
-    extra_params = {}
+    args = {}
     import asyncio
     from .wallet_funcs import execute_with_wallet, masternode_staking
-    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_staking))
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, args, masternode_staking))
 
 #Cancel staking for MasterNode
 @wallet_cmd.command("masternode_cancel", short_help="Begin cancel staking coin for MasterNode. Once cancel, your coins will back to your wallet.")

@@ -590,12 +590,26 @@ class MasterNodeManager:
         override = False
         memo = "Merge coin for MasterNode"
         get_staking_address_result = self.masternode_wallet.get_staking_address()
+
         # to choose staking period from three options
-        StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
-        amount = max_send_amount
-        #Staking Amount
-        stakingCoinAmount = 100000
-        #print(balances)
+        year = args['year']
+        amount = args['amount']
+        if year == 0:
+            StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
+        elif year == 1:
+            StakingAddress = get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']
+        else:
+            StakingAddress = get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']
+        if amount == 100000:
+            stakingCoinAmount = amount
+        elif amount == 300000:
+            stakingCoinAmount = amount
+        elif amount == 500000:
+            stakingCoinAmount = amount
+        else:
+            #unsupport amount as the test purpose
+            StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
+            stakingCoinAmount = amount
         #print(get_staking_address_result)
         # #################################################################
         # get mempool txn to check current staking address is or not in the txn.
@@ -632,7 +646,7 @@ class MasterNodeManager:
 
         if isHaveStakingCoin is False:
             get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,StakingAddress)
-            print(get_target_xcc_coin_result)
+            #print(get_target_xcc_coin_result)
             if get_target_xcc_coin_result is not None:
                 for target_xcc_coin in get_target_xcc_coin_result:
                     StakingAccountAmount += target_xcc_coin.coin.amount
