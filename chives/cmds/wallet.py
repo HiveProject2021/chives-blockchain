@@ -220,6 +220,8 @@ def masternode_staking_cmd(
     fingerprint: int,
 ) -> None:
     args = {}
+    args['year'] = year
+    args['amount'] = amount
     import asyncio
     from .wallet_funcs import execute_with_wallet, masternode_staking
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, args, masternode_staking))

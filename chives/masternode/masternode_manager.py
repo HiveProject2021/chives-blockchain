@@ -124,6 +124,7 @@ class MasterNodeManager:
         self.mojo_per_unit = 100000000
         self.puzzle_store = None
         self.get_current_derivation_index = 30
+        self.allow_staking_amount = [100000,300000,500000]
 
     async def connect(self, wallet_index: int = 0) -> None:
         config = load_config(Path(DEFAULT_ROOT_PATH), "config.yaml")
@@ -495,7 +496,7 @@ class MasterNodeManager:
         if get_target_xcc_coin_result is not None:
             for target_xcc_coin in get_target_xcc_coin_result:
                 StakingAccountAmount += target_xcc_coin.coin.amount
-                if target_xcc_coin.coin.amount == stakingCoinAmount * mojo_per_unit:
+                if int(target_xcc_coin.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
                     isHaveStakingCoin = True
         #print(balances);
         print(f"")
@@ -650,7 +651,7 @@ class MasterNodeManager:
             if get_target_xcc_coin_result is not None:
                 for target_xcc_coin in get_target_xcc_coin_result:
                     StakingAccountAmount += target_xcc_coin.coin.amount
-                    if target_xcc_coin.coin.amount == stakingCoinAmount * mojo_per_unit:
+                    if int(target_xcc_coin.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
                         isHaveStakingCoin = True
                 StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
         #print(balances);
@@ -758,9 +759,6 @@ class MasterNodeManager:
         StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
         amount = max_send_amount
         
-        #Staking Amount
-        stakingCoinAmount = 100000
-        
         #print(balances)
         #print(get_staking_address_result)
         
@@ -772,8 +770,7 @@ class MasterNodeManager:
         if get_target_xcc_coin_result is not None:
             for target_xcc_coin in get_target_xcc_coin_result:
                 StakingAccountAmount += target_xcc_coin.coin.amount
-                if target_xcc_coin.coin.amount == stakingCoinAmount * mojo_per_unit:
-                    isHaveStakingCoin = True;
+                isHaveStakingCoin = True;
         
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -900,7 +897,7 @@ class MasterNodeManager:
         if get_target_xcc_coin_result is not None:
             for target_xcc_coin in get_target_xcc_coin_result:
                 StakingAccountAmount += target_xcc_coin.coin.amount
-                if target_xcc_coin.coin.amount == stakingCoinAmount * self.mojo_per_unit:
+                if int(target_xcc_coin.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
                     isHaveStakingCoin = True
         #print(balances);
 
