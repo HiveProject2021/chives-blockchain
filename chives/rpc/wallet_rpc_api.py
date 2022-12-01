@@ -816,7 +816,22 @@ class WalletRpcApi:
                     "wallet_id": wallet_id,
                     "error":"choose wallet failed in manager section."
                     }
-        masternode_staking_json = await manager.masternode_staking_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        if "year" not in request:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"pls input the 'year' (int) value, only accept 0, 1, 2"
+                    }
+        if "amount" not in request:
+            return {
+                    "fingerprint": self.service.logged_in_fingerprint,
+                    "wallet_id": wallet_id,
+                    "error":"pls input the 'amount' (int) value, amount only accept 100000, 300000, 500000, other amount just for test purposes."
+                    }
+        args = {}
+        args['year'] = request['year']
+        args['amount'] = request['amount']
+        masternode_staking_json = await manager.masternode_staking_json(args, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
         masternode_result = {
@@ -935,7 +950,7 @@ class WalletRpcApi:
                     "wallet_id": wallet_id,
                     "error":"choose wallet failed in manager section."
                     }
-        masternode_init = await manager.sync()
+        masternode_init = await manager.sync_masternode_from_blockchain()
         await manager.close()
 
         masternode_result = {

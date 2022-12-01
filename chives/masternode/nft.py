@@ -49,7 +49,7 @@ def cli(ctx: click.Context):
 async def init_cmd():
     manager = MasterNodeManager()
     await manager.connect()
-    await manager.sync()
+    await manager.sync_masternode_from_blockchain()
     await manager.close()
 
 

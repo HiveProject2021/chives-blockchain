@@ -302,7 +302,7 @@ async def masternode_init(args: dict, wallet_client: WalletRpcClient, fingerprin
     for item in checkSyncedStatusText:
         print(item)
     if checkSyncedStatus == 2: 
-        await manager.sync()
+        await manager.sync_masternode_from_blockchain()
     await manager.close()
     
 async def masternode_list(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:

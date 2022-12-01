@@ -254,7 +254,7 @@ class MasterNodeManager:
         if self.connection:
             await self.connection.close()
 
-    async def sync(self) -> None:
+    async def sync_masternode_from_blockchain(self) -> None:
         return await self.masternode_wallet.sync_masternode()
 
     async def derive_nft_keys(self, index: int = 0) -> None:
@@ -315,22 +315,28 @@ class MasterNodeManager:
         sync_mode = blockchain_state["sync"]["sync_mode"]        
         
         #Create MasterNode ID Must Have Staking Coin.            
-        get_staking_address = self.masternode_wallet.get_staking_address()
+        get_staking_address_result = self.masternode_wallet.get_staking_address()
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        if STAKING_ADDRESS is None:
+            return ("No finish staking coin","No finish staking coin")
+            
         StakingData = {}
-        StakingData['ReceivedAddress'] = get_staking_address['ReceivedAddress']
-        StakingData['StakingAddress'] = get_staking_address['STAKING_ADDRESS_TEST']
-        StakingData['StakingAmount'] = get_staking_address['StakingAmount']
-        StakingData['StakingHeight'] = get_staking_address['STAKING_HEIGHT_TEST']
+        StakingData['ReceivedAddress'] = get_staking_address_result['ReceivedAddress']
+        StakingData['StakingAddress'] = STAKING_ADDRESS
+        StakingData['StakingAmount'] = "NOT USE"
+        StakingData['StakingHeight'] = STAKING_HEIGHT
+        StakingData['StakingCoinFirstTime'] = str(STAKING_COIN.coin.name())
         StakingData['NodeName'] = blockchain_state["node_id"]
         IsStakingCoin = False
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingData['StakingAddress']),False)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(STAKING_ADDRESS),False)
         for coin_record in all_staking_coins:
             StakingAmount = coin_record.coin.amount
             if int(coin_record.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
                 IsStakingCoin = True
         if IsStakingCoin == False:
-            return ("No finish staking coin","No finish staking coin")
-        
+            return ("Staking coin amount invalid","Staking coin amount invalid")
+
+        #print(f"==================={StakingData}")
         dataJsonText = json.dumps(StakingData)       
         nft_data = ("MasterNodeNFT", dataJsonText)
         
@@ -721,7 +727,7 @@ class MasterNodeManager:
             if tx_id is not None and len(tx_id)>=32:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes.":""})
-                jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to StakingAddress: {StakingAddress}":""})
+                jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to StakingAddress: {StakingAddress} on stakingCoinAmount: {stakingCoinAmount} stakingYear: {year} ":""})
                 self.printJsonResult(jsonResult)
                 await self.wait_tx_for_confirmation(tx_id)
                 #jsonResult = {}
@@ -756,6 +762,7 @@ class MasterNodeManager:
         override = False
         memo = "Merge coin for MasterNode"
         get_staking_address_result = self.masternode_wallet.get_staking_address()
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
         amount = max_send_amount
         
@@ -815,22 +822,29 @@ class MasterNodeManager:
         self.printJsonResult(jsonResult)
 
     async def masternode_register_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
-        #First step to check staking address is or not in database
+        #First step to syncing data from blockchain
+        await self.masternode_wallet.sync_masternode()
+        #Second step to check staking address is or not in database
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        staking_address = get_staking_address_result['STAKING_ADDRESS_TEST']
-
-        #print(staking_address)
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        #print(STAKING_ADDRESS)
+        #print(STAKING_PUZZLE_HASH)
+        #print(STAKING_COIN)
+        #return None
+        
         query = f"SELECT launcher_id FROM masternode_list WHERE StakingAddress = ?"
-        cursor = await self.masternode_wallet.db_connection.execute(query, (staking_address,))
+        cursor = await self.masternode_wallet.db_connection.execute(query, (STAKING_ADDRESS,))
         rows = await cursor.fetchone()
         await cursor.close()
         #print(f"rows:{rows}")
         staking_launcher_id = None
+        
         if rows is not None and len(rows)>0 and rows[0] is not None:
             staking_launcher_id = rows[0]
-            await self.masternode_mynode(args, wallet_client, fingerprint)
+            jsonResult = await self.masternode_mynode_json(args, wallet_client, fingerprint)
+            return jsonResult
         else:        
-            #Second step: if staking address is not in database, will start a new nft mint process to finish the register
+            #Third step: if staking address is not in database, will start a new nft mint process to finish the register
             tx_id, launcher_id = await self.launch_staking_storage()
             if tx_id is not None and len(tx_id)>=32:
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
@@ -845,7 +859,6 @@ class MasterNodeManager:
                 jsonResult['data'].append({"result":"stake NFT Launched!!"})
                 return jsonResult
             else:
-                print(f"Error: {tx_id}")
                 jsonResult = {}
                 jsonResult['status'] = "error"
                 jsonResult['title'] = "Chives Masternode Register Trip"
@@ -1245,6 +1258,27 @@ class MasterNodeWallet:
         #print(f"STAKING_ADDRESS: {STAKING_ADDRESS}\n")
         return STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS
 
+    async def get_staking_address_and_amount_in_use(self,result):
+        STAKING_PUZZLE_HASH = result['STAKING_PUZZLE_HASH_TEST']
+        STAKING_ADDRESS = result['STAKING_ADDRESS_TEST']
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+        if all_staking_coins is not None:
+            return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins[0],result['STAKING_HEIGHT_TEST']
+        else:
+            STAKING_PUZZLE_HASH = result['STAKING_PUZZLE_HASH_ONE_YEAR']
+            STAKING_ADDRESS = result['STAKING_ADDRESS_ONE_YEAR']
+            all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+            if all_staking_coins is not None:
+                return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins[0],result['STAKING_HEIGHT_ONE_YEAR']
+            else:
+                STAKING_PUZZLE_HASH = result['STAKING_PUZZLE_HASH_TWO_YEAR']
+                STAKING_ADDRESS = result['STAKING_ADDRESS_TWO_YEAR']
+                all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+                if all_staking_coins is not None:
+                    return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins[0],result['STAKING_HEIGHT_TWO_YEAR']
+                else:
+                    return None,None,None
+
     def get_staking_address(self):
         non_observer_derivation = False
         root_path = DEFAULT_ROOT_PATH
@@ -1300,7 +1334,7 @@ class MasterNodeWallet:
                 self.puzzlehash_to_publickey[puzzle_hash] = publicKey
                 self.key_dict[bytes(publicKey)] = privateKey
         # Staking fixed height smart coin for test
-        STAKING_REQUIRED_HEIGHT = 5
+        STAKING_REQUIRED_HEIGHT = 10
         STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS = self.MakeUserStakingAddressBaseOnStaking(result['first_address'], STAKING_REQUIRED_HEIGHT)
         result['STAKING_PUZZLE_HASH_TEST'] = STAKING_PUZZLE_HASH
         result['STAKING_PUZZLE_TEST'] = STAKING_PUZZLE
