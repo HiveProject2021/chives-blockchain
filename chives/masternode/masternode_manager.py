@@ -326,7 +326,7 @@ class MasterNodeManager:
         all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingData['StakingAddress']),False)
         for coin_record in all_staking_coins:
             StakingAmount = coin_record.coin.amount
-            if StakingAmount == StakingData['StakingAmount'] * 100000000 :
+            if int(coin_record.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
                 IsStakingCoin = True
         if IsStakingCoin == False:
             return ("No finish staking coin","No finish staking coin")
