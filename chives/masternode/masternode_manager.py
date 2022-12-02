@@ -841,6 +841,7 @@ class MasterNodeManager:
         if rows is not None and len(rows)>0 and rows[0] is not None:
             staking_launcher_id = rows[0]
             jsonResult = await self.masternode_mynode_json(args, wallet_client, fingerprint)
+            jsonResult['title'] = "Chives Masternode Register Success"
             return jsonResult
         else:        
             #Third step: if staking address is not in database, will start a new nft mint process to finish the register
@@ -941,6 +942,11 @@ class MasterNodeManager:
         dictResult['StakingAddressForTest'] = get_staking_address_result['STAKING_ADDRESS_TEST']
         dictResult['StakingAddressOneYear'] = get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']
         dictResult['StakingAddressTwoYear'] = get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']
+
+        dictResult['StakingPeriodValue'] = [0,1,2]
+        dictResult['StakingPeriodText'] = ["For test","One year","Two year"]
+        dictResult['StakingAmountList'] = self.allow_staking_amount
+
         jsonResult['dictResult'] = dictResult
         jsonResult['get_staking_address_result'] = get_staking_address_result
         return jsonResult
