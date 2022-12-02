@@ -788,14 +788,13 @@ class WalletRpcApi:
         masternode_cancel_json = await manager.masternode_cancel_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        masternode_result = {
+        return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "status": masternode_cancel_json['status'],
                     "title": masternode_cancel_json['title'],
                     "data": masternode_cancel_json['data'],
                     "wallet_id": wallet_id,
                     }
-        return {"masternode_result": masternode_result}
     
     async def masternode_staking(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
