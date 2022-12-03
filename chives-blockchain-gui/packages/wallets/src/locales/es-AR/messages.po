@@ -60,9 +60,25 @@ msgstr ""
 #~ msgid "0 automatically chooses bucket count"
 #~ msgstr ""
 
+#: src/components/MasterNodeStakingPanelStep3.tsx:35
+msgid "100,000"
+msgstr ""
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:148
 #~ msgid "128 buckets is recommended"
 #~ msgstr "128 buckets is recommended"
+
+#: src/components/MasterNodeStakingPanelStep3.tsx:39
+msgid "300,000"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:35
+msgid "5 minutes(For test)"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep3.tsx:44
+msgid "500,000"
+msgstr ""
 
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:96
 #~ msgid "A harvester is a service running on a machine where plot(s) are actually stored. A farmer and harvester talk to a full node to see the state of the chain. View your network of connected harvesters below Learn more"
@@ -301,6 +317,10 @@ msgstr ""
 #: src/components/offers/OfferShareDialog.tsx:759
 #~ msgid "Before posting an offer in Keybase to the #{KeybaseChannelName} channel, you must first join the {KeybaseTeamName} team. Please note that it might take a few moments to join the channel."
 #~ msgstr ""
+
+#: src/components/MasterNodeStakingPanelForm.tsx:74
+msgid "Begin Staking"
+msgstr ""
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:33
 #: src/components/farm/FarmLatestBlockChallenges.tsx:43
@@ -683,7 +703,7 @@ msgstr ""
 
 #: src/components/cat/WalletCAT.tsx:129
 #: src/components/masternode/MasterNodeStandard.tsx:54
-#: src/components/standard/WalletStandard.tsx:58
+#: src/components/standard/WalletStandard.tsx:59
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -1945,6 +1965,10 @@ msgstr "Por término medio, hay un minuto entre cada bloque de transacción. A m
 #~ msgid "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 #~ msgstr ""
 
+#: src/components/MasterNodeStakingPanelStep2.tsx:39
+msgid "One year"
+msgstr ""
+
 #: src/components/MasterNodeCards.tsx:87
 msgid "Online Nodes"
 msgstr ""
@@ -2071,6 +2095,11 @@ msgstr "Saldo Pendiente Total"
 #: src/components/trading/CreateOffer.jsx:100
 #~ msgid "Please add a trade pair"
 #~ msgstr "Please add a trade pair"
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:21
+#: src/components/MasterNodeStakingPanelStep3.tsx:21
+msgid "Please choose staking period"
+msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:667
 msgid "Please enter 0 fee. Positive fees not supported yet for RL."
@@ -2963,11 +2992,24 @@ msgid "Staking Balance"
 msgstr ""
 
 #: src/components/MasterNodeMyCard.tsx:34
+#: src/components/MasterNodeStakingPanelStep1.tsx:29
 msgid "Staking Information"
 msgstr ""
 
+#: src/components/MasterNodeStakingPanelForm.tsx:64
+#~ msgid "Staking Panel"
+#~ msgstr ""
+
 #: src/components/MasterNodeMyCard.tsx:77
 msgid "Staking Status"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep3.tsx:25
+msgid "Staking xcc amount, only support these three items"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:25
+msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 msgstr ""
 
 #: src/components/MasterNodeList.tsx:94
@@ -3093,6 +3135,10 @@ msgstr "Sincronizando"
 #: src/components/plot/add/PlotAddSelectTemporaryDirectory.tsx:64
 #~ msgid "Temporary folder location"
 #~ msgstr "Temporary folder location"
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:47
+#~ msgid "Test purpose"
+#~ msgstr ""
 
 #: src/components/app/AppTimeBomb.tsx:28
 #~ msgid "The application will stop working at block height 193536."
@@ -3432,6 +3478,10 @@ msgstr ""
 #~ msgid "Transactions Filter Hash"
 #~ msgstr "Transactions Filter Hash"
 
+#: src/components/MasterNodeStakingPanelStep2.tsx:44
+msgid "Two year"
+msgstr ""
+
 #: src/components/_wallet_old/WalletHistory.tsx:25
 #~ msgid "Type"
 #~ msgstr "Type"
@@ -3583,6 +3633,14 @@ msgstr "Ver saldos pendientes"
 #: src/components/plotNFT/PlotNFTUnconfirmedCard.tsx:84
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
+
+#: src/components/MasterNodeStakingPanelStep1.tsx:38
+msgid "Wallet Balance"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep1.tsx:62
+msgid "Wallet Max Sent"
+msgstr ""
 
 #: src/components/_wallet_old/standard/WalletStandard.tsx:649
 #: src/components/pool/PoolOverview.tsx:182

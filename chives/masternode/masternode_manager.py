@@ -456,7 +456,7 @@ class MasterNodeManager:
         MasterNodeCount = 0
         for nft in nfts:
             NftDataJson = json.loads(nft['nft_data'][1].decode("utf-8"))
-            if "StakingAmount" in NftDataJson:
+            if "StakingAmount" in NftDataJson and NftDataJson['StakingAmount']!='NOT USE':
                 MasterNodeStakingAmount += int(NftDataJson['StakingAmount'])
                 MasterNodeCount += 1
         result = {}

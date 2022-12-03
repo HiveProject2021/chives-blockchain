@@ -14,6 +14,7 @@ import MasterNodeList from '../MasterNodeList';
 import MasterNodeReceivedList from '../MasterNodeReceivedList';
 import MasterNodeStandardCards from '../masternode/MasterNodeStandardCards';
 import MasterNodeMyCard from '../MasterNodeMyCard';
+import MasterNodeStakingPanelForm from '../MasterNodeStakingPanelForm';
 
 type StandardWalletProps = {
   walletId: number;
@@ -76,7 +77,7 @@ export default function StandardWallet(props: StandardWalletProps) {
       </Box>
       <Box display={selectedTab === 'masternodereceived' ? 'block' : 'none'}>
         <Flex flexDirection="column" gap={4}>
-          <MasterNodeMyCard walletId={walletId} />
+          <MasterNodeStakingPanelForm walletId={walletId} />
           <MasterNodeReceivedList walletId={walletId} />
         </Flex>
       </Box>
