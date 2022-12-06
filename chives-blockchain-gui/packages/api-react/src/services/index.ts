@@ -111,6 +111,7 @@ export const {
   useGetMasterNodeSummaryQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
+  useTakeMasterNodeRegisterMutation,
   useFarmBlockMutation,
   useGetHeightInfoQuery,
   useGetNetworkInfoQuery,

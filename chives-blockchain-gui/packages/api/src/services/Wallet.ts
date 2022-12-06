@@ -284,6 +284,14 @@ export default class Wallet extends Service {
     });
   }
 
+  async takeMasterNodeRegister(walletId: number, stakingPeriod: number, stakingAmount: number) {
+    return this.command('masternode_register', {
+      walletId,
+      stakingPeriod,
+      stakingAmount,
+    });
+  }
+
   async farmBlock(address: string) {
     return this.command('farm_block', {
       address,
