@@ -101,8 +101,8 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
     <Form methods={methods} onSubmit={handleSubmit}>
       <Flex flexDirection="column" gap={3}>
         <MasterNodeStakingPanelStep1 step={step++} myCard={MyCard}/>
-        <MasterNodeStakingPanelStep2 step={step++}/>
-        <MasterNodeStakingPanelStep3 step={step++}/>
+        <MasterNodeStakingPanelStep2 step={step++} myCard={MyCard}/>
+        <MasterNodeStakingPanelStep3 step={step++} myCard={MyCard}/>
         <Flex justifyContent="flex-end">
           <ButtonLoading
             loading={isSendTransactionLoading}

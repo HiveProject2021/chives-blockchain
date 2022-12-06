@@ -1008,6 +1008,38 @@ export const walletApi = apiWithTag.injectEndpoints({
         result ? [{ type: 'MasterNode', id: walletId }] : [],
     }),
 
+    takeMasterNodeRegister: build.mutation<
+      string,
+      {
+        walletId: number;
+      }
+    >({
+      query: ({ walletId }) => ({
+        command: 'takeMasterNodeRegister',
+        service: Wallet,
+        args: [walletId],
+      }),
+      transformResponse: (response: any) => response?.masternode_result,
+      invalidatesTags: (result, _error, { walletId }) =>
+        result ? [{ type: 'MasterNode', id: walletId }] : [],
+    }),
+
+    takeMasterNodeCancel: build.mutation<
+      string,
+      {
+        walletId: number;
+      }
+    >({
+      query: ({ walletId }) => ({
+        command: 'takeMasterNodeCancel',
+        service: Wallet,
+        args: [walletId],
+      }),
+      transformResponse: (response: any) => response?.masternode_result,
+      invalidatesTags: (result, _error, { walletId }) =>
+        result ? [{ type: 'MasterNode', id: walletId }] : [],
+    }),
+
     getNextAddress: build.mutation<
       string,
       {
@@ -2376,6 +2408,8 @@ export const {
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useTakeMasterNodeStakingMutation,
+  useTakeMasterNodeRegisterMutation,
+  useTakeMasterNodeCancelMutation,
   useFarmBlockMutation,
   useGetHeightInfoQuery,
   useGetNetworkInfoQuery,

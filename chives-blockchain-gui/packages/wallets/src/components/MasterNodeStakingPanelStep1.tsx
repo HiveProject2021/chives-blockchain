@@ -20,62 +20,116 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
   const isLoading = false
   const WalletBalance = myCard?.WalletBalance;
   const WalletMaxSent = myCard?.WalletMaxSent;
-  const StakingAccountStatus = myCard?.StakingAccountStatus;
-  const StakingCancelAddress = myCard?.StakingCancelAddress;
-  const StakingAccountBalance = myCard?.StakingAccountBalance;
-
+  const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
+  const StakingReceivedAddress = myCard?.StakingReceivedAddress;
+  
 
   return (
     <CardStep step={step} title={<Trans>Staking Information</Trans>}>
         <Grid spacing={2} direction="row" container>
+          {!StakingAccountStatus && (
+            <>
             <Grid item xs={6}>
               <Box display="flex">
-                  <Box flexGrow={1}>
+                <Box flexGrow={1}>
                   {isLoading ? (
-                      <Loading center />
+                    <Loading center />
                   ) : (
-                      <TextField
+                    <TextField
                       label={<Trans>Wallet Balance</Trans>}
                       value={WalletBalance}
                       variant="filled"
                       InputProps={{
-                          readOnly: true,
-                          endAdornment: (
+                        readOnly: true,
+                        endAdornment: (
                           <InputAdornment position="end">
-                              <CopyToClipboard value={WalletBalance} />
+                            <CopyToClipboard value={WalletBalance} />
                           </InputAdornment>
-                          ),
+                        ),
                       }}
-                      fullWidth
-                      />
+                      fullWidth />
                   )}
-                  </Box>
+                </Box>
               </Box>
-            </Grid>   
+            </Grid>
             <Grid item xs={6}>
               <Box display="flex">
-                  <Box flexGrow={1}>
+                <Box flexGrow={1}>
                   {isLoading ? (
-                      <Loading center />
+                    <Loading center />
                   ) : (
-                      <TextField
+                    <TextField
                       label={<Trans>Wallet Max Sent</Trans>}
                       value={WalletMaxSent}
                       variant="filled"
                       InputProps={{
-                          readOnly: true,
-                          endAdornment: (
+                        readOnly: true,
+                        endAdornment: (
                           <InputAdornment position="end">
-                              <CopyToClipboard value={WalletMaxSent} />
+                            <CopyToClipboard value={WalletMaxSent} />
                           </InputAdornment>
-                          ),
+                        ),
                       }}
-                      fullWidth
-                      />
+                      fullWidth />
                   )}
-                  </Box>
+                </Box>
               </Box>
-            </Grid>  
+            </Grid>
+            </> 
+          )}
+
+          {StakingAccountStatus && (
+            <>
+            <Grid item xs={6}>
+              <Box display="flex">
+                <Box flexGrow={1}>
+                  {isLoading ? (
+                    <Loading center />
+                  ) : (
+                    <TextField
+                      label={<Trans>Staking Account Status</Trans>}
+                      value={StakingAccountStatus}
+                      variant="filled"
+                      InputProps={{
+                        readOnly: true,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <CopyToClipboard value={StakingAccountStatus} />
+                          </InputAdornment>
+                        ),
+                      }}
+                      fullWidth />
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box display="flex">
+                <Box flexGrow={1}>
+                  {isLoading ? (
+                    <Loading center />
+                  ) : (
+                    <TextField
+                      label={<Trans>Staking Received Address</Trans>}
+                      value={StakingReceivedAddress}
+                      variant="filled"
+                      InputProps={{
+                        readOnly: true,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <CopyToClipboard value={StakingReceivedAddress} />
+                          </InputAdornment>
+                        ),
+                      }}
+                      fullWidth />
+                  )}
+                </Box>
+              </Box>
+            </Grid>
+            </> 
+          )}
+
+
         </Grid> 
     </CardStep>
 

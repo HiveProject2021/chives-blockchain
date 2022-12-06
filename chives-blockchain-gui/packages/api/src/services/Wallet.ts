@@ -292,6 +292,18 @@ export default class Wallet extends Service {
     });
   }
 
+  async takeMasterNodeRegister(walletId: number) {
+    return this.command('masternode_register', {
+      walletId,
+    });
+  }
+
+  async takeMasterNodeCancel(walletId: number) {
+    return this.command('masternode_cancel', {
+      walletId,
+    });
+  }
+
   async farmBlock(address: string) {
     return this.command('farm_block', {
       address,
