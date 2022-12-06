@@ -318,7 +318,7 @@ msgstr "余额"
 #~ msgid "Before posting an offer in Keybase to the #{KeybaseChannelName} channel, you must first join the {KeybaseTeamName} team. Please note that it might take a few moments to join the channel."
 #~ msgstr "在 #{KeybaseChannelName} 频道发布密钥库之前, 您必须先加入 {KeybaseTeamName} 团队。 请注意，加入频道可能需要一些时间。"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:74
+#: src/components/MasterNodeStakingPanelForm.tsx:113
 msgid "Begin Staking"
 msgstr ""
 
@@ -3009,7 +3009,11 @@ msgid "Staking xcc amount, only support these three items"
 msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep2.tsx:25
-msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
+#~ msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
+#~ msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:25
+msgid "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 msgstr ""
 
 #: src/components/MasterNodeList.tsx:94

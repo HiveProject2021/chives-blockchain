@@ -990,7 +990,7 @@ export const walletApi = apiWithTag.injectEndpoints({
         result ? [{ type: 'Address', id: walletId }] : [],
     }),
 
-    takeMasterNodeRegister: build.mutation<
+    takeMasterNodeStaking: build.mutation<
       string,
       {
         walletId: number;
@@ -999,7 +999,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       }
     >({
       query: ({ walletId, stakingPeriod, stakingAmount }) => ({
-        command: 'takeMasterNodeRegister',
+        command: 'takeMasterNodeStaking',
         service: Wallet,
         args: [walletId, stakingPeriod, stakingAmount],
       }),
@@ -2375,7 +2375,7 @@ export const {
   useGetMasterNodeSummaryQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
-  useTakeMasterNodeRegisterMutation,
+  useTakeMasterNodeStakingMutation,
   useFarmBlockMutation,
   useGetHeightInfoQuery,
   useGetNetworkInfoQuery,

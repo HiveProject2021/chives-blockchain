@@ -284,8 +284,8 @@ export default class Wallet extends Service {
     });
   }
 
-  async takeMasterNodeRegister(walletId: number, stakingPeriod: number, stakingAmount: number) {
-    return this.command('masternode_register', {
+  async takeMasterNodeStaking(walletId: number, stakingPeriod: number, stakingAmount: number) {
+    return this.command('masternode_staking', {
       walletId,
       stakingPeriod,
       stakingAmount,

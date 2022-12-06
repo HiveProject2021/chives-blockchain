@@ -6,7 +6,7 @@ import { CardStep, CopyToClipboard, Loading, Back, useShowError, ButtonLoading, 
   getTransactionResult,} from '@chives/core';
 import {
   useGetSyncStatusQuery,
-  useTakeMasterNodeRegisterMutation,
+  useTakeMasterNodeStakingMutation,
   useFarmBlockMutation,
 } from '@chives/api-react';
 import { useNavigate, useLocation } from 'react-router';
@@ -36,7 +36,7 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   });
 
   const openDialog = useOpenDialog();
-  const [takeMasterNodeRegister, { isLoading: isSendTransactionLoading }] = useTakeMasterNodeRegisterMutation();
+  const [takeMasterNodeStaking, { isLoading: isSendTransactionLoading }] = useTakeMasterNodeStakingMutation();
   const methods = useForm<FormData>({
     defaultValues: {
       stakingPeriod: 1,
@@ -75,11 +75,13 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
     const stakingPeriod = data.stakingPeriod;
     const stakingAmount = data.stakingAmount;
 
-    const response = await takeMasterNodeRegister({
+    const response = await takeMasterNodeStaking({
       walletId,
       stakingPeriod,
       stakingAmount,
-    }).unwrap();
+    });
+    console.log("------------------")
+    console.log(response)
 
     const result = getTransactionResult(response.transaction);
     const resultDialog = CreateWalletSendTransactionResultDialog({success: result.success, message: result.message});
