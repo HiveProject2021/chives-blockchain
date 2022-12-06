@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import { CardStep, CopyToClipboard, Loading, Back, useShowError, ButtonLoading, Flex, Form, 
   useOpenDialog,
-  chivesToMojo,
   getTransactionResult,} from '@chives/core';
 import {
   useGetSyncStatusQuery,
   useTakeMasterNodeStakingMutation,
-  useFarmBlockMutation,
+  useTakeMasterNodeRegisterMutation,
 } from '@chives/api-react';
 import { useNavigate, useLocation } from 'react-router';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -34,15 +33,20 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   const { data: MyCard } = useGetMasterNodeMyCardQuery({
     walletId,
   });
+  const StakingAccountStatus: boolean = MyCard?.StakingAccountStatus;
+  const stakingAmount: number = MyCard?.stakingAmount;
+  const stakingPeriod: number = MyCard?.stakingPeriod;
+  
+  const methods = useForm<FormData>({
+    defaultValues: {
+      stakingPeriod: stakingPeriod,
+      stakingAmount: stakingAmount,
+    },
+  });
 
   const openDialog = useOpenDialog();
   const [takeMasterNodeStaking, { isLoading: isSendTransactionLoading }] = useTakeMasterNodeStakingMutation();
-  const methods = useForm<FormData>({
-    defaultValues: {
-      stakingPeriod: 1,
-      stakingAmount: 300000,
-    },
-  });
+  const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();
 
   const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery({}, {
     pollingInterval: 10000,
@@ -63,8 +67,8 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   let step = 1;
 
   
-  async function handleSubmit(data: FormData) {
-    //const handleSubmit: SubmitHandler<FormData> = async (data) => {
+  async function handleSubmitStaking(data: FormData) {
+    //const handleSubmitStaking: SubmitHandler<FormData> = async (data) => {
     if (isSendTransactionLoading) {
       return;
     }
@@ -83,38 +87,94 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
     console.log("------------------")
     console.log(response)
 
-    const result = getTransactionResult(response.transaction);
-    const resultDialog = CreateWalletSendTransactionResultDialog({success: result.success, message: result.message});
+    const resultDialog = CreateWalletSendTransactionResultDialog({success: response.success, message: response.message});
 
     if (resultDialog) {
       await openDialog(resultDialog);
     }
     else {
-      throw new Error(result.message ?? 'Something went wrong');
+      throw new Error(response.message ?? 'Something went wrong');
     }
 
     methods.reset();
     
   };
 
-  return (
-    <Form methods={methods} onSubmit={handleSubmit}>
-      <Flex flexDirection="column" gap={3}>
-        <MasterNodeStakingPanelStep1 step={step++} myCard={MyCard}/>
-        <MasterNodeStakingPanelStep2 step={step++} myCard={MyCard}/>
-        <MasterNodeStakingPanelStep3 step={step++} myCard={MyCard}/>
-        <Flex justifyContent="flex-end">
-          <ButtonLoading
-            loading={isSendTransactionLoading}
-            color="primary"
-            type="submit"
-            variant="contained"
-          >
-            <Trans>Begin Staking</Trans>
-          </ButtonLoading>
+  async function handleSubmitRegister(data: FormData) {
+    //const handleSubmitRegister: SubmitHandler<FormData> = async (data) => {
+    if (isSendTransactionLoadingRegister) {
+      return;
+    }
+    if (syncing) {
+      throw new Error(t`Please finish syncing before making a transaction`);
+    }
+
+    const stakingPeriod = data.stakingPeriod;
+    const stakingAmount = data.stakingAmount;
+
+    const response = await takeMasterNodeRegister({
+      walletId,
+    });
+    console.log("------------------")
+    console.log(response)
+
+    const resultDialog = CreateWalletSendTransactionResultDialog({success: response.success, message: response.message});
+
+    if (resultDialog) {
+      await openDialog(resultDialog);
+    }
+    else {
+      throw new Error(response.message ?? 'Something went wrong');
+    }
+
+    methods.reset();
+    
+  };
+
+  if(!StakingAccountStatus) {
+    return (
+      //Not staking
+      <Form methods={methods} onSubmit={handleSubmitStaking}>
+        <Flex flexDirection="column" gap={3}>
+          <MasterNodeStakingPanelStep1 step={step++} myCard={MyCard}/>
+          <MasterNodeStakingPanelStep2 step={step++} myCard={MyCard}/>
+          <MasterNodeStakingPanelStep3 step={step++} myCard={MyCard}/>
+          <Flex justifyContent="flex-end">
+            <ButtonLoading
+              loading={isSendTransactionLoading}
+              color="primary"
+              type="submit"
+              variant="contained"
+            >
+              <Trans>Begin Staking</Trans>
+            </ButtonLoading>
+          </Flex>
         </Flex>
-      </Flex>
-    </Form>
-  );
+      </Form>
+    );
+  }
+  else {
+    //have staking and begin to register masternode
+    return (
+      <Form methods={methods} onSubmit={handleSubmitRegister}>
+        <Flex flexDirection="column" gap={3}>
+          <MasterNodeStakingPanelStep1 step={step++} myCard={MyCard}/>
+          <MasterNodeStakingPanelStep2 step={step++} myCard={MyCard}/>
+          <MasterNodeStakingPanelStep3 step={step++} myCard={MyCard}/>
+          <Flex justifyContent="flex-end">
+            <ButtonLoading
+              loading={isSendTransactionLoading}
+              color="primary"
+              type="submit"
+              variant="contained"
+            >
+              <Trans>Begin Register MasterNode</Trans>
+            </ButtonLoading>
+          </Flex>
+        </Flex>
+      </Form>
+    );
+  }
+  
 
 }
