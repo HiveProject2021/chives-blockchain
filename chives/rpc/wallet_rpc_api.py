@@ -776,25 +776,29 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText
+                    "success": False,
+                    "message":checkSyncedStatusText
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section."
+                    "success": False,
+                    "message":"choose wallet failed in manager section."
                     }
         masternode_cancel_json = await manager.masternode_cancel_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
-        return {
+        masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "status": masternode_cancel_json['status'],
-                    "title": masternode_cancel_json['title'],
                     "data": masternode_cancel_json['data'],
+                    "success": masternode_cancel_json['success'],
+                    "message": masternode_cancel_json['message'],
                     "wallet_id": wallet_id,
                     }
+        return {"masternode_result": masternode_result}
     
     async def masternode_staking(self, request: Dict) -> Dict:
         from chives.masternode.masternode_manager import MasterNodeManager
@@ -806,26 +810,31 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText
+                    "error":checkSyncedStatusText,
+                    "success": False,
+                    "message": checkSyncedStatusText,
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section."
+                    "success": False,
+                    "message":"choose wallet failed in manager section."
                     }
         if "year" not in request:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"pls input the 'year' (int) value, only accept 0, 1, 2"
+                    "success": False,
+                    "message":"pls input the 'year' (int) value, only accept 0, 1, 2"
                     }
         if "amount" not in request:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"pls input the 'amount' (int) value, amount only accept 100000, 300000, 500000, other amount just for test purposes."
+                    "success": False,
+                    "message":"pls input the 'amount' (int) value, amount only accept 100000, 300000, 500000, other amount just for test purposes."
                     }
         args = {}
         args['year'] = request['year']
@@ -836,8 +845,9 @@ class WalletRpcApi:
         masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "status": masternode_staking_json['status'],
-                    "title": masternode_staking_json['title'],
                     "data": masternode_staking_json['data'],
+                    "success": masternode_staking_json['success'],
+                    "message": masternode_staking_json['message'],
                     "wallet_id": wallet_id,
                     }
         return {"masternode_result": masternode_result}
@@ -852,14 +862,16 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText
+                    "success": False,
+                    "message": checkSyncedStatusText,
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section."
+                    "success": False,
+                    "message":"choose wallet failed in manager section."
                     }
         masternode_register_json = await manager.masternode_register_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
@@ -867,7 +879,9 @@ class WalletRpcApi:
         masternode_result = {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "status": masternode_register_json['status'],
-                    "title": masternode_register_json['title'],
+                    "success": masternode_register_json['success'],
+                    "message": masternode_register_json['message'],
+                    "launcher_id": masternode_register_json['launcher_id'],
                     "data": masternode_register_json['data'],
                     "wallet_id": wallet_id,
                     }
@@ -883,14 +897,16 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText
+                    "success": False,
+                    "message":checkSyncedStatusText
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section."
+                    "success": False,
+                    "message":"choose wallet failed in manager section."
                     }
         masternode_list_json = await manager.masternode_list_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
@@ -898,7 +914,7 @@ class WalletRpcApi:
         return {
                 "wallet_id": wallet_id,
                 "transactions": masternode_list_json,
-                "fingerprint": self.service.logged_in_fingerprint,
+                "fingerprint": self.service.logged_in_fingerprint
                 }
 
     async def masternode_list_count(self, request: Dict) -> Dict:
@@ -911,7 +927,8 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText,
+                    "success": False,
+                    "message":checkSyncedStatusText,
                     "count": 0
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
@@ -919,7 +936,8 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section.",
+                    "success": False,
+                    "message":"choose wallet failed in manager section.",
                     "count": 0
                     }
         get_all_masternodes_count = await manager.get_all_masternodes_count()
@@ -940,14 +958,16 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText
+                    "success": False,
+                    "message":checkSyncedStatusText
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section."
+                    "success": False,
+                    "message":"choose wallet failed in manager section."
                     }
         masternode_init = await manager.sync_masternode_from_blockchain()
         await manager.close()
@@ -957,6 +977,7 @@ class WalletRpcApi:
                     "status": masternode_init,
                     "title": "Chives Masternode Initial Process",
                     "data": [],
+                    "success": True,
                     "wallet_id": wallet_id,
                     }
         return {"masternode_result": masternode_result}
@@ -971,14 +992,16 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText
+                    "success": False,
+                    "message":checkSyncedStatusText
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section."
+                    "success": False,
+                    "message":"choose wallet failed in manager section."
                     }
         get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
@@ -996,7 +1019,8 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":checkSyncedStatusText,
+                    "success": False,
+                    "message":checkSyncedStatusText,
                     "count": 0
                     }
         chooseWallet = await manager.chooseWallet(wallet_id)
@@ -1004,7 +1028,8 @@ class WalletRpcApi:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
-                    "error":"choose wallet failed in manager section.",
+                    "success": False,
+                    "message":"choose wallet failed in manager section.",
                     "count": 0
                     }
         get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)

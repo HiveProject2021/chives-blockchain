@@ -60,7 +60,7 @@ msgstr ""
 #~ msgid "0 automatically chooses bucket count"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:35
+#: src/components/MasterNodeStakingPanelStep3.tsx:39
 msgid "100,000"
 msgstr ""
 
@@ -68,15 +68,15 @@ msgstr ""
 #~ msgid "128 buckets is recommended"
 #~ msgstr "128 buckets is recommended"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:39
+#: src/components/MasterNodeStakingPanelStep3.tsx:44
 msgid "300,000"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:35
+#: src/components/MasterNodeStakingPanelStep2.tsx:39
 msgid "5 minutes(For test)"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:44
+#: src/components/MasterNodeStakingPanelStep3.tsx:50
 msgid "500,000"
 msgstr ""
 
@@ -318,7 +318,11 @@ msgstr "Ye Treasure"
 #~ msgid "Before posting an offer in Keybase to the #{KeybaseChannelName} channel, you must first join the {KeybaseTeamName} team. Please note that it might take a few moments to join the channel."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelForm.tsx:113
+#: src/components/MasterNodeStakingPanelForm.tsx:171
+msgid "Begin Register MasterNode"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelForm.tsx:149
 msgid "Begin Staking"
 msgstr ""
 
@@ -1965,7 +1969,7 @@ msgstr "On average we got a transaction booty every minute. If pirates aren't mo
 #~ msgid "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:39
+#: src/components/MasterNodeStakingPanelStep2.tsx:44
 msgid "One year"
 msgstr ""
 
@@ -2096,8 +2100,8 @@ msgstr "All Yer Under Way Treasure"
 #~ msgid "Please add a trade pair"
 #~ msgstr "Please add a trade pair"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:21
-#: src/components/MasterNodeStakingPanelStep3.tsx:21
+#: src/components/MasterNodeStakingPanelStep2.tsx:25
+#: src/components/MasterNodeStakingPanelStep3.tsx:25
 msgid "Please choose staking period"
 msgstr ""
 
@@ -2205,6 +2209,8 @@ msgstr ""
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
+#: src/components/MasterNodeStakingPanelForm.tsx:76
+#: src/components/MasterNodeStakingPanelForm.tsx:109
 #: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
@@ -2979,6 +2985,10 @@ msgstr "Spendin' Interval Length (number o' booties)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Squanderin' Limit (chives per interval): {0}"
 
+#: src/components/MasterNodeStakingPanelStep1.tsx:90
+msgid "Staking Account Status"
+msgstr ""
+
 #: src/components/MasterNodeMyCard.tsx:149
 msgid "Staking Address"
 msgstr ""
@@ -2992,7 +3002,7 @@ msgid "Staking Balance"
 msgstr ""
 
 #: src/components/MasterNodeMyCard.tsx:34
-#: src/components/MasterNodeStakingPanelStep1.tsx:29
+#: src/components/MasterNodeStakingPanelStep1.tsx:28
 msgid "Staking Information"
 msgstr ""
 
@@ -3000,11 +3010,15 @@ msgstr ""
 #~ msgid "Staking Panel"
 #~ msgstr ""
 
+#: src/components/MasterNodeStakingPanelStep1.tsx:113
+msgid "Staking Received Address"
+msgstr ""
+
 #: src/components/MasterNodeMyCard.tsx:77
 msgid "Staking Status"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:25
+#: src/components/MasterNodeStakingPanelStep3.tsx:29
 msgid "Staking xcc amount, only support these three items"
 msgstr ""
 
@@ -3012,7 +3026,7 @@ msgstr ""
 #~ msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:25
+#: src/components/MasterNodeStakingPanelStep2.tsx:29
 msgid "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 msgstr ""
 
@@ -3482,7 +3496,7 @@ msgstr ""
 #~ msgid "Transactions Filter Hash"
 #~ msgstr "Transactions Filter Hash"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:44
+#: src/components/MasterNodeStakingPanelStep2.tsx:50
 msgid "Two year"
 msgstr ""
 
@@ -3638,7 +3652,7 @@ msgstr "Look at under way treasures"
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:38
+#: src/components/MasterNodeStakingPanelStep1.tsx:39
 msgid "Wallet Balance"
 msgstr ""
 
