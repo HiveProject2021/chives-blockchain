@@ -2213,7 +2213,7 @@ msgstr "Please enter valid wallet name"
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:77
+#: src/components/MasterNodeStakingPanelForm.tsx:78
 #: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
@@ -2988,7 +2988,7 @@ msgstr "Spending Interval Length (number of blocks)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Spending Limit (chives per interval): {0}"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:91
+#: src/components/MasterNodeStakingPanelStep1.tsx:94
 msgid "Staking Account Status"
 msgstr "Staking Account Status"
 
@@ -3009,11 +3009,15 @@ msgstr "Staking Balance"
 msgid "Staking Information"
 msgstr "Staking Information"
 
+#: src/components/MasterNodeStakingPanelStep4.tsx:31
+msgid "Staking Operation"
+msgstr "Staking Operation"
+
 #: src/components/MasterNodeStakingPanelForm.tsx:64
 #~ msgid "Staking Panel"
 #~ msgstr "Staking Panel"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:115
+#: src/components/MasterNodeStakingPanelStep1.tsx:119
 msgid "Staking Received Address"
 msgstr "Staking Received Address"
 
@@ -3356,6 +3360,10 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 #~ msgid "This plot NFT is not connected to pool"
 #~ msgstr "This plot NFT is not connected to a pool"
 
+#: src/components/MasterNodeStakingPanelStep4.tsx:35
+msgid "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
+msgstr "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
+
 #: src/components/farm/FarmLastAttemptedProof.tsx:39
 #~ msgid "This table shows you the last time your farm attempted to win a block challenge."
 #~ msgstr ""
@@ -3659,11 +3667,11 @@ msgstr "View pending balances"
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:38
+#: src/components/MasterNodeStakingPanelStep1.tsx:39
 msgid "Wallet Balance"
 msgstr "Wallet Balance"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:62
+#: src/components/MasterNodeStakingPanelStep1.tsx:64
 msgid "Wallet Max Sent"
 msgstr "Wallet Max Sent"
 
@@ -4017,7 +4025,7 @@ msgstr ""
 #~ msgid "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 #~ msgstr "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:120
+#: src/components/MasterNodeStakingPanelStep4.tsx:46
 msgid "{0}"
 msgstr "{0}"
 

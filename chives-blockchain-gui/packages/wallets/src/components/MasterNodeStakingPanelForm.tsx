@@ -10,6 +10,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import MasterNodeStakingPanelStep1 from './MasterNodeStakingPanelStep1';
 import MasterNodeStakingPanelStep2 from './MasterNodeStakingPanelStep2';
 import MasterNodeStakingPanelStep3 from './MasterNodeStakingPanelStep3';
+import MasterNodeStakingPanelStep4 from './MasterNodeStakingPanelStep4';
 
 import { useGetMasterNodeMyCardQuery } from '@chives/api-react';
 
@@ -110,16 +111,8 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
         <MasterNodeStakingPanelStep1 step={step++} myCard={MyCard}/>
         <MasterNodeStakingPanelStep2 step={step++} myCard={MyCard}/>
         <MasterNodeStakingPanelStep3 step={step++} myCard={MyCard}/>
-        <Flex justifyContent="flex-end">
-          <ButtonLoading
-            loading={isSendTransactionLoading}
-            color="primary"
-            type="submit"
-            variant="contained"
-          >
-            <Trans>{formButton.submitButton}</Trans>
-          </ButtonLoading>
-        </Flex>
+        <MasterNodeStakingPanelStep4 step={step++} myCard={MyCard} isSendTransactionLoading={isSendTransactionLoading}/>
+        
       </Flex>
     </Form>
   );

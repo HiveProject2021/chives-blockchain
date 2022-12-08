@@ -34,6 +34,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      disabled
                       name="WalletBalance"
                       label={<Trans>Wallet Balance</Trans>}
                       value={WalletBalance}
@@ -58,6 +59,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      disabled
                       name="WalletMaxSent"
                       label={<Trans>Wallet Max Sent</Trans>}
                       value={WalletMaxSent}
@@ -87,6 +89,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      disabled
                       name="StakingAccountStatus"
                       label={<Trans>Staking Account Status</Trans>}
                       value={StakingAccountStatus}
@@ -111,6 +114,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      disabled
                       name="StakingReceivedAddress"
                       label={<Trans>Staking Received Address</Trans>}
                       value={StakingReceivedAddress}
