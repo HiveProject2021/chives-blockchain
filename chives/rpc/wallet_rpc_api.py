@@ -839,6 +839,8 @@ class WalletRpcApi:
         args = {}
         args['year'] = request['year']
         args['amount'] = request['amount']
+        log.warning("1 api masternode_staking.masternode_staking_json: %s", request)
+        log.warning("2 api masternode_staking.fingerprint: %s", str(self.service.logged_in_fingerprint))
         masternode_staking_json = await manager.masternode_staking_json(args, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
 
@@ -849,7 +851,9 @@ class WalletRpcApi:
                     "success": masternode_staking_json['success'],
                     "message": masternode_staking_json['message'],
                     "wallet_id": wallet_id,
-                    }
+                    }                    
+        log.warning("3 api masternode_staking.masternode_result: %s", masternode_result)
+
         return {"masternode_result": masternode_result}
     
     async def masternode_register(self, request: Dict) -> Dict:

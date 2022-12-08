@@ -2,7 +2,6 @@ import React from 'react';
 import { Trans } from '@lingui/macro';
 import { CardStep,CopyToClipboard, Loading} from '@chives/core';
 
-import { useGetMasterNodeMyCardQuery } from '@chives/api-react';
 import {
   Box,
   TextField,
@@ -23,7 +22,6 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
   const StakingReceivedAddress = myCard?.StakingReceivedAddress;
   
-
   return (
     <CardStep step={step} title={<Trans>Staking Information</Trans>}>
         <Grid spacing={2} direction="row" container>
@@ -36,6 +34,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      name="WalletBalance"
                       label={<Trans>Wallet Balance</Trans>}
                       value={WalletBalance}
                       variant="filled"
@@ -59,6 +58,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      name="WalletMaxSent"
                       label={<Trans>Wallet Max Sent</Trans>}
                       value={WalletMaxSent}
                       variant="filled"
@@ -87,6 +87,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      name="StakingAccountStatus"
                       label={<Trans>Staking Account Status</Trans>}
                       value={StakingAccountStatus}
                       variant="filled"
@@ -110,6 +111,7 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                     <Loading center />
                   ) : (
                     <TextField
+                      name="StakingReceivedAddress"
                       label={<Trans>Staking Received Address</Trans>}
                       value={StakingReceivedAddress}
                       variant="filled"
@@ -128,7 +130,6 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
             </Grid>
             </> 
           )}
-
 
         </Grid> 
     </CardStep>

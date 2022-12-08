@@ -319,12 +319,12 @@ msgstr "Saldo"
 #~ msgstr ""
 
 #: src/components/MasterNodeStakingPanelForm.tsx:171
-msgid "Begin Register MasterNode"
-msgstr ""
+#~ msgid "Begin Register MasterNode"
+#~ msgstr ""
 
 #: src/components/MasterNodeStakingPanelForm.tsx:149
-msgid "Begin Staking"
-msgstr ""
+#~ msgid "Begin Staking"
+#~ msgstr ""
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:33
 #: src/components/farm/FarmLatestBlockChallenges.tsx:43
@@ -2209,8 +2209,7 @@ msgstr ""
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:76
-#: src/components/MasterNodeStakingPanelForm.tsx:109
+#: src/components/MasterNodeStakingPanelForm.tsx:77
 #: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
@@ -2985,7 +2984,7 @@ msgstr "Intervalo de gastos (número de blocos)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Limite de gastos (chives por intervalo): {0}"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:90
+#: src/components/MasterNodeStakingPanelStep1.tsx:91
 msgid "Staking Account Status"
 msgstr ""
 
@@ -3002,7 +3001,7 @@ msgid "Staking Balance"
 msgstr ""
 
 #: src/components/MasterNodeMyCard.tsx:34
-#: src/components/MasterNodeStakingPanelStep1.tsx:28
+#: src/components/MasterNodeStakingPanelStep1.tsx:26
 msgid "Staking Information"
 msgstr ""
 
@@ -3010,7 +3009,7 @@ msgstr ""
 #~ msgid "Staking Panel"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:113
+#: src/components/MasterNodeStakingPanelStep1.tsx:115
 msgid "Staking Received Address"
 msgstr ""
 
@@ -3029,6 +3028,10 @@ msgstr ""
 #: src/components/MasterNodeStakingPanelStep2.tsx:29
 msgid "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 msgstr ""
+
+#: src/components/MasterNodeStakingPanelForm.tsx:127
+#~ msgid "StakingAccountStatus"
+#~ msgstr ""
 
 #: src/components/MasterNodeList.tsx:94
 #~ msgid "StakingAddress"
@@ -3652,7 +3655,7 @@ msgstr "Ver saldos pendentes"
 #~ msgid "Waiting for the transaction to be confirmed"
 #~ msgstr "Waiting for the transaction to be confirmed"
 
-#: src/components/MasterNodeStakingPanelStep1.tsx:39
+#: src/components/MasterNodeStakingPanelStep1.tsx:38
 msgid "Wallet Balance"
 msgstr ""
 
@@ -4010,9 +4013,9 @@ msgstr ""
 #~ msgid "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 #~ msgstr "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 
-#: src/components/offers/OfferShareDialog.tsx:853
-#~ msgid "{0}"
-#~ msgstr ""
+#: src/components/MasterNodeStakingPanelForm.tsx:119
+msgid "{0}"
+msgstr ""
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"

@@ -120,6 +120,7 @@ class MasterNodeManager:
         self.node_client = node_client
         self.db_name = db_name
         self.connection = None
+        self.log = None
         self.key_dict = {}
         self.mojo_per_unit = 100000000
         self.puzzle_store = None
@@ -142,6 +143,7 @@ class MasterNodeManager:
         self.connection = await aiosqlite.connect(Path(self.db_name))
         self.db_wrapper = DBWrapper(self.connection)
         self.fingerprints = await self.wallet_client.get_public_keys()
+        self.log = logging.getLogger(__name__)
 
     async def chooseWallet(self, fingerprint: int = 0) -> bool:
         if fingerprint is None:
@@ -596,7 +598,9 @@ class MasterNodeManager:
         fee = 1
         override = False
         memo = "Merge coin for MasterNode"
+        self.log.warning(f"1 masternode_staking_json args: {args}")
         get_staking_address_result = self.masternode_wallet.get_staking_address()
+        self.log.warning(f"2 masternode_staking_json get_staking_address_result: {get_staking_address_result}")
 
         # to choose staking period from three options
         year = args['year']
@@ -656,7 +660,9 @@ class MasterNodeManager:
             StakingAccountAmount = STAKING_COIN[0].coin.amount
             StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
             #print(STAKING_COIN)
-
+        
+        self.log.warning(f"3 masternode_staking_json STAKING_ADDRESS: {STAKING_ADDRESS}")
+        self.log.warning(f"4 masternode_staking_json STAKING_COIN: {STAKING_COIN}")
         # check staking status in blockchain
         if isHaveStakingCoin is False:
             get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,StakingAddress)
@@ -668,12 +674,15 @@ class MasterNodeManager:
                         isHaveStakingCoin = True
                 StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
 
+        self.log.warning(f"5 masternode_staking_json StakingAccountAmountCoin: {StakingAccountAmountCoin}")
+
         StakingAccountAmountText = str(StakingAccountAmount/self.mojo_per_unit)
         # check staking status in memory pool
         if StakingAddress in all_address_in_mempool:
             isHaveStakingCoin = True
             StakingAccountAmountText = "Wait block to generate..."
 
+        self.log.warning(f"6 STAKING_ADDRESS: {STAKING_ADDRESS}")
         #print(balances);
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -692,6 +701,8 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
         jsonResult['data'].append({"Staking Address One Year":get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']})
         jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
+        
+        self.log.warning(f"7 masternode_staking_json jsonResult: {jsonResult}")
 
         dictResult = {}
         dictResult['WalletBalance'] = str(confirmed_wallet_balance)
@@ -757,10 +768,13 @@ class MasterNodeManager:
                 return jsonResult
             final_fee = uint64(int(fee * units["chives"]))
             final_amount: uint64
+            
             if typ == WalletType.STANDARD_WALLET:
                 final_amount = uint64(int(amount * units["chives"]))
                 jsonResult['data'].append({"Staking coin for MasterNode Submitting transaction...":""})
+                self.log.warning(f"8 masternode_staking_json send_transaction begin: {jsonResult}")
                 res = await wallet_client.send_transaction(str(wallet_id), final_amount, StakingAddress, final_fee, memos)
+                self.log.warning(f"9 masternode_staking_json send_transaction end: {jsonResult}")
             else:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Only standard wallet is supported":""})
@@ -814,7 +828,7 @@ class MasterNodeManager:
         
         jsonResult = {}
         jsonResult['status'] = "success"
-        jsonResult['message'] = "Chives Masternode Cancel Information:"
+        jsonResult['message'] = "Chives Masternode Cancel Success"
         jsonResult['data'] = []
         jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
