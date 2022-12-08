@@ -76,7 +76,8 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
     if (syncing) {
       throw new Error(t`Please finish syncing before making a transaction`);
     }
-
+    console.log("handleSubmit", data)
+    console.log("walletId", walletId)
     const stakingPeriod = data.stakingPeriod;
     const stakingAmount = data.stakingAmount;
 

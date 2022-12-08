@@ -1003,7 +1003,7 @@ export const walletApi = apiWithTag.injectEndpoints({
         service: Wallet,
         args: [walletId, stakingPeriod, stakingAmount],
       }),
-      transformResponse: (response: any) => response?.masternode_result,
+      transformResponse: (response: any) => response,
       invalidatesTags: (result, _error, { walletId }) =>
         result ? [{ type: 'MasterNode', id: walletId }] : [],
     }),
@@ -1019,7 +1019,7 @@ export const walletApi = apiWithTag.injectEndpoints({
         service: Wallet,
         args: [walletId],
       }),
-      transformResponse: (response: any) => response?.masternode_result,
+      transformResponse: (response: any) => response,
       invalidatesTags: (result, _error, { walletId }) =>
         result ? [{ type: 'MasterNode', id: walletId }] : [],
     }),
@@ -1035,7 +1035,7 @@ export const walletApi = apiWithTag.injectEndpoints({
         service: Wallet,
         args: [walletId],
       }),
-      transformResponse: (response: any) => response?.masternode_result,
+      transformResponse: (response: any) => response,
       invalidatesTags: (result, _error, { walletId }) =>
         result ? [{ type: 'MasterNode', id: walletId }] : [],
     }),

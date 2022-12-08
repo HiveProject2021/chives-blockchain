@@ -4013,7 +4013,7 @@ msgstr "您粘贴的列表中未包含24个有效的助记词。"
 #~ msgid "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 #~ msgstr "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:119
+#: src/components/MasterNodeStakingPanelForm.tsx:120
 msgid "{0}"
 msgstr ""
 

@@ -4013,7 +4013,7 @@ msgstr "Вставленный список не содержит 24 валид�
 #~ msgid "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 #~ msgstr "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:119
+#: src/components/MasterNodeStakingPanelForm.tsx:120
 msgid "{0}"
 msgstr "{0}"
 

@@ -286,9 +286,10 @@ export default class Wallet extends Service {
 
   async takeMasterNodeStaking(walletId: number, stakingPeriod: number, stakingAmount: number) {
     return this.command('masternode_staking', {
-      walletId,
-      stakingPeriod,
-      stakingAmount,
+      walletId: walletId,
+      year:0,
+      amount:100000,
+      wallet_id: walletId,
     });
   }
 
