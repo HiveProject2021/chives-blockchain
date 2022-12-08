@@ -718,10 +718,12 @@ class MasterNodeManager:
         dictResult['StakingAddressTwoYear'] = get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']
         if dictResult['StakingAccountBalance'] in self.allow_staking_amount:
             dictResult['stakingAmount'] = dictResult['StakingAccountBalance']
+            dictResult['stakingPeriod'] = int(STAKING_PERIOD)
         else:
             # default value in Wallet GUI
-            dictResult['stakingAmount'] = 100000
-        dictResult['stakingPeriod'] = int(STAKING_PERIOD)
+            dictResult['stakingAmount'] = None
+            dictResult['stakingPeriod'] = None
+        
         dictResult['stakingAddress'] = STAKING_ADDRESS
         jsonResult['dictResult'] = dictResult
 
