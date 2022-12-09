@@ -1380,7 +1380,7 @@ msgstr "IP アドレス"
 #~ msgid "If you have already shared your offer file, you may need to submit a transaction to cancel the pending offer. Click \"Cancel on blockchain\" to submit a cancellation transaction."
 #~ msgstr ""
 
-#: src/components/WalletSendTransactionResultDialog.tsx:41
+#: src/components/WalletSendTransactionResultDialog.tsx:44
 msgid "If you would like to speed up the transaction, please delete unconfirmed transactions and retry with a higher fee."
 msgstr ""
 
@@ -1661,8 +1661,8 @@ msgid "Master Node"
 msgstr ""
 
 #: src/components/WalletHeader.tsx:62
-msgid "Master Node Income"
-msgstr ""
+#~ msgid "Master Node Income"
+#~ msgstr ""
 
 #: src/components/card/MasterNodeCardTotalBalance.tsx:44
 #~ msgid "MasterNode Count"
@@ -2991,6 +2991,10 @@ msgstr "支払いインターバル長 (ブロック数)"
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "支払い額上限 (Chives毎インターバル): {0}"
 
+#: src/components/WalletHeader.tsx:62
+msgid "Staking"
+msgstr ""
+
 #: src/components/MasterNodeStakingPanelStep1.tsx:94
 msgid "Staking Account Status"
 msgstr ""
@@ -3248,7 +3252,7 @@ msgstr ""
 #~ msgid "The total transactions fees in this block. Rewarded to the farmer."
 #~ msgstr "The total transactions fees in this block. Rewarded to the farmer."
 
-#: src/components/WalletSendTransactionResultDialog.tsx:34
+#: src/components/WalletSendTransactionResultDialog.tsx:37
 msgid "The transaction could not be immediately included in the mempool because the specified fee is too low. The transaction will be retried periodically, and may be included in the mempool once fees are lower, or if space becomes available."
 msgstr ""
 
@@ -3368,7 +3372,6 @@ msgid "This step will register your masternode to blockchain."
 msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:66
-#: src/components/MasterNodeStakingPanelStep5.tsx:63
 msgid "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
 msgstr ""
 
@@ -3507,7 +3510,8 @@ msgstr ""
 #~ msgid "Trading History"
 #~ msgstr "Trading History"
 
-#: src/components/WalletSendTransactionResultDialog.tsx:27
+#: src/components/WalletSendTransactionResultDialog.tsx:30
+#: src/components/WalletSendTransactionResultDialog.tsx:53
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
 msgstr ""
 
@@ -3518,6 +3522,10 @@ msgstr ""
 #: src/components/block/Block.jsx:298
 #~ msgid "Transactions Filter Hash"
 #~ msgstr "Transactions Filter Hash"
+
+#: src/components/WalletSendTransactionResultDialog.tsx:22
+msgid "Trip"
+msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep2.tsx:50
 msgid "Two year"
@@ -3936,6 +3944,10 @@ msgstr ""
 #: src/components/pool/PoolOverview.tsx:157
 #~ msgid "Your Pool Overview"
 #~ msgstr "Your Pool Overview"
+
+#: src/components/MasterNodeStakingPanelStep5.tsx:63
+msgid "Your coin have staking in a smart coin base on Lisp, you can cancel it when the staking period is finished."
+msgstr ""
 
 #: src/components/app/AppPassPrompt.tsx:79
 #~ msgid "Your keyring is locked"

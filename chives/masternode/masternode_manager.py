@@ -739,7 +739,7 @@ class MasterNodeManager:
             jsonResult['data'].append({"":""})
             jsonResult['data'].append({"Wallet confirmed balance must more than":(stakingCoinAmount+fee)})
             jsonResult['data'].append({"":""})
-            jsonResult['success'] = False
+            jsonResult['success'] = True
             jsonResult['message'] = f"Wallet confirmed balance must more than " + str(stakingCoinAmount+fee)
             return jsonResult
             
@@ -756,7 +756,7 @@ class MasterNodeManager:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({f"A transaction of amount {amount} and fee {fee} is unusual":""})
                 jsonResult['data'].append({"Pass in --override if you are sure you mean to do this.":""})
-                jsonResult['success'] = False
+                jsonResult['success'] = True
                 jsonResult['message'] = f"A transaction of amount {amount} and fee {fee} is unusual"
                 return jsonResult
             try:
@@ -764,7 +764,7 @@ class MasterNodeManager:
             except LookupError:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({f"Wallet id: {wallet_id} not found.":""})
-                jsonResult['success'] = False
+                jsonResult['success'] = True
                 jsonResult['message'] = f"Wallet id: {wallet_id} not found."
                 return jsonResult
             final_fee = uint64(int(fee * units["chives"]))
@@ -779,7 +779,7 @@ class MasterNodeManager:
             else:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Only standard wallet is supported":""})
-                jsonResult['success'] = False
+                jsonResult['success'] = True
                 jsonResult['message'] = "Only standard wallet is supported"
                 return jsonResult
 
@@ -788,7 +788,7 @@ class MasterNodeManager:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes.":""})
                 jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to StakingAddress: {StakingAddress} on stakingCoinAmount: {stakingCoinAmount} stakingYear: {year} ":""})
-                self.printJsonResult(jsonResult)
+                #self.printJsonResult(jsonResult)
                 await self.wait_tx_for_confirmation(tx_id)
                 #jsonResult = {}
                 jsonResult['status'] = "success"
@@ -796,12 +796,12 @@ class MasterNodeManager:
                 #jsonResult['data'] = []
                 jsonResult['data'].append({f"Finish to submit blockchain":""})
                 jsonResult['success'] = True
-                jsonResult['message'] = "finish to submit blockchain"
+                jsonResult['message'] = "finish to submit blockchain, the status will change after a few minutes."
                 return jsonResult  
             else:
                 jsonResult['data'].append({"Staking coin for MasterNode not yet submitted to nodes":""})
                 jsonResult['data'].append({"tx":{tx_id}})
-                jsonResult['success'] = False
+                jsonResult['success'] = True
                 jsonResult['message'] = "Staking coin for MasterNode not yet submitted to nodes"
                 return jsonResult 
                     
@@ -829,7 +829,7 @@ class MasterNodeManager:
         
         jsonResult = {}
         jsonResult['status'] = "success"
-        jsonResult['message'] = "Chives Masternode Cancel Success"
+        jsonResult['message'] = "Chives Masternode Cancel Success. You will receive your coin in 3-5 minutes."
         jsonResult['data'] = []
         jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
@@ -845,7 +845,7 @@ class MasterNodeManager:
         if isHaveStakingCoin is True:
             jsonResult['data'].append({"Cancel staking coin for MasterNode Submitting transaction...":""})
             cancel_masternode_staking_coins = await self.cancel_masternode_staking_coins(STAKING_ADDRESS,STAKING_PUZZLE)
-            print(f"cancel_masternode_staking_coins:{cancel_masternode_staking_coins}")
+            #print(f"cancel_masternode_staking_coins:{cancel_masternode_staking_coins}")
             if cancel_masternode_staking_coins is not None and "tx_id" in cancel_masternode_staking_coins:
                 jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes":""})
                 jsonResult['data'].append({"You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.":""})
@@ -857,17 +857,17 @@ class MasterNodeManager:
                 jsonResult['data'].append({"error":cancel_masternode_staking_coins})
                 jsonResult['status'] = "failed"
                 jsonResult['message'] = cancel_masternode_staking_coins['error']
-                jsonResult['success'] = False
+                jsonResult['success'] = True
             else:
                 jsonResult['data'].append({"status":"Masternode cancel failed!!!"})
                 jsonResult['status'] = "failed"
                 jsonResult['message'] = "Masternode cancel failed!!!"
-                jsonResult['success'] = False
+                jsonResult['success'] = True
         else:
             jsonResult['data'].append({"You have not staking coins":""})
             jsonResult['data'].append({"":""})
             jsonResult['message'] = "You have not staking coins"
-            jsonResult['success'] = False
+            jsonResult['success'] = True
         return jsonResult
 
     async def masternode_register(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -924,7 +924,7 @@ class MasterNodeManager:
                 jsonResult['data'] = []
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Error":tx_id})
-                jsonResult['success'] = False
+                jsonResult['success'] = True
                 jsonResult['message'] = str(tx_id)
                 jsonResult['launcher_id'] = ""
                 return jsonResult
@@ -1043,8 +1043,8 @@ class MasterNodeManager:
                 #print(f"wait_tx_for_confirmation: {item}")
                 return item
             else:
-                print("Waiting for block (30s)")
-                await asyncio.sleep(30)
+                #print("Waiting for block (30s)")
+                await asyncio.sleep(3)
 
     async def get_all_masternodes(self) -> List:
         launcher_ids = await self.masternode_wallet.get_all_nft_ids()
@@ -1462,8 +1462,8 @@ class MasterNodeWallet:
                 res["tx_id"] = tx_id
                 return res
             elif res["status"] == "PENDING":
-                res['success'] = False
-                res["error"] = "Cancel Staking Coin Failed. Maybe it can only be canceled after reaching the specified block height."
+                res['success'] = True
+                res["error"] = "Cancel Staking Coin Failed. Maybe it can only be canceled after reaching the specified block height. If you choose for test purpose, it will can canncel after 10 minutes."
                 return res
             else:
                 return res

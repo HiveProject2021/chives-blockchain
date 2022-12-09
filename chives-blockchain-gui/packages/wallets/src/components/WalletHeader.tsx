@@ -59,7 +59,7 @@ export default function WalletHeader(props: StandardWalletProps) {
             <Tab value="send" label={<Trans>Send</Trans>} />
             <Tab value="receive" label={<Trans>Receive</Trans>} />
             <Tab value="masternodesummary" label={<Trans>Master Node</Trans>} />
-            <Tab value="masternodereceived" label={<Trans>Master Node Income</Trans>} />
+            <Tab value="masternodereceived" label={<Trans>Staking</Trans>} />
           </Tabs>
         </Flex>
         <Flex gap={1} alignItems="center">
