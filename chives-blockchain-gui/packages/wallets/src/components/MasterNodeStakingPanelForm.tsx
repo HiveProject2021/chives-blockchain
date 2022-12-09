@@ -11,6 +11,7 @@ import MasterNodeStakingPanelStep1 from './MasterNodeStakingPanelStep1';
 import MasterNodeStakingPanelStep2 from './MasterNodeStakingPanelStep2';
 import MasterNodeStakingPanelStep3 from './MasterNodeStakingPanelStep3';
 import MasterNodeStakingPanelStep4 from './MasterNodeStakingPanelStep4';
+import MasterNodeStakingPanelStep5 from './MasterNodeStakingPanelStep5';
 
 import { useGetMasterNodeMyCardQuery } from '@chives/api-react';
 
@@ -34,12 +35,9 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   const StakingAccountStatus: boolean = MyCard?.StakingAccountStatus;
   const stakingAmount: number = MyCard?.stakingAmount;
   const stakingPeriod: number = MyCard?.stakingPeriod;
-  const formButton = {"submitButton":"Begin Staking","submitResult":{}};
 
-  if(StakingAccountStatus) {
-    formButton.submitButton = "Begin Register MasterNode";
-  }
-  
+  console.log("MyCard==========================", MyCard)
+
   const methods = useForm<FormData>({
     defaultValues: {
       stakingPeriod: stakingPeriod,
@@ -88,10 +86,13 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
       stakingAmount,
     });
 
-    console.log("------------------")
+    console.log("--takeMasterNodeStaking--response--------------")
     console.log(response)
 
-    const resultDialog = CreateWalletSendTransactionResultDialog({success: response.success, message: response.message});
+    const resultDialog = CreateWalletSendTransactionResultDialog({success: response['data']['success'], message: response['data']['message']});
+
+    console.log("---===============")
+    console.log(resultDialog)
 
     if (resultDialog) {
       await openDialog(resultDialog);
@@ -111,8 +112,10 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
         <MasterNodeStakingPanelStep1 step={step++} myCard={MyCard}/>
         <MasterNodeStakingPanelStep2 step={step++} myCard={MyCard}/>
         <MasterNodeStakingPanelStep3 step={step++} myCard={MyCard}/>
-        <MasterNodeStakingPanelStep4 step={step++} myCard={MyCard} isSendTransactionLoading={isSendTransactionLoading}/>
-        
+        <MasterNodeStakingPanelStep4 step={step++} myCard={MyCard} syncing={syncing} walletId={walletId} isSendTransactionLoading={isSendTransactionLoading}/>  
+        {StakingAccountStatus && (
+          <MasterNodeStakingPanelStep5 step={step++} myCard={MyCard} syncing={syncing} walletId={walletId}/>       
+        )}
       </Flex>
     </Form>
   );

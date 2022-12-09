@@ -569,7 +569,7 @@ class MasterNodeManager:
                     print(f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}")
                     print("Waiting for block (180s). Do not quit.")
                     await asyncio.sleep(180)
-                    print(f"finish to submit blockchain")
+                    print(f"finish to submit blockchain, the status will change after a few minutes.")
                     print("")
                     return None
             print("Merge coin for MasterNode not yet submitted to nodes")
@@ -718,11 +718,10 @@ class MasterNodeManager:
         dictResult['StakingAddressTwoYear'] = get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']
         if dictResult['StakingAccountBalance'] in self.allow_staking_amount:
             dictResult['stakingAmount'] = dictResult['StakingAccountBalance']
-            dictResult['stakingPeriod'] = int(STAKING_PERIOD)
         else:
             # default value in Wallet GUI
-            dictResult['stakingAmount'] = None
-            dictResult['stakingPeriod'] = None
+            dictResult['stakingAmount'] = 100000
+        dictResult['stakingPeriod'] = int(STAKING_PERIOD)
         
         dictResult['stakingAddress'] = STAKING_ADDRESS
         jsonResult['dictResult'] = dictResult

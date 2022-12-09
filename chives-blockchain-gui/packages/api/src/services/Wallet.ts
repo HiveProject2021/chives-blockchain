@@ -285,10 +285,22 @@ export default class Wallet extends Service {
   }
 
   async takeMasterNodeStaking(walletId: number, stakingPeriod: number, stakingAmount: number) {
+    console.log("api takeMasterNodeStaking *********************************")
+    console.log("walletId",walletId)
+    console.log("stakingPeriod",stakingPeriod)
+    console.log("stakingAmount",stakingAmount)
+    if(stakingPeriod==undefined) {
+      stakingPeriod = 0;
+    }
+    if(stakingAmount==undefined) {
+      stakingAmount = 100000;
+    }
+    console.log("stakingPeriod",stakingPeriod)
+    console.log("stakingAmount",stakingAmount)
     return this.command('masternode_staking', {
       walletId: walletId,
-      year:0,
-      amount:100000,
+      year:stakingPeriod,
+      amount:stakingAmount,
       wallet_id: walletId,
     });
   }

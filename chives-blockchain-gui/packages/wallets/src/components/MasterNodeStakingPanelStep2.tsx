@@ -31,7 +31,7 @@ export default function MasterNodeStakingPanelStep2(props: MasterNodeStakingPane
                     </Trans>
                 </Typography>
                 <FormControl variant="filled" fullWidth>
-                    <RadioGroup name="stakingPeriod">
+                    <RadioGroup name="stakingPeriod" defaultValue={0}>
                       <Flex gap={2} flexWrap="wrap">
                           <FormControlLabel
                           value={0}

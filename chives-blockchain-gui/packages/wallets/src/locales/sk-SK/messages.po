@@ -318,13 +318,13 @@ msgstr "Zostatok"
 #~ msgid "Before posting an offer in Keybase to the #{KeybaseChannelName} channel, you must first join the {KeybaseTeamName} team. Please note that it might take a few moments to join the channel."
 #~ msgstr "Pred odoslaním ponuky na Keybase kanál #{KeybaseChannelName} sa musíte najskôr pripojiť k tímu {KeybaseTeamName}. Upozorňujeme, že pripojenie ku kanálu môže chvíľu trvať."
 
-#: src/components/MasterNodeStakingPanelForm.tsx:171
-#~ msgid "Begin Register MasterNode"
-#~ msgstr ""
+#: src/components/MasterNodeStakingPanelStep4.tsx:100
+msgid "Begin Register MasterNode"
+msgstr ""
 
-#: src/components/MasterNodeStakingPanelForm.tsx:149
-#~ msgid "Begin Staking"
-#~ msgstr ""
+#: src/components/MasterNodeStakingPanelStep4.tsx:79
+msgid "Begin Staking"
+msgstr ""
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:33
 #: src/components/farm/FarmLatestBlockChallenges.tsx:43
@@ -425,6 +425,11 @@ msgstr ""
 #: src/components/offers/OfferManager.tsx:423
 #~ msgid "Cancel Offer"
 #~ msgstr "Zrušiť ponuku"
+
+#: src/components/MasterNodeStakingPanelStep5.tsx:59
+#: src/components/MasterNodeStakingPanelStep5.tsx:75
+msgid "Cancel Staking"
+msgstr ""
 
 #: src/components/trading/TradingOverview.jsx:388
 #~ msgid "Cancel and Spend"
@@ -2213,7 +2218,9 @@ msgstr "Prosím zadajte platný názov peňaženky"
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:78
+#: src/components/MasterNodeStakingPanelForm.tsx:76
+#: src/components/MasterNodeStakingPanelStep4.tsx:39
+#: src/components/MasterNodeStakingPanelStep5.tsx:37
 #: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
@@ -3009,7 +3016,7 @@ msgstr ""
 msgid "Staking Information"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:31
+#: src/components/MasterNodeStakingPanelStep4.tsx:61
 msgid "Staking Operation"
 msgstr ""
 
@@ -3360,7 +3367,12 @@ msgstr "Toto je celkový zostatok + nespracovaný zostatok alebo to, aký bude v
 #~ msgid "This plot NFT is not connected to pool"
 #~ msgstr "This plot NFT is not connected to a pool"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:35
+#: src/components/MasterNodeStakingPanelStep4.tsx:86
+msgid "This step will register your masternode to blockchain."
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:66
+#: src/components/MasterNodeStakingPanelStep5.tsx:63
 msgid "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
 msgstr ""
 
@@ -4026,8 +4038,8 @@ msgstr "Vložený zoznam neobsahuje 24 platných mnemotechnických slov."
 #~ msgstr "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:46
-msgid "{0}"
-msgstr "{0}"
+#~ msgid "{0}"
+#~ msgstr "{0}"
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"
