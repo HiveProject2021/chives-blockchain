@@ -13,7 +13,6 @@ import WalletHeader from '../WalletHeader';
 import MasterNodeList from '../MasterNodeList';
 import MasterNodeReceivedList from '../MasterNodeReceivedList';
 import MasterNodeStandardCards from '../masternode/MasterNodeStandardCards';
-import MasterNodeMyCard from '../MasterNodeMyCard';
 import MasterNodeStakingPanelForm from '../MasterNodeStakingPanelForm';
 
 type StandardWalletProps = {

@@ -4,9 +4,6 @@ import { CardStep,Flex,ButtonLoading,useOpenDialog } from '@chives/core';
 import {useTakeMasterNodeRegisterMutation, } from '@chives/api-react';
 
 import {
-  FormControl,
-  FormControlLabel,
-  Radio,
   Grid,
   Typography,
 } from '@mui/material';
@@ -23,9 +20,7 @@ export type MasterNodeStakingPanelStep4Props = {
 
 export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPanelStep4Props) {
   const { step, myCard, syncing, walletId, isSendTransactionLoading } = props;
-  const isLoading = false
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
-  const StakingReceivedAddress = myCard?.StakingReceivedAddress;
 
   const openDialog = useOpenDialog();
   const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();

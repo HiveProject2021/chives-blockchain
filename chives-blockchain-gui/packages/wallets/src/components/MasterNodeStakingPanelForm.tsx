@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Trans, t } from '@lingui/macro';
-import { CardStep, CopyToClipboard, Loading, ButtonLoading, Flex, Form, useOpenDialog,} from '@chives/core';
+import { Flex, Form, useOpenDialog,} from '@chives/core';
 import {
   useGetSyncStatusQuery,
   useTakeMasterNodeStakingMutation,
-  useTakeMasterNodeRegisterMutation,
 } from '@chives/api-react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import MasterNodeStakingPanelStep1 from './MasterNodeStakingPanelStep1';

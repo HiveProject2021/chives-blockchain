@@ -3,9 +3,6 @@ import { Trans, t } from '@lingui/macro';
 import { CardStep,Flex,ButtonLoading, Form, useOpenDialog, } from '@chives/core';
 import { useTakeMasterNodeCancelMutation, } from '@chives/api-react';
 import {
-  FormControl,
-  FormControlLabel,
-  Radio,
   Grid,
   Typography,
 } from '@mui/material';
@@ -20,11 +17,6 @@ export type MasterNodeStakingPanelStep5Props = {
 
 export default function MasterNodeStakingPanelStep5(props: MasterNodeStakingPanelStep5Props) {
   const { step, myCard, syncing, walletId } = props;
-  const isLoading = false
-  const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
-  const StakingReceivedAddress = myCard?.StakingReceivedAddress;
-
-  
   const openDialog = useOpenDialog();
   const [takeMasterNodeCancel, { isLoading: isSendTransactionLoading }] = useTakeMasterNodeCancelMutation();
 

@@ -17,9 +17,7 @@ export type MasterNodeStakingPanelStep3Props = {
 
 export default function MasterNodeStakingPanelStep3(props: MasterNodeStakingPanelStep3Props) {
   const { step, myCard } = props;
-  const isLoading = false
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
-  const StakingReceivedAddress = myCard?.StakingReceivedAddress;
 
   return (
     <CardStep step={step} title={<Trans>Please choose staking period</Trans>}>
