@@ -121,8 +121,7 @@ msgstr ""
 #~ msgid "Action"
 #~ msgstr "Action"
 
-#: src/components/MasterNodeHeader.tsx:74
-#: src/components/WalletHeader.tsx:76
+#: src/components/WalletHeader.tsx:64
 msgid "Actions"
 msgstr "Дзеянні"
 
@@ -249,7 +248,6 @@ msgstr ""
 #~ msgid "Are you sure you want to delete the plot? The plot cannot be recovered."
 #~ msgstr "Are you sure you want to delete the plot? The plot cannot be recovered."
 
-#: src/components/MasterNodeHeader.tsx:42
 #: src/components/WalletHeader.tsx:42
 msgid "Are you sure you want to delete unconfirmed transactions?"
 msgstr ""
@@ -589,7 +587,6 @@ msgstr ""
 #~ msgid "Confirm Passphrase"
 #~ msgstr "Confirm Passphrase"
 
-#: src/components/MasterNodeHeader.tsx:37
 #: src/components/WalletHeader.tsx:37
 msgid "Confirmation"
 msgstr ""
@@ -711,8 +708,7 @@ msgid "Create New Wallet"
 msgstr ""
 
 #: src/components/cat/WalletCAT.tsx:129
-#: src/components/masternode/MasterNodeStandard.tsx:54
-#: src/components/standard/WalletStandard.tsx:58
+#: src/components/standard/WalletStandard.tsx:53
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -871,7 +867,6 @@ msgstr "Дата"
 #~ msgid "Delay"
 #~ msgstr "Delay"
 
-#: src/components/MasterNodeHeader.tsx:38
 #: src/components/WalletHeader.tsx:38
 #: src/components/cat/WalletDID.tsx:448
 #: src/components/cat/WalletDID.tsx:862
@@ -891,8 +886,7 @@ msgstr "Выдаліць"
 #~ msgid "Delete Plot"
 #~ msgstr "Delete Plot"
 
-#: src/components/MasterNodeHeader.tsx:87
-#: src/components/WalletHeader.tsx:89
+#: src/components/WalletHeader.tsx:77
 msgid "Delete Unconfirmed Transactions"
 msgstr ""
 
@@ -1657,8 +1651,8 @@ msgid "Manage token list"
 msgstr ""
 
 #: src/components/WalletHeader.tsx:61
-msgid "Master Node"
-msgstr ""
+#~ msgid "Master Node"
+#~ msgstr ""
 
 #: src/components/WalletHeader.tsx:62
 #~ msgid "Master Node Income"
@@ -2583,7 +2577,6 @@ msgstr "Наладжванне кашалька карыстальніка з а
 #~ msgid "Read the blog post for details"
 #~ msgstr ""
 
-#: src/components/MasterNodeHeader.tsx:60
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
 msgstr ""
@@ -2702,6 +2695,10 @@ msgstr ""
 
 #: src/components/MasterNodeCards.tsx:107
 msgid "Reward Pool Amount"
+msgstr ""
+
+#: src/components/MasterNodeHeader.tsx:29
+msgid "Rewards"
 msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:57
@@ -2838,7 +2835,6 @@ msgstr ""
 #~ msgid "Sell"
 #~ msgstr "Sell"
 
-#: src/components/MasterNodeHeader.tsx:59
 #: src/components/WalletHeader.tsx:59
 #: src/components/WalletSend.tsx:196
 #: src/components/cat/WalletCATSend.tsx:250
@@ -2991,7 +2987,7 @@ msgstr "Працягласць інтэрвалу расходаў (колька
 msgid "Spending Limit (chives per interval): {0}"
 msgstr "Ліміт расходаў (манет chives на інтэрвал): {0}"
 
-#: src/components/WalletHeader.tsx:62
+#: src/components/MasterNodeHeader.tsx:28
 msgid "Staking"
 msgstr ""
 
@@ -3119,7 +3115,7 @@ msgstr "Адправіць"
 msgid "Success"
 msgstr ""
 
-#: src/components/MasterNodeHeader.tsx:58
+#: src/components/MasterNodeHeader.tsx:27
 #: src/components/WalletHeader.tsx:58
 msgid "Summary"
 msgstr ""

@@ -22,8 +22,8 @@ import WalletName from './WalletName';
 type StandardWalletProps = {
   walletId: number;
   actions?: ({ onClose } : { onClose: () => void } ) => ReactNode;
-  tab: 'summary' | 'send' | 'receive' | 'masternodesummary' | 'masternodereceived';
-  onTabChange: (tab: 'summary' | 'send' | 'receive' | 'masternodesummary' | 'masternodereceived') => void;
+  tab: 'summary' | 'send' | 'receive';
+  onTabChange: (tab: 'summary' | 'send' | 'receive') => void;
 };
 
 export default function WalletHeader(props: StandardWalletProps) {
@@ -58,21 +58,9 @@ export default function WalletHeader(props: StandardWalletProps) {
             <Tab value="summary" label={<Trans>Summary</Trans>} />
             <Tab value="send" label={<Trans>Send</Trans>} />
             <Tab value="receive" label={<Trans>Receive</Trans>} />
-            <Tab value="masternodesummary" label={<Trans>Master Node</Trans>} />
-            <Tab value="masternodereceived" label={<Trans>Staking</Trans>} />
           </Tabs>
         </Flex>
         <Flex gap={1} alignItems="center">
-          {/*
-          <Flex alignItems="center">
-            <Typography variant="body1" color="textSecondary">
-              <Trans>Status:</Trans>
-            </Typography>
-            &nbsp;
-            <WalletStatus height={showDebugInformation} />
-          </Flex>
-          */}
-
           <DropdownActions label={<Trans>Actions</Trans>} variant="outlined">
             {({ onClose }) => (
               <>

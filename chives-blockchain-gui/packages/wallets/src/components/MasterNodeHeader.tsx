@@ -1,48 +1,17 @@
 import React, { type ReactNode } from 'react';
 import { Trans } from '@lingui/macro';
-import {
-  Flex,
-  ConfirmDialog,
-  useOpenDialog,
-  DropdownActions,
-} from '@chives/core';
-import {
-  Typography,
-  ListItemIcon,
-  MenuItem,
-  Tab,
-  Tabs,
-} from '@mui/material';
-import {
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
-import { useDeleteUnconfirmedTransactionsMutation } from '@chives/api-react';
+import { Flex, } from '@chives/core';
+import {Tab, Tabs,} from '@mui/material';
 import WalletName from './WalletName';
 
-type MasterNodeProps = {
+type MasterNodeWalletProps = {
   walletId: number;
-  actions?: ({ onClose } : { onClose: () => void } ) => ReactNode;
-  tab: 'summary' | 'send' | 'receive';
-  onTabChange: (tab: 'summary' | 'send' | 'receive') => void;
+  tab: 'summary' | 'staking' | 'rewards';
+  onTabChange: (tab: 'summary' | 'staking' | 'rewards') => void;
 };
 
-export default function MasterNodeHeader(props: MasterNodeProps) {
-  const { walletId, actions, tab, onTabChange } = props;
-  const openDialog = useOpenDialog();
-  const [deleteUnconfirmedTransactions] = useDeleteUnconfirmedTransactionsMutation();
-
-  async function handleDeleteUnconfirmedTransactions() {
-    await openDialog(
-      <ConfirmDialog
-        title={<Trans>Confirmation</Trans>}
-        confirmTitle={<Trans>Delete</Trans>}
-        confirmColor="danger"
-        onConfirm={() => deleteUnconfirmedTransactions({ walletId }).unwrap()}
-      >
-        <Trans>Are you sure you want to delete unconfirmed transactions?</Trans>
-      </ConfirmDialog>,
-    );
-  }
+export default function MasterNodeHeader(props: MasterNodeWalletProps) {
+  const { walletId, tab, onTabChange } = props;
 
   return (
     <Flex flexDirection="column" gap={2}>
@@ -56,8 +25,8 @@ export default function MasterNodeHeader(props: MasterNodeProps) {
             indicatorColor="primary"
           >
             <Tab value="summary" label={<Trans>Summary</Trans>} />
-            <Tab value="send" label={<Trans>Send</Trans>} />
-            <Tab value="receive" label={<Trans>Receive</Trans>} />
+            <Tab value="staking" label={<Trans>Staking</Trans>} />
+            <Tab value="rewards" label={<Trans>Rewards</Trans>} />
           </Tabs>
         </Flex>
         <Flex gap={1} alignItems="center">
@@ -70,27 +39,6 @@ export default function MasterNodeHeader(props: MasterNodeProps) {
             <WalletStatus height={showDebugInformation} />
           </Flex>
           */}
-
-          <DropdownActions label={<Trans>Actions</Trans>} variant="outlined">
-            {({ onClose }) => (
-              <>
-                <MenuItem
-                  onClick={() => {
-                    onClose();
-                    handleDeleteUnconfirmedTransactions();
-                  }}
-                >
-                  <ListItemIcon>
-                    <DeleteIcon />
-                  </ListItemIcon>
-                  <Typography variant="inherit" noWrap>
-                    <Trans>Delete Unconfirmed Transactions</Trans>
-                  </Typography>
-                </MenuItem>
-                {actions?.({ onClose })}
-              </>
-            )}
-          </DropdownActions>
         </Flex>
       </Flex>
     </Flex>

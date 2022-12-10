@@ -10,11 +10,6 @@ import WalletStandardCards from './WalletStandardCards';
 import WalletReceiveAddress from '../WalletReceiveAddress';
 import WalletSend from '../WalletSend';
 import WalletHeader from '../WalletHeader';
-import MasterNodeList from '../MasterNodeList';
-import MasterNodeReceivedList from '../MasterNodeReceivedList';
-import MasterNodeStandardCards from '../masternode/MasterNodeStandardCards';
-import MasterNodeStakingPanelForm from '../MasterNodeStakingPanelForm';
-
 type StandardWalletProps = {
   walletId: number;
 };
@@ -24,7 +19,7 @@ export default function StandardWallet(props: StandardWalletProps) {
   // const showDebugInformation = useShowDebugInformation();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<
-    'summary' | 'send' | 'receive' | 'masternodesummary' | 'masternodereceived'
+    'summary' | 'send' | 'receive'
   >('summary');
 
   function handleCreateOffer() {
@@ -68,30 +63,12 @@ export default function StandardWallet(props: StandardWalletProps) {
           <WalletHistory walletId={walletId} />
         </Flex>
       </Box>
-      <Box display={selectedTab === 'masternodesummary' ? 'block' : 'none'}>
-        <Flex flexDirection="column" gap={4}>
-          <MasterNodeStandardCards walletId={walletId} />
-          <MasterNodeList walletId={walletId} />
-        </Flex>
-      </Box>
-      <Box display={selectedTab === 'masternodereceived' ? 'block' : 'none'}>
-        <Flex flexDirection="column" gap={4}>
-          <MasterNodeStakingPanelForm walletId={walletId} />
-          <MasterNodeReceivedList walletId={walletId} />
-        </Flex>
-      </Box>
       <Box display={selectedTab === 'send' ? 'block' : 'none'}>
         <WalletSend walletId={walletId} />
       </Box>
       <Box display={selectedTab === 'receive' ? 'block' : 'none'}>
         <WalletReceiveAddress walletId={walletId} />
       </Box>
-
-      {/*
-      {showDebugInformation && (
-        <WalletConnections walletId={walletId} />
-      )}
-      */}
     </Flex>
   );
 }
