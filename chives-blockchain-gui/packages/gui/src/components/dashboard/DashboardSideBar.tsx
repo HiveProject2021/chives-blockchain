@@ -76,20 +76,17 @@ export default function DashboardSideBar(props: DashboardSideBarProps) {
               icon={FullNodeIcon}
               title={<Trans>Full Node</Trans>}
               end
+            />            
+            <SideBarItem
+              to="/dashboard/masternode"
+              icon={TokensIcon}
+              title={<Trans>MasterNode</Trans>}
             />
             <SideBarItem
               to="/dashboard/plot"
               icon={PlotsIcon}
               title={<Trans>Plots</Trans>}
             />
-            {/*}
-            <SideBarItem
-              to="/dashboard/wallets"
-              icon={<WalletIcon fontSize="large" />}
-              title={<Trans>Wallets</Trans>}
-            />
-            */}
-
             <SideBarItem
               to="/dashboard/farm"
               icon={FarmingIcon}

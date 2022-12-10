@@ -1313,7 +1313,7 @@ msgstr "Διακομιστής δεν λειτουργεί"
 msgid "Farmers earn block rewards and transaction fees by committing spare space to the network to help secure transactions. This is where your farm will be once you add a plot. <0>Learn more</0>"
 msgstr "Οι αγρότες κερδίζουν ανταμοιβές και τέλη συναλλαγών δεσμεύοντας ελεύθερο χώρο στο δίκτυο για να βοηθήσουν στην ασφάλεια των συναλλαγών. Εδώ θα είναι το αγρόκτημά σας μόλις προσθέσετε ένα οικόπεδο. <0>Μάθετε περισσότερα</0>"
 
-#: src/components/dashboard/DashboardSideBar.tsx:96
+#: src/components/dashboard/DashboardSideBar.tsx:93
 #: src/components/farm/FarmerStatus.tsx:18
 #: src/components/farm/card/FarmCardStatus.tsx:61
 #: src/components/plot/PlotStatus.tsx:17
@@ -1903,9 +1903,9 @@ msgstr "Διαχείριση Διευθύνσεων Επιβραβεύσεων �
 #~ msgid "Master Node"
 #~ msgstr ""
 
-#: src/components/dashboard/DashboardSideBar.tsx:61
-#~ msgid "MasterNode"
-#~ msgstr ""
+#: src/components/dashboard/DashboardSideBar.tsx:83
+msgid "MasterNode"
+msgstr ""
 
 #: src/electron/main.tsx:630
 msgid "Medium"
@@ -2678,7 +2678,7 @@ msgstr ""
 msgid "PlotNFT is transitioning to (target state). This can take a while. Please do not close the application until this is finalized."
 msgstr ""
 
-#: src/components/dashboard/DashboardSideBar.tsx:83
+#: src/components/dashboard/DashboardSideBar.tsx:88
 #: src/components/plot/PlotHarvester.tsx:93
 msgid "Plots"
 msgstr ""
@@ -2822,7 +2822,7 @@ msgstr ""
 msgid "Pool:"
 msgstr ""
 
-#: src/components/dashboard/DashboardSideBar.tsx:101
+#: src/components/dashboard/DashboardSideBar.tsx:98
 #: src/components/plotNFT/PlotNFTExternalState.tsx:24
 #: src/components/plotNFT/PlotNFTState.tsx:59
 msgid "Pooling"
@@ -3274,7 +3274,7 @@ msgstr ""
 #~ msgid "Setting a passphrase is strongly recommended to protect your keys. Are you sure you want to skip setting a passphrase?"
 #~ msgstr "Setting a passphrase is strongly recommended to protect your keys. Are you sure you want to skip setting a passphrase?"
 
-#: src/components/dashboard/DashboardSideBar.tsx:110
+#: src/components/dashboard/DashboardSideBar.tsx:107
 #: src/components/settings/Settings.tsx:257
 msgid "Settings"
 msgstr ""

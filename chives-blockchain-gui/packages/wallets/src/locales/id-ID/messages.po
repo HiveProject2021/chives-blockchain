@@ -60,7 +60,7 @@ msgstr ""
 #~ msgid "0 automatically chooses bucket count"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:39
+#: src/components/MasterNodeStakingPanelStep3.tsx:37
 msgid "100,000"
 msgstr ""
 
@@ -68,15 +68,15 @@ msgstr ""
 #~ msgid "128 buckets is recommended"
 #~ msgstr "128 buckets is recommended"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:44
+#: src/components/MasterNodeStakingPanelStep3.tsx:42
 msgid "300,000"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:39
+#: src/components/MasterNodeStakingPanelStep2.tsx:37
 msgid "5 minutes(For test)"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:50
+#: src/components/MasterNodeStakingPanelStep3.tsx:48
 msgid "500,000"
 msgstr ""
 
@@ -318,11 +318,11 @@ msgstr "Saldo"
 #~ msgid "Before posting an offer in Keybase to the #{KeybaseChannelName} channel, you must first join the {KeybaseTeamName} team. Please note that it might take a few moments to join the channel."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:100
+#: src/components/MasterNodeStakingPanelStep4.tsx:95
 msgid "Begin Register MasterNode"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:79
+#: src/components/MasterNodeStakingPanelStep4.tsx:74
 msgid "Begin Staking"
 msgstr ""
 
@@ -426,8 +426,8 @@ msgstr ""
 #~ msgid "Cancel Offer"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep5.tsx:59
-#: src/components/MasterNodeStakingPanelStep5.tsx:75
+#: src/components/MasterNodeStakingPanelStep5.tsx:51
+#: src/components/MasterNodeStakingPanelStep5.tsx:67
 msgid "Cancel Staking"
 msgstr ""
 
@@ -712,7 +712,7 @@ msgstr "Buat Dompet Baru"
 
 #: src/components/cat/WalletCAT.tsx:129
 #: src/components/masternode/MasterNodeStandard.tsx:54
-#: src/components/standard/WalletStandard.tsx:59
+#: src/components/standard/WalletStandard.tsx:58
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -1974,7 +1974,7 @@ msgstr "Rata rata ada jarak 1 menit antara masing masing blok transaksi. Kecuali
 #~ msgid "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:44
+#: src/components/MasterNodeStakingPanelStep2.tsx:42
 msgid "One year"
 msgstr ""
 
@@ -2105,8 +2105,8 @@ msgstr "Proses Mengira Jumlah Saldo"
 #~ msgid "Please add a trade pair"
 #~ msgstr "Please add a trade pair"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:25
-#: src/components/MasterNodeStakingPanelStep3.tsx:25
+#: src/components/MasterNodeStakingPanelStep2.tsx:23
+#: src/components/MasterNodeStakingPanelStep3.tsx:23
 msgid "Please choose staking period"
 msgstr ""
 
@@ -2214,9 +2214,9 @@ msgstr ""
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:76
-#: src/components/MasterNodeStakingPanelStep4.tsx:39
-#: src/components/MasterNodeStakingPanelStep5.tsx:37
+#: src/components/MasterNodeStakingPanelForm.tsx:75
+#: src/components/MasterNodeStakingPanelStep4.tsx:34
+#: src/components/MasterNodeStakingPanelStep5.tsx:29
 #: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
@@ -3016,7 +3016,7 @@ msgstr ""
 msgid "Staking Information"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:61
+#: src/components/MasterNodeStakingPanelStep4.tsx:56
 msgid "Staking Operation"
 msgstr ""
 
@@ -3032,7 +3032,7 @@ msgstr ""
 msgid "Staking Status"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:29
+#: src/components/MasterNodeStakingPanelStep3.tsx:27
 msgid "Staking xcc amount, only support these three items"
 msgstr ""
 
@@ -3040,7 +3040,7 @@ msgstr ""
 #~ msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:29
+#: src/components/MasterNodeStakingPanelStep2.tsx:27
 msgid "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 msgstr ""
 
@@ -3367,11 +3367,11 @@ msgstr "Ini adalah total saldo + saldo tertahan: total saldo yang akan ada pegan
 #~ msgid "This plot NFT is not connected to pool"
 #~ msgstr "This plot NFT is not connected to a pool"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:86
+#: src/components/MasterNodeStakingPanelStep4.tsx:81
 msgid "This step will register your masternode to blockchain."
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:66
+#: src/components/MasterNodeStakingPanelStep4.tsx:61
 msgid "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
 msgstr ""
 
@@ -3526,7 +3526,7 @@ msgstr ""
 #~ msgid "Trip"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:50
+#: src/components/MasterNodeStakingPanelStep2.tsx:48
 msgid "Two year"
 msgstr ""
 
@@ -3705,7 +3705,7 @@ msgstr "Berkas tidak ada"
 #~ msgid "Wallet is not defined"
 #~ msgstr "Wallet is not defined"
 
-#: src/components/MasterNode.tsx:36
+#: src/components/MasterNode.tsx:35
 #: src/components/Wallet.tsx:50
 msgid "Wallet with type {0} not supported"
 msgstr ""
@@ -3944,7 +3944,7 @@ msgstr "DID anda perlu {dids_num_req} berkas pengesahan untuk pemulihan fail{0}.
 #~ msgid "Your Pool Overview"
 #~ msgstr "Your Pool Overview"
 
-#: src/components/MasterNodeStakingPanelStep5.tsx:63
+#: src/components/MasterNodeStakingPanelStep5.tsx:55
 msgid "Your coin have staking in a smart coin base on Lisp, you can cancel it when the staking period is finished."
 msgstr ""
 

@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro';
 import { Suspender } from '@chives/core';
 import { WalletType } from '@chives/api';
 import React from 'react';
-import WalletMasterNode from './masternode/MasterNodeStandard';
+import MasterNodeStandard from './masternode/MasterNodeStandard';
 import useWallet from '../hooks/useWallet';
 
 export default function MasterNode() {
@@ -26,10 +26,9 @@ export default function MasterNode() {
 
   if (wallet.type === WalletType.STANDARD_WALLET) {
     return (
-      <WalletMasterNode walletId={Number(walletId)} />
+      <MasterNodeStandard walletId={Number(walletId)} />
     );
   }
-
 
   return (
     <Alert severity="warning">
