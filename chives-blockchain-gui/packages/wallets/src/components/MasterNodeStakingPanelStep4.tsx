@@ -21,6 +21,7 @@ export type MasterNodeStakingPanelStep4Props = {
 export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPanelStep4Props) {
   const { step, myCard, syncing, walletId, isSendTransactionLoading } = props;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
+  const StakingAccountBalance: number = myCard?.StakingAccountBalance;
 
   const openDialog = useOpenDialog();
   const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();
@@ -56,14 +57,21 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
     <CardStep step={step} title={<Trans>Staking Operation</Trans>}>
         <Grid spacing={2} direction="column" container>
             <Grid xs={12} md={12} lg={6} item>
-              {!StakingAccountStatus && (
+              {!StakingAccountStatus && StakingAccountBalance<100000 && (
                 <Typography color="textSecondary">
                     <Trans>
-                    This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation.
+                    Staking a masternode requires at least 100000 xcc in your wallet.
                     </Trans>
                 </Typography>
               )}
-              {!StakingAccountStatus && (
+              {!StakingAccountStatus && StakingAccountBalance>=100000 && (
+                <Typography color="textSecondary">
+                    <Trans>
+                    This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain.
+                    </Trans>
+                </Typography>
+              )}
+              {!StakingAccountStatus && StakingAccountBalance>=100000 && (
                 <Flex justifyContent="flex-end">
                     <ButtonLoading
                         loading={isSendTransactionLoading}
@@ -71,7 +79,7 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
                         type="submit"
                         variant="contained"
                     >
-                        <Trans>Begin Staking</Trans>
+                        <Trans>Start Staking</Trans>
                     </ButtonLoading>
                 </Flex>
               )}
@@ -79,7 +87,7 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
               {StakingAccountStatus && (
                 <Typography color="textSecondary">
                     <Trans>
-                    This step will register your masternode to blockchain.
+                    This step will register your masternode to the blockchain.
                     </Trans>
                 </Typography>
               )}
@@ -92,7 +100,7 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
                         variant="contained"
                         onClick={handleSubmit}
                     >
-                        <Trans>Begin Register MasterNode</Trans>
+                        <Trans>Start Register MasterNode</Trans>
                     </ButtonLoading>
                 </Flex>
               )}

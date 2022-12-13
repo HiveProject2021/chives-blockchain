@@ -18,6 +18,7 @@ export type MasterNodeStakingPanelStep2Props = {
 export default function MasterNodeStakingPanelStep2(props: MasterNodeStakingPanelStep2Props) {
   const { step, myCard } = props;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
+  const StakingAccountBalance: number = myCard?.StakingAccountBalance;
 
   return (
     <CardStep step={step} title={<Trans>Please choose staking period</Trans>}>
@@ -35,19 +36,19 @@ export default function MasterNodeStakingPanelStep2(props: MasterNodeStakingPane
                           value={0}
                           control={<Radio />}
                           label={<Trans>5 minutes(For test)</Trans>}
-                          disabled={StakingAccountStatus}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>One year</Trans>}
                           value={1}
-                          disabled={StakingAccountStatus}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>Two year</Trans>}
                           value={2}
-                          disabled={StakingAccountStatus}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
                           />
                       </Flex>
                     </RadioGroup>
