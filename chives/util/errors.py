@@ -155,6 +155,8 @@ class Err(Enum):
     INVALID_SPEND_BUNDLE = 126
     FAILED_GETTING_GENERATOR_MULTIPROCESSING = 127
 
+    INVALID_COMMUNITY = 999
+
 
 class ValidationError(Exception):
     def __init__(self, code: Err, error_msg: str = ""):

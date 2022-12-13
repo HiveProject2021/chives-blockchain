@@ -151,6 +151,9 @@ def create_foliage(
 
         reward_claims_incorporated = []
         if height > 0:
+            # Stage 3 MasterNode
+            if height > 170000:
+                constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = '8bf7756e9065b56b78f56e1eaef09b2f8e1c8485597bfd1df7c6e51c20fc8622'
             assert prev_transaction_block is not None
             assert prev_block is not None
             curr: BlockRecord = prev_block
