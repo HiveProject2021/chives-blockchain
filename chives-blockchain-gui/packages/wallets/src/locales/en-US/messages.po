@@ -60,7 +60,7 @@ msgstr "-"
 #~ msgid "0 automatically chooses bucket count"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:37
+#: src/components/MasterNodeStakingPanelStep3.tsx:38
 msgid "100,000"
 msgstr "100,000"
 
@@ -68,15 +68,15 @@ msgstr "100,000"
 #~ msgid "128 buckets is recommended"
 #~ msgstr "128 buckets is recommended"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:42
+#: src/components/MasterNodeStakingPanelStep3.tsx:43
 msgid "300,000"
 msgstr "300,000"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:37
+#: src/components/MasterNodeStakingPanelStep2.tsx:38
 msgid "5 minutes(For test)"
 msgstr "5 minutes(For test)"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:48
+#: src/components/MasterNodeStakingPanelStep3.tsx:49
 msgid "500,000"
 msgstr "500,000"
 
@@ -317,12 +317,12 @@ msgstr "Balance"
 #~ msgstr "Before posting an offer in Keybase to the #{KeybaseChannelName} channel, you must first join the {KeybaseTeamName} team. Please note that it might take a few moments to join the channel."
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:95
-msgid "Begin Register MasterNode"
-msgstr "Begin Register MasterNode"
+#~ msgid "Begin Register MasterNode"
+#~ msgstr "Begin Register MasterNode"
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:74
-msgid "Begin Staking"
-msgstr "Begin Staking"
+#~ msgid "Begin Staking"
+#~ msgstr "Begin Staking"
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:33
 #: src/components/farm/FarmLatestBlockChallenges.tsx:43
@@ -1972,7 +1972,7 @@ msgstr "On average there is one minute between each transaction block. Unless th
 #~ msgid "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 #~ msgstr "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:42
+#: src/components/MasterNodeStakingPanelStep2.tsx:43
 msgid "One year"
 msgstr "One year"
 
@@ -2103,8 +2103,8 @@ msgstr "Pending Total Balance"
 #~ msgid "Please add a trade pair"
 #~ msgstr "Please add a trade pair"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:23
-#: src/components/MasterNodeStakingPanelStep3.tsx:23
+#: src/components/MasterNodeStakingPanelStep2.tsx:24
+#: src/components/MasterNodeStakingPanelStep3.tsx:24
 msgid "Please choose staking period"
 msgstr "Please choose staking period"
 
@@ -2213,7 +2213,7 @@ msgstr "Please enter valid wallet name"
 #~ msgstr "Please enter your passphrase to proceed"
 
 #: src/components/MasterNodeStakingPanelForm.tsx:75
-#: src/components/MasterNodeStakingPanelStep4.tsx:34
+#: src/components/MasterNodeStakingPanelStep4.tsx:35
 #: src/components/MasterNodeStakingPanelStep5.tsx:29
 #: src/components/WalletSend.tsx:88
 #: src/components/cat/WalletCATSend.tsx:95
@@ -3016,7 +3016,7 @@ msgstr "Staking Balance"
 msgid "Staking Information"
 msgstr "Staking Information"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:56
+#: src/components/MasterNodeStakingPanelStep4.tsx:57
 msgid "Staking Operation"
 msgstr "Staking Operation"
 
@@ -3032,7 +3032,11 @@ msgstr "Staking Received Address"
 msgid "Staking Status"
 msgstr "Staking Status"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:27
+#: src/components/MasterNodeStakingPanelStep4.tsx:62
+msgid "Staking a masternode requires at least 100000 xcc in your wallet."
+msgstr "Staking a masternode requires at least 100000 xcc in your wallet."
+
+#: src/components/MasterNodeStakingPanelStep3.tsx:28
 msgid "Staking xcc amount, only support these three items"
 msgstr "Staking xcc amount, only support these three items"
 
@@ -3040,7 +3044,7 @@ msgstr "Staking xcc amount, only support these three items"
 #~ msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 #~ msgstr "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:27
+#: src/components/MasterNodeStakingPanelStep2.tsx:28
 msgid "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 msgstr "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 
@@ -3059,6 +3063,14 @@ msgstr "StakingAmount"
 #: src/constants/WalletName.ts:5
 msgid "Standard Wallet"
 msgstr "Standard Wallet"
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:103
+msgid "Start Register MasterNode"
+msgstr "Start Register MasterNode"
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:82
+msgid "Start Staking"
+msgstr "Start Staking"
 
 #: src/components/app/AppState.tsx:161
 #~ msgid "Starting services"
@@ -3368,12 +3380,20 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 #~ msgstr "This plot NFT is not connected to a pool"
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:81
-msgid "This step will register your masternode to blockchain."
-msgstr "This step will register your masternode to blockchain."
+#~ msgid "This step will register your masternode to blockchain."
+#~ msgstr "This step will register your masternode to blockchain."
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:89
+msgid "This step will register your masternode to the blockchain."
+msgstr "This step will register your masternode to the blockchain."
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:69
+msgid "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
+msgstr "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:61
-msgid "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
-msgstr "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
+#~ msgid "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
+#~ msgstr "This step will staking your coin to a smart coin base on Lisp, and it will takes a few minutes to complete the blockchain packaging operation."
 
 #: src/components/farm/FarmLastAttemptedProof.tsx:39
 #~ msgid "This table shows you the last time your farm attempted to win a block challenge."
@@ -3526,7 +3546,7 @@ msgstr "Transactions"
 #~ msgid "Trip"
 #~ msgstr "Trip"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:48
+#: src/components/MasterNodeStakingPanelStep2.tsx:49
 msgid "Two year"
 msgstr "Two year"
 
