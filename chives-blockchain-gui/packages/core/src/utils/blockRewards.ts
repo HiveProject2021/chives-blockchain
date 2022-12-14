@@ -88,35 +88,35 @@ export function calculateBaseCommunityReward(height: number): Big {
       return MOJO_PER_CHIVES.times(0);
     }
     if (height < 3 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(2*100).times(55 / 10);
+      return MOJO_PER_CHIVES.times(2*100).times(0.55);
     }
     if (height < 6 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(1*100).times(55 / 10);
+      return MOJO_PER_CHIVES.times(1*100).times(0.55);
     }
     if (height < 9 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(0.5*100).times(55 / 10);
+      return MOJO_PER_CHIVES.times(0.5*100).times(0.55);
     }
     if (height < 12 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(0.25*100).times(55 / 10);
+      return MOJO_PER_CHIVES.times(0.25*100).times(0.55);
     }
-    return MOJO_PER_CHIVES.times(0.125*100).times(55 / 10);
+    return MOJO_PER_CHIVES.times(0.125*100).times(0.55);
   }
   else {
     if (height === 0) {
       return MOJO_PER_CHIVES.times(0);
     }
     if (height < 3 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(2*100).times(1 / 10);
+      return MOJO_PER_CHIVES.times(2*100).times(0.1);
     }
     if (height < 6 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(1*100).times(1 / 10);
+      return MOJO_PER_CHIVES.times(1*100).times(0.1);
     }
     if (height < 9 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(0.5*100).times(1 / 10);
+      return MOJO_PER_CHIVES.times(0.5*100).times(0.1);
     }
     if (height < 12 * BLOCKS_PER_YEAR) {
-      return MOJO_PER_CHIVES.times(0.25*100).times(1 / 10);
+      return MOJO_PER_CHIVES.times(0.25*100).times(0.1);
     }
-    return MOJO_PER_CHIVES.times(0.125*100).times(1 / 10);
+    return MOJO_PER_CHIVES.times(0.125*100).times(0.1);
   }
 }

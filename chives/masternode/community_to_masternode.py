@@ -51,8 +51,9 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
 async def getAllUnspentCoins(STAKING_PUZZLE_HASH, STAKING_PUZZLE):  
     try:
         node_client = await FullNodeRpcClient.create(self_hostname, uint16(full_node_rpc_port), DEFAULT_ROOT_PATH, config)
-        all_staking_coins = await node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
-        print(f"all_staking_coins:{all_staking_coins}")
+        all_staking_coins = await node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH)
+        print(f"STAKING_PUZZLE_HASH: {STAKING_PUZZLE_HASH}")
+        print(f"all_staking_coins: {all_staking_coins}")
         for coin_record in all_staking_coins:
             coin_record = await node_client.get_coin_record_by_name(coin_record.coin.name())
             print(f"unspend coin_record:{coin_record}")        
