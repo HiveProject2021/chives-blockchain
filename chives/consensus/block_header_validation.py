@@ -890,11 +890,13 @@ def validate_finished_header_block(
         
         # Stage 3 MasterNode
         if header_block.height > 162000:
-            constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = bytes.fromhex('715def9fe21c793076f4e5d13b18326822103f26e459ec76e8b4850f38bddb3c')
+            GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = bytes.fromhex('715def9fe21c793076f4e5d13b18326822103f26e459ec76e8b4850f38bddb3c')
+        else:
+            GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
         #20A. Check Community Reward Puzzle Hash
         if (
             header_block.foliage.foliage_block_data.community_reward_puzzle_hash
-            != constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
+            != GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
         ):
             return None, ValidationError(Err.INVALID_COMMUNITY)
 

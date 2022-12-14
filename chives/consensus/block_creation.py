@@ -153,7 +153,9 @@ def create_foliage(
         if height > 0:
             # Stage 3 MasterNode
             if height > 162000:
-                constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = bytes.fromhex('715def9fe21c793076f4e5d13b18326822103f26e459ec76e8b4850f38bddb3c')
+                GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = bytes.fromhex('715def9fe21c793076f4e5d13b18326822103f26e459ec76e8b4850f38bddb3c')
+            else:
+                GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
             assert prev_transaction_block is not None
             assert prev_block is not None
             curr: BlockRecord = prev_block
@@ -174,7 +176,7 @@ def create_foliage(
             
             community_coin = create_community_coin(
                 curr.height,
-                constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH,
+                GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH,
                 calculate_base_community_reward(curr.height),
                 constants.GENESIS_CHALLENGE,
             )
@@ -200,7 +202,7 @@ def create_foliage(
                     )
                     community_coin = create_community_coin(
                         curr.height,
-                        constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH,
+                        GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH,
                         calculate_base_community_reward(curr.height),
                         constants.GENESIS_CHALLENGE,
                     )
