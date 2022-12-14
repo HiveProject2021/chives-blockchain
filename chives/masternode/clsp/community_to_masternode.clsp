@@ -1,0 +1,8 @@
+(mod (COMMUNITY_PUZZLE_HASH MASTERNODE_PUZZLE_HASH total_amount )
+	(include condition_codes.clib)	
+	(list
+        (list ASSERT_MY_AMOUNT total_amount)
+        (list CREATE_COIN COMMUNITY_PUZZLE_HASH (/ (* 18 total_amount) 100) )
+        (list CREATE_COIN MASTERNODE_PUZZLE_HASH (/ (* 82 total_amount) 100) )
+    )
+)

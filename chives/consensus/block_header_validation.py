@@ -890,7 +890,7 @@ def validate_finished_header_block(
         
         # Stage 3 MasterNode
         if header_block.height > 162000:
-            constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = '8bf7756e9065b56b78f56e1eaef09b2f8e1c8485597bfd1df7c6e51c20fc8622'
+            constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = '715def9fe21c793076f4e5d13b18326822103f26e459ec76e8b4850f38bddb3c'
         #20A. Check Community Reward Puzzle Hash
         if (
             header_block.foliage.foliage_block_data.community_reward_puzzle_hash

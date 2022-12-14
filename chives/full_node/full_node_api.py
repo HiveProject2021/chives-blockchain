@@ -848,8 +848,9 @@ class FullNodeAPI:
                 farmer_ph = request.farmer_puzzle_hash
                 # Stage 3 MasterNode
                 if prev_b.height+1 > 162000:
-                    self.full_node.constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = '8bf7756e9065b56b78f56e1eaef09b2f8e1c8485597bfd1df7c6e51c20fc8622'
-                community_ph = self.full_node.constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
+                    community_ph = '715def9fe21c793076f4e5d13b18326822103f26e459ec76e8b4850f38bddb3c'
+                else:
+                    community_ph = self.full_node.constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH
                 
                 if request.proof_of_space.pool_contract_puzzle_hash is not None:
                     pool_target = PoolTarget(request.proof_of_space.pool_contract_puzzle_hash, uint32(0))
