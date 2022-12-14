@@ -889,7 +889,7 @@ def validate_finished_header_block(
             return None, ValidationError(Err.INVALID_WEIGHT)
         
         # Stage 3 MasterNode
-        if header_block.height > 163000:
+        if header_block.height > 162000:
             constants.GENESIS_PRE_FARM_COMMUNITY_PUZZLE_HASH = '8bf7756e9065b56b78f56e1eaef09b2f8e1c8485597bfd1df7c6e51c20fc8622'
         #20A. Check Community Reward Puzzle Hash
         if (
