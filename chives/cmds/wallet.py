@@ -204,7 +204,7 @@ def masternode_merge_cmd(
 #Begin staking for MasterNode
 @wallet_cmd.command("masternode_staking", short_help="Begin staking coins for MasterNode. Your coins will stake in a smart coin, can cancel only after some block height.")
 @click.option("-y", "--year", help="pls input 0, 1 or 2. 1: one year, 2: two year, 0: just for test.", type=int, default=0)
-@click.option("-a", "--amount", help="pls input 100000, 300000, 500000. Other amount just for test.", type=int, default=100000)
+@click.option("-a", "--amount", help="pls input 100000, 300000, 500000, 1000000. Other amount just for test.", type=int, default=100000)
 @click.option(
     "-wp",
     "--wallet-rpc-port",

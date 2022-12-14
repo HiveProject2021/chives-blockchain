@@ -96,14 +96,14 @@ def calculate_base_community_reward(height: uint32) -> uint64:
             return uint64(int(0.55 * 0.125 * 100 * _mojo_per_chives))
     else:
         if height == 0:
-            return uint64(int((1 / 10) * 0 * _mojo_per_chives))
+            return uint64(int((0.1) * 0 * _mojo_per_chives))
         elif height < 3 * _blocks_per_year:
-            return uint64(int((1 / 10) * 2 * 100 * _mojo_per_chives))
+            return uint64(int((0.1) * 2 * 100 * _mojo_per_chives))
         elif height < 6 * _blocks_per_year:
-            return uint64(int((1 / 10) * 1 * 100 * _mojo_per_chives))
+            return uint64(int((0.1) * 1 * 100 * _mojo_per_chives))
         elif height < 9 * _blocks_per_year:
-            return uint64(int((1 / 10) * 0.5 * 100 * _mojo_per_chives))
+            return uint64(int((0.1) * 0.5 * 100 * _mojo_per_chives))
         elif height < 12 * _blocks_per_year:
-            return uint64(int((1 / 10) * 0.25 * 100 * _mojo_per_chives))
+            return uint64(int((0.1) * 0.25 * 100 * _mojo_per_chives))
         else:
-            return uint64(int((1 / 10) * 0.125 * 100 * _mojo_per_chives))
+            return uint64(int((0.1) * 0.125 * 100 * _mojo_per_chives))

@@ -837,7 +837,7 @@ class WalletRpcApi:
                     "wallet_id": wallet_id,
                     "success": False,
                     "request": request,
-                    "message":"pls input the 'amount' (int) value, amount only accept 100000, 300000, 500000, other amount just for test purposes."
+                    "message":"pls input the 'amount' (int) value, amount only accept 100000, 300000, 500000, 1000000, other amount just for test purposes."
                     }
         args = {}
         args['year'] = request['year']

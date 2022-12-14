@@ -125,7 +125,7 @@ class MasterNodeManager:
         self.mojo_per_unit = 100000000
         self.puzzle_store = None
         self.get_current_derivation_index = 30
-        self.allow_staking_amount = [100000,300000,500000]
+        self.allow_staking_amount = [100000,300000,500000,1000000]
 
     async def connect(self, wallet_index: int = 0) -> None:
         config = load_config(Path(DEFAULT_ROOT_PATH), "config.yaml")
@@ -616,6 +616,8 @@ class MasterNodeManager:
         elif amount == 300000:
             stakingCoinAmount = amount
         elif amount == 500000:
+            stakingCoinAmount = amount
+        elif amount == 1000000:
             stakingCoinAmount = amount
         else:
             #unsupport amount as the test purpose
