@@ -51,12 +51,12 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
 async def getAllUnspentCoins(STAKING_PUZZLE_HASH, STAKING_PUZZLE):  
     try:
         node_client = await FullNodeRpcClient.create(self_hostname, uint16(full_node_rpc_port), DEFAULT_ROOT_PATH, config)
-        all_staking_coins = await node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH)
-        print(f"STAKING_PUZZLE_HASH: {STAKING_PUZZLE_HASH}")
-        print(f"all_staking_coins: {all_staking_coins}")
+        all_staking_coins = await node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
+        #print(f"STAKING_PUZZLE_HASH: {STAKING_PUZZLE_HASH}")
+        print(f"all_staking_coins: {len(all_staking_coins)}")
         for coin_record in all_staking_coins:
             coin_record = await node_client.get_coin_record_by_name(coin_record.coin.name())
-            print(f"unspend coin_record:{coin_record}")        
+            #print(f"unspend coin_record:{coin_record}")        
             #Spent Coin
             coin_spend = CoinSpend(
                 coin_record.coin,
@@ -72,22 +72,24 @@ async def getAllUnspentCoins(STAKING_PUZZLE_HASH, STAKING_PUZZLE):
                     # aggregated_signature
                     signature,
                 )
-            print_json(spend_bundle.to_json_dict())
+            #print_json(spend_bundle.to_json_dict())
             status = await node_client.push_tx(spend_bundle)
-            print_json(status)            
+            print_json(status['status'])            
     finally:
         node_client.close()
         await node_client.await_closed()
 
+# /home/wang/chives-blockchain/venv/bin/python3 /home/wang/chives-blockchain/chives/masternode/community_to_masternode.py
+
 def MakeUserStakingAddressBaseOnStaking(COMMUNITY_ADDRESS, MASTERNODE_ADDRESS): 
-    STAKING_MOD = load_clsp_relative("clsp/community_to_masternode.clsp")
+    STAKING_MOD = load_clsp_relative("chives/masternode/clsp/community_to_masternode.clsp")
     #print(f"decode_puzzle_hash(FIRST_ADDRESS):{decode_puzzle_hash(FIRST_ADDRESS)}")
     STAKING_PUZZLE = STAKING_MOD.curry(decode_puzzle_hash(COMMUNITY_ADDRESS), decode_puzzle_hash(MASTERNODE_ADDRESS))
     STAKING_PUZZLE_HASH = STAKING_PUZZLE.get_tree_hash()
     STAKING_ADDRESS = encode_puzzle_hash(STAKING_PUZZLE_HASH,prefix)
     #print(f"STAKING_PUZZLE:{STAKING_PUZZLE}")
-    print(f"STAKING_PUZZLE_HASH: {STAKING_PUZZLE_HASH}\n")
-    print(f"STAKING_ADDRESS: {STAKING_ADDRESS}\n")
+    #print(f"STAKING_PUZZLE_HASH: {STAKING_PUZZLE_HASH}\n")
+    #print(f"STAKING_ADDRESS: {STAKING_ADDRESS}\n")
     return STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS
     
 if __name__ == "__main__":
@@ -104,7 +106,7 @@ if __name__ == "__main__":
     STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS = MakeUserStakingAddressBaseOnStaking(COMMUNITY_ADDRESS, MASTERNODE_ADDRESS)
 
     # Pls send coin to this address use cmd
-    print(f"Pls send coin to this address use cmd: chives wallet send -t {STAKING_ADDRESS} -a 1.234")
+    #print(f"Pls send coin to this address use cmd: chives wallet send -t {STAKING_ADDRESS} -a 1.234")
 
     # spend coins if coin can be spent
     asyncio.run(getAllUnspentCoins(STAKING_PUZZLE_HASH,STAKING_PUZZLE))
