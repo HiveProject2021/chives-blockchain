@@ -327,10 +327,11 @@ class MasterNodeManager:
         StakingData['StakingAddress'] = STAKING_ADDRESS
         StakingData['StakingAmount'] = "NOT USE"
         StakingData['StakingHeight'] = STAKING_HEIGHT
+        StakingData['StakingPeriod'] = STAKING_PERIOD
         StakingData['StakingCoinFirstTime'] = str(STAKING_COIN[0].coin.name())
         StakingData['NodeName'] = blockchain_state["node_id"]
         IsStakingCoin = False
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(STAKING_ADDRESS),False)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(STAKING_ADDRESS),False,160000)
         for coin_record in all_staking_coins:
             StakingAmount = coin_record.coin.amount
             if int(coin_record.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
@@ -409,9 +410,12 @@ class MasterNodeManager:
             print(f"StakingAmount:   {round(Decimal(StakingAmount/self.mojo_per_unit),8)}")
         else:
             print(f"StakingAmount:   0")
+        if 'StakingPeriod' in StakingData:
+            print(f"StakingPeriod:   {StakingData['StakingPeriod']} Year")
+        else:
+            print(f"StakingPeriod:   For test (10 minutes)")
 
         print(f"ReceivedAddress: {StakingData['ReceivedAddress']}")
-        #print(f"All Data:")
         print("-" * 64)
         print("\n")
 
@@ -598,9 +602,9 @@ class MasterNodeManager:
         fee = 1
         override = False
         memo = "Merge coin for MasterNode"
-        self.log.warning(f"1 masternode_staking_json args: {args}")
+        #self.log.warning(f"1 masternode_staking_json args: {args}")
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        self.log.warning(f"2 masternode_staking_json get_staking_address_result: {get_staking_address_result}")
+        #self.log.warning(f"2 masternode_staking_json get_staking_address_result: {get_staking_address_result}")
 
         # to choose staking period from three options
         year = args['year']
@@ -663,8 +667,8 @@ class MasterNodeManager:
             StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
             #print(STAKING_COIN)
         
-        self.log.warning(f"3 masternode_staking_json STAKING_ADDRESS: {STAKING_ADDRESS}")
-        self.log.warning(f"4 masternode_staking_json STAKING_COIN: {STAKING_COIN}")
+        #self.log.warning(f"3 masternode_staking_json STAKING_ADDRESS: {STAKING_ADDRESS}")
+        #self.log.warning(f"4 masternode_staking_json STAKING_COIN: {STAKING_COIN}")
         # check staking status in blockchain
         if isHaveStakingCoin is False:
             get_target_xcc_coin_result = await self.get_target_xcc_coin(args,wallet_client,fingerprint,mojo_per_unit,StakingAddress)
@@ -676,7 +680,7 @@ class MasterNodeManager:
                         isHaveStakingCoin = True
                 StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
 
-        self.log.warning(f"5 masternode_staking_json StakingAccountAmountCoin: {StakingAccountAmountCoin}")
+        #self.log.warning(f"5 masternode_staking_json StakingAccountAmountCoin: {StakingAccountAmountCoin}")
 
         StakingAccountAmountText = str(StakingAccountAmount/self.mojo_per_unit)
         # check staking status in memory pool
@@ -684,7 +688,7 @@ class MasterNodeManager:
             isHaveStakingCoin = True
             StakingAccountAmountText = "Wait block to generate..."
 
-        self.log.warning(f"6 STAKING_ADDRESS: {STAKING_ADDRESS}")
+        #self.log.warning(f"6 STAKING_ADDRESS: {STAKING_ADDRESS}")
         #print(balances);
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -704,7 +708,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Address One Year":get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']})
         jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
         
-        self.log.warning(f"7 masternode_staking_json jsonResult: {jsonResult}")
+        #self.log.warning(f"7 masternode_staking_json jsonResult: {jsonResult}")
 
         dictResult = {}
         dictResult['WalletBalance'] = str(confirmed_wallet_balance)
@@ -775,9 +779,9 @@ class MasterNodeManager:
             if typ == WalletType.STANDARD_WALLET:
                 final_amount = uint64(int(amount * units["chives"]))
                 jsonResult['data'].append({"Staking coin for MasterNode Submitting transaction...":""})
-                self.log.warning(f"8 masternode_staking_json send_transaction begin: {jsonResult}")
+                #self.log.warning(f"8 masternode_staking_json send_transaction begin: {jsonResult}")
                 res = await wallet_client.send_transaction(str(wallet_id), final_amount, StakingAddress, final_fee, memos)
-                self.log.warning(f"9 masternode_staking_json send_transaction end: {jsonResult}")
+                #self.log.warning(f"9 masternode_staking_json send_transaction end: {jsonResult}")
             else:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Only standard wallet is supported":""})
@@ -1053,12 +1057,13 @@ class MasterNodeManager:
         get_all_masternodes = []
         for launcher_id in launcher_ids:            
             nft = await self.masternode_wallet.get_nft_by_launcher_id(hexstr_to_bytes(launcher_id))
-            get_all_masternodes.append(nft)
+            if nft['StakingData']['StakingAmount']>0:
+                get_all_masternodes.append(nft)
         return get_all_masternodes
     
     async def get_all_masternodes_count(self) -> List:
-        launcher_ids = await self.masternode_wallet.get_all_nft_ids()
-        return len(launcher_ids)
+        nfts = await self.get_all_masternodes()
+        return len(nfts)
     
     async def cancel_masternode_staking_coins(self,STAKING_ADDRESS,STAKING_PUZZLE) -> List:
         cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins_from_staking_coin(STAKING_ADDRESS,STAKING_PUZZLE)
@@ -1330,7 +1335,7 @@ class MasterNodeWallet:
         STAKING_ADDRESS = result['STAKING_ADDRESS_TEST']
         STAKING_PUZZLE = result['STAKING_PUZZLE_TEST']
         STAKING_PERIOD = 0
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
         if all_staking_coins is not None and len(all_staking_coins)>0:
             return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TEST'],STAKING_PERIOD,STAKING_PUZZLE
         else:
@@ -1338,7 +1343,7 @@ class MasterNodeWallet:
             STAKING_ADDRESS = result['STAKING_ADDRESS_ONE_YEAR']
             STAKING_PUZZLE = result['STAKING_PUZZLE_ONE_YEAR']
             STAKING_PERIOD = 1
-            all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+            all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
             if all_staking_coins is not None and len(all_staking_coins)>0:
                 return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_ONE_YEAR'],STAKING_PERIOD,STAKING_PUZZLE
             else:
@@ -1346,7 +1351,7 @@ class MasterNodeWallet:
                 STAKING_ADDRESS = result['STAKING_ADDRESS_TWO_YEAR']
                 STAKING_PUZZLE = result['STAKING_PUZZLE_TWO_YEAR']
                 STAKING_PERIOD = 2
-                all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,100000)
+                all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
                 if all_staking_coins is not None and len(all_staking_coins)>0:
                     return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TWO_YEAR'],STAKING_PERIOD,STAKING_PUZZLE
                 else:

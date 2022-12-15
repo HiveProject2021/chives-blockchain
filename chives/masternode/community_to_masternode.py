@@ -1,4 +1,14 @@
+import sys
 import asyncio
+import aiosqlite
+import binascii
+import sqlite3
+import json
+import logging
+import time
+import pathlib
+import importlib
+
 from blspy import G2Element
 import json
 
@@ -32,6 +42,8 @@ self_hostname = config["self_hostname"] # localhost
 full_node_rpc_port = config["full_node"]["rpc_port"] # 8555
 wallet_rpc_port = config["wallet"]["rpc_port"] # 9256
 prefix = config["network_overrides"]["config"][selected]["address_prefix"]
+
+ROOT = pathlib.Path(importlib.import_module("chives").__file__).absolute().parent.parent
 
 
 def print_json(dict):
@@ -82,7 +94,7 @@ async def getAllUnspentCoins(STAKING_PUZZLE_HASH, STAKING_PUZZLE):
 # /home/wang/chives-blockchain/venv/bin/python3 /home/wang/chives-blockchain/chives/masternode/community_to_masternode.py
 
 def MakeUserStakingAddressBaseOnStaking(COMMUNITY_ADDRESS, MASTERNODE_ADDRESS): 
-    STAKING_MOD = load_clsp_relative("chives/masternode/clsp/community_to_masternode.clsp")
+    STAKING_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/community_to_masternode.clsp")
     #print(f"decode_puzzle_hash(FIRST_ADDRESS):{decode_puzzle_hash(FIRST_ADDRESS)}")
     STAKING_PUZZLE = STAKING_MOD.curry(decode_puzzle_hash(COMMUNITY_ADDRESS), decode_puzzle_hash(MASTERNODE_ADDRESS))
     STAKING_PUZZLE_HASH = STAKING_PUZZLE.get_tree_hash()
