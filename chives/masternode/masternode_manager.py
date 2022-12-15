@@ -513,30 +513,24 @@ class MasterNodeManager:
         #print(balances);
         print(f"")
         print(f"Wallet Balance:             {confirmed_wallet_balance}");
-        print(f"Wallet Max Sent:            {max_send_amount} (Must more than {stakingCoinAmount} XCC)");
+        print(f"Wallet Max Sent:            {max_send_amount}");
         print(f"Wallet Address:             {get_staking_address_result['first_address']}");
         print(f"")
         
-        if isHaveStakingCoin is True:
-            print("You have staking coins. Not need to merge coin again.");
+        if max_send_amount == 0:
+            print("Max send amount is 0, no coin need to merge.");
             print("")
             return None
         
-        #Wallet balance must more than 100000 XCC
-        if confirmed_wallet_balance < (stakingCoinAmount+fee):
-            print(f"Wallet confirmed balance must more than {(stakingCoinAmount+fee)} XCC. Need extra {fee} xcc as miner fee.");
-            print("")
-            return None
-        
-        #最大发送金额超过100000 XCC
-        if max_send_amount >= (stakingCoinAmount+fee):
-            print(f"Wallet Max Sent Amount have more than {(stakingCoinAmount+fee)} XCC, not need to merge coins");
-            print("")
-            return None
-            
-        #Merge small amount coins
-        #print(f"max_send_amount:{max_send_amount}")
-        if max_send_amount>fee and max_send_amount < (stakingCoinAmount+fee) and isHaveStakingCoin == False:
+        wallets_coins_check = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(get_staking_address_result['first_address']), include_spent_coins=False) 
+        if len(wallets_coins_check)>0:
+            wallets_amount_check = wallets_coins_check[0].coin.amount
+            if wallets_amount_check == balances["max_send_amount"]:
+                print("You only have one unspent coin in wallet, have finished merge coin task.");
+                print("")
+                return None
+
+        if max_send_amount>fee:
             amount = max_send_amount-fee;
             address = get_staking_address_result['first_address']
             memos = ["Merge coin for MasterNode"]
@@ -564,22 +558,18 @@ class MasterNodeManager:
                 print("")
                 return
             tx_id = res.name
-            start = time.time()
-            while time.time() - start < 10:
-                await asyncio.sleep(0.1)
-                tx = await wallet_client.get_transaction(str(wallet_id), tx_id)
-                if len(tx.sent_to) > 0:
-                    print(f"Merge coin for MasterNode Transaction submitted to nodes: {tx.sent_to}")
-                    print(f"fingerprint {fingerprint} tx 0x{tx_id} to address: {address}")
-                    print("Waiting for block (180s). Do not quit.")
-                    await asyncio.sleep(180)
-                    print(f"finish to submit blockchain, the status will change after a few minutes.")
-                    print("")
-                    return None
-            print("Merge coin for MasterNode not yet submitted to nodes")
-            print(f"tx 0x{tx_id} ")
-            print("")
-    
+            if tx_id is not None and len(tx_id)>=32:
+                print(f"Merge coin for MasterNode Transaction submitted to node.")
+                print(f"Fingerprint {fingerprint} \nTx 0x{tx_id} \nTo address: {address}")
+                print("")
+                print(f"finish to submit blockchain, the status will change after a few minutes.")
+                print("")
+                return None
+            else:
+                print("Merge coin for MasterNode not yet submitted to nodes")
+                print(f"tx 0x{tx_id} ")
+                print("")
+
     async def masternode_staking(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         jsonResult = await self.masternode_staking_json(args, wallet_client, fingerprint)
         self.printJsonResult(jsonResult)

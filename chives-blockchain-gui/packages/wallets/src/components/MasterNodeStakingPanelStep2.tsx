@@ -36,19 +36,19 @@ export default function MasterNodeStakingPanelStep2(props: MasterNodeStakingPane
                           value={0}
                           control={<Radio />}
                           label={<Trans>5 minutes(For test)</Trans>}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>One year</Trans>}
                           value={1}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>Two year</Trans>}
                           value={2}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
                           />
                       </Flex>
                     </RadioGroup>

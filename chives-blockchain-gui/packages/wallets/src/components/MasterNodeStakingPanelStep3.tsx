@@ -36,25 +36,25 @@ export default function MasterNodeStakingPanelStep3(props: MasterNodeStakingPane
                           value={100000}
                           control={<Radio />}
                           label={<Trans>100,000</Trans>}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>300,000</Trans>}
                           value={300000}
-                          disabled={StakingAccountStatus || StakingAccountBalance<300000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<300000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>500,000</Trans>}
                           value={500000}
-                          disabled={StakingAccountStatus || StakingAccountBalance<500000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<500000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>1,000,000</Trans>}
                           value={1000000}
-                          disabled={StakingAccountStatus || StakingAccountBalance<1000000}
+                          disabled={StakingAccountStatus || StakingAccountBalance<1000000 || myCard==undefined}
                           />
                       </Flex>
                     </RadioGroup>

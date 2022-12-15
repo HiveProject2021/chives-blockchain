@@ -60,6 +60,10 @@ msgstr ""
 #~ msgid "0 automatically chooses bucket count"
 #~ msgstr ""
 
+#: src/components/MasterNodeStakingPanelStep3.tsx:55
+msgid "1,000,000"
+msgstr ""
+
 #: src/components/MasterNodeStakingPanelStep3.tsx:38
 msgid "100,000"
 msgstr ""
