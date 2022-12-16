@@ -182,6 +182,25 @@ def send_cmd(
 
 # ##############################################################################
 #Merge many little amount coins to one large amount coin for MasterNode
+@wallet_cmd.command("masternode_mergecoin_by_fullnode", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_mergecoin_by_fullnode_cmd(
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    extra_params = {}
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_mergecoin_by_fullnode
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_mergecoin_by_fullnode))
+
+#Merge many little amount coins to one large amount coin for MasterNode
 @wallet_cmd.command("masternode_merge", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
 @click.option(
     "-wp",
@@ -199,7 +218,6 @@ def masternode_merge_cmd(
     import asyncio
     from .wallet_funcs import execute_with_wallet, masternode_merge
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_merge))
-
 
 #Begin staking for MasterNode
 @wallet_cmd.command("masternode_staking", short_help="Begin staking coins for MasterNode. Your coins will stake in a smart coin, can cancel only after some block height.")

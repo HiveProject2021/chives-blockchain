@@ -145,7 +145,7 @@ class MasterNodeManager:
         self.fingerprints = await self.wallet_client.get_public_keys()
         self.log = logging.getLogger(__name__)
 
-    async def chooseWallet(self, fingerprint: int = 0) -> bool:
+    async def chooseWallet(self, fingerprint: int = 0, sk = None) -> bool:
         if fingerprint is None:
             return None
         if fingerprint == 0:
@@ -1059,6 +1059,11 @@ class MasterNodeManager:
         cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins_from_staking_coin(STAKING_ADDRESS,STAKING_PUZZLE)
         return cancel_staking_coins
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
+    
+    async def masternode_mergecoin_by_fullnode(self, args: dict) -> List:
+        cancel_staking_coins = await self.masternode_wallet.masternode_mergecoin_by_fullnode()
+        return cancel_staking_coins
+        #print(f"cancel_staking_coins:{cancel_staking_coins}")
 
 class MasterNodeCoin:
     def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None, StakingData=None):
@@ -1424,6 +1429,43 @@ class MasterNodeWallet:
         result['STAKING_HEIGHT_TWO_YEAR'] = STAKING_REQUIRED_HEIGHT
         return result
 
+    def init_pk_address(self, n, sk):
+        root_path = DEFAULT_ROOT_PATH
+        config = load_config(root_path, "config.yaml")
+        selected = config["selected_network"]
+        prefix = config["network_overrides"]["config"][selected]["address_prefix"]
+        result = {}
+        # Standard wallet keys
+        for i in range(n):   
+            sk_data = binascii.unhexlify(sk)
+            privateKey = _derive_path(PrivateKey.from_bytes(sk_data), [12381, 9699, 2, i])
+            publicKey = privateKey.get_g1()
+            puzzle = puzzle_for_pk(bytes(publicKey))
+            puzzle_hash = puzzle.get_tree_hash()
+            #print(puzzle_hash)
+            first_address = encode_puzzle_hash(puzzle_hash, prefix)  
+            self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
+            self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
+            self.puzzlehash_to_publickey[puzzle_hash] = publicKey
+            self.key_dict[bytes(publicKey)] = privateKey
+
+        # Standard wallet keys
+        for i in range(n):    
+            sk_data = binascii.unhexlify(sk)
+            privateKey = _derive_path_unhardened(PrivateKey.from_bytes(sk_data), [12381, 9699, 2, i])
+            publicKey = privateKey.get_g1()
+            puzzle = puzzle_for_pk(bytes(publicKey))
+            puzzle_hash = puzzle.get_tree_hash()
+            #print(puzzle_hash)
+            first_address = encode_puzzle_hash(puzzle_hash, prefix)
+            result['first_address'] = first_address;      
+            result['first_puzzle_hash'] = puzzle_hash; 
+            self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
+            self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
+            self.puzzlehash_to_publickey[puzzle_hash] = publicKey
+            self.key_dict[bytes(publicKey)] = privateKey
+        return result
+    
     def print_json(self,dict):
         print(json.dumps(dict, sort_keys=True, indent=4))
 
@@ -1466,37 +1508,42 @@ class MasterNodeWallet:
                 return res
         return None
 
-    async def cancel_staking_coins(self) -> Tuple[Coin, Program]:
-        get_staking_address = self.get_staking_address()
-        staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
-            [get_staking_address['puzzle_hash']], include_spent_coins=False
+    async def masternode_mergecoin_by_fullnode(self) -> Tuple[Coin, Program]:
+        get_staking_address = self.init_pk_address(10,'')
+        puzzle_hashes = []
+        for k in self.key_dict.keys():
+            puzzle_hashes.append(puzzle_for_pk(k).get_tree_hash())
+            staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
+            puzzle_hashes, include_spent_coins=False
         )
-        #print(f"cancel_staking_select_coins: {staking_coins}")        
+        print(f"\nMerge coins records: {len(staking_coins)}")        
         totalAmount = 0
         for coin in staking_coins:
             totalAmount += coin.coin.amount
         self.get_max_send_amount = totalAmount
-        Memos = "Cancel Masternode Staking Amount."
-        #print(totalAmount)
+        Memos = "Merge coins"
         spend_bundle = await self.generate_signed_transaction(
             totalAmount, get_staking_address['first_puzzle_hash'], uint64(0), memos=[Memos]
         )
-        #print(spend_bundle)
         if spend_bundle is not None:
             #print(f"res:{get_staking_address['first_puzzle_hash']}")
             try:
                 res = await self.node_client.push_tx(spend_bundle)
             except Exception as e:
+                print(e)
                 return str(e)
-            #print(f"res:{res}")
-            if res["success"]:
+            print(res)
+            if res["success"] and res["success"]=="success":
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
-                #print(f"coin name: {coin.coin.name()}")
-                #print(f"Cancel Masternode Staking Amount Successful. tx_id: {tx_id}")
+                print(f"To address: {get_staking_address['first_address']}")
+                print(f"To amount: {totalAmount}")
+                print(f"Merge Coin Successful. \nTX: {tx_id}")
                 res["tx_id"] = tx_id
                 return res
+            elif res["success"]=="PENDING":
+                print("PENDING")
             else:
-                #print(f"Cancel Masternode Staking Amount Failed. push_tx res: {res}")
+                print(f"Merge Coin Failed. res: {res}")
                 return res
         return None
 
@@ -1601,11 +1648,10 @@ class MasterNodeWallet:
             return None
         #self.log.info(f"coins is not None {coins}")
         spend_value = sum([coin.amount for coin in coins])
-
+        
         change = spend_value - total_amount
         if negative_change_allowed:
             change = max(0, change)
-
         #assert change >= 0
 
         if coin_announcements_to_consume is not None:
@@ -1778,6 +1824,7 @@ class MasterNodeWallet:
         # check that wallet_balance is greater than amount
         # assert await self.available_balance() > amount
         select_coins = []
+        send_max = 0
         for k in self.key_dict.keys():
             puzzle = puzzle_for_pk(k)
             my_coins = await self.node_client.get_coin_records_by_puzzle_hash(
@@ -1791,8 +1838,9 @@ class MasterNodeWallet:
                             synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
                             self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
                             select_coins.append(coin_record.coin)
-                if self.get_max_send_amount >= amount:
-                    return select_coins
+                            send_max = send_max + coin_record.coin.amount
+                            if send_max >= amount:
+                                return select_coins
         print(f"No spendable coins found !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Need Select: {amount}")
         print(f"select_coins:{select_coins}")
         return None
