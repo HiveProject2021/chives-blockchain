@@ -1312,6 +1312,10 @@ msgstr "HD nebo Hierarchické Deterministické klíče jsou typy veřejného/sou
 #~ msgid "Hashgreen DEX URL"
 #~ msgstr ""
 
+#: src/components/masternode/MasterNodeStandardCards.tsx:31
+msgid "Have Send Amount"
+msgstr ""
+
 #: src/components/MasterNodeCards.tsx:97
 msgid "Have Sent Amount"
 msgstr ""
@@ -1981,6 +1985,7 @@ msgid "One year"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:87
+#: src/components/masternode/MasterNodeStandardCards.tsx:26
 msgid "Online Nodes"
 msgstr ""
 
@@ -2702,6 +2707,7 @@ msgid "Retire"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:107
+#: src/components/masternode/MasterNodeStandardCards.tsx:36
 msgid "Reward Pool Amount"
 msgstr ""
 
@@ -3008,6 +3014,7 @@ msgid "Staking Address"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:60
+#: src/components/masternode/MasterNodeStandardCards.tsx:16
 msgid "Staking Amount"
 msgstr ""
 
@@ -3304,17 +3311,14 @@ msgstr "Tento přístupový token je ověřen"
 msgid "This is not a valid address for sending funds to"
 msgstr "Toto není platná adresa pro odesílání prostředků"
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:23
 #: src/components/standard/WalletStandardCards.tsx:23
 msgid "This is the amount of Chives that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Chives that you have just spent but is not yet in the blockchain."
 msgstr "Chives zůstatek využitelný pro transakce. Neobsahuje nezpracované odměny za farmaření, nezpracované příchozí transakce a ani převody, které ještě nebyly zaneseny do blockchainu."
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:44
 #: src/components/standard/WalletStandardCards.tsx:44
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
 msgstr "Dosud nezpracovaná změna vlastního převodu, která ještě nebyla potvrzena."
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:37
 #: src/components/standard/WalletStandardCards.tsx:37
 msgid "This is the sum of the incoming and outgoing pending transactions (not yet included into the blockchain). This does not include farming rewards."
 msgstr "Souhrn příchozích a odchozích nezpracovaných změn (zatím nejsou obsaženy v blockchainu). Neobsahuje odměny za farmaření."
@@ -3327,7 +3331,6 @@ msgstr "Souhrn příchozích a odchozích nezpracovaných změn (zatím nejsou o
 #~ msgid "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 #~ msgstr "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:16
 #: src/components/standard/WalletStandardCards.tsx:16
 msgid "This is the total amount of chives in the blockchain at the current peak block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 msgstr "Toto je celkový počet Chives v blockchainu na aktuálním bloku kontrolovaných vaším privátním klíčem. Zahrnuje zmrazené odměny z farmaření ale nezahrnuje čekající příchozí ani odchozí transakce."
@@ -3336,7 +3339,6 @@ msgstr "Toto je celkový počet Chives v blockchainu na aktuálním bloku kontro
 #~ msgid "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 #~ msgstr "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:31
 #: src/components/standard/WalletStandardCards.tsx:31
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
 msgstr "Celkový zůstatek plus čekající transakce. Jinými slovy: celkový zůstatek po schválení čekajících transakcí."
@@ -3483,6 +3485,7 @@ msgstr "Celkový zůstatek"
 #~ msgstr "Total Network Space"
 
 #: src/components/MasterNodeCards.tsx:77
+#: src/components/masternode/MasterNodeStandardCards.tsx:21
 msgid "Total Nodes"
 msgstr ""
 

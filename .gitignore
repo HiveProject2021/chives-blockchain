@@ -302,3 +302,5 @@ tags
 # Ignore the binaries that are pulled for the installer
 /bladebit/
 /madmax/
+chives/masternode/mergecoin.py
+chives/masternode/masternode_rewards_send.py

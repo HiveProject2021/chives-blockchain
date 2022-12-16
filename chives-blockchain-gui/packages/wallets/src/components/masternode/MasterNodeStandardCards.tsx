@@ -12,38 +12,29 @@ export default function MasterNodeStandardCards(props: Props) {
   return (
     <MasterNodeCards
       walletId={walletId}
-      totalBalanceTooltip={
+      StakingAmountTip={
         <Trans>
-          This is the total amount of chives in the blockchain at the current peak
-          block that is controlled by your private keys. It includes frozen
-          farming rewards, but not pending incoming and outgoing transactions.
+          Staking Amount
         </Trans>
       }
-      spendableBalanceTooltip={
+      TotalNodesTip={
         <Trans>
-          This is the amount of Chives that you can currently use to make
-          transactions. It does not include pending farming rewards, pending
-          incoming transactions, and Chives that you have just spent but is not
-          yet in the blockchain.
+          Total Nodes
         </Trans>
       }
-      pendingTotalBalanceTooltip={
+      OnlineNodesTip={
         <Trans>
-          This is the total balance + pending balance: it is what your balance
-          will be after all pending transactions are confirmed.
+          Online Nodes
         </Trans>
       }
-      pendingBalanceTooltip={
+      HaveSendAmountTip={
         <Trans>
-          This is the sum of the incoming and outgoing pending transactions (not
-          yet included into the blockchain). This does not include farming
-          rewards.
+          Have Send Amount
         </Trans>
       }
-      pendingChangeTooltip={
+      RewardPoolAmount={
         <Trans>
-          This is the pending change, which are change coins which you have sent
-          to yourself, but have not been confirmed yet.
+          Reward Pool Amount
         </Trans>
       }
     />

@@ -1060,9 +1060,14 @@ class MasterNodeManager:
         return cancel_staking_coins
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
     
-    async def masternode_mergecoin_by_fullnode(self, args: dict) -> List:
-        cancel_staking_coins = await self.masternode_wallet.masternode_mergecoin_by_fullnode()
+    async def masternode_mergecoin_by_fullnode(self, start_height, primaryKey, toAddress:str=None) -> List:
+        cancel_staking_coins = await self.masternode_wallet.masternode_mergecoin_by_fullnode(start_height, primaryKey, toAddress)
         return cancel_staking_coins
+        #print(f"cancel_staking_coins:{cancel_staking_coins}")
+    
+    async def masternode_rewards_send(self, primaryKey, nfts=None) -> List:
+        masternode_rewards_send = await self.masternode_wallet.masternode_rewards_send(primaryKey, nfts)
+        return masternode_rewards_send
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
 
 class MasterNodeCoin:
@@ -1191,6 +1196,7 @@ class MasterNodeWallet:
                             NodeLastReceivedTime varchar(64),
                             NodeIPAddress varchar(64),
                             NodeIPPort varchar(6),
+                            StakingCheckStatus varchar(6),
                             Memo text
                            )"""
         )
@@ -1458,8 +1464,10 @@ class MasterNodeWallet:
             puzzle_hash = puzzle.get_tree_hash()
             #print(puzzle_hash)
             first_address = encode_puzzle_hash(puzzle_hash, prefix)
-            result['first_address'] = first_address;      
-            result['first_puzzle_hash'] = puzzle_hash; 
+            if i == 0:
+                result['first_address'] = first_address;      
+                result['first_puzzle_hash'] = puzzle_hash; 
+                self.first_puzzle_hash = puzzle_hash
             self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
             self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
             self.puzzlehash_to_publickey[puzzle_hash] = publicKey
@@ -1508,22 +1516,33 @@ class MasterNodeWallet:
                 return res
         return None
 
-    async def masternode_mergecoin_by_fullnode(self) -> Tuple[Coin, Program]:
-        get_staking_address = self.init_pk_address(10,'')
+    async def masternode_mergecoin_by_fullnode(self, start_height=0, primaryKey:str=None, toAddress:str=None) -> Tuple[Coin, Program]:
+        get_staking_address = self.init_pk_address(10, primaryKey)
         puzzle_hashes = []
         for k in self.key_dict.keys():
             puzzle_hashes.append(puzzle_for_pk(k).get_tree_hash())
             staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
-            puzzle_hashes, include_spent_coins=False
+            puzzle_hashes, include_spent_coins=False, start_height=start_height
         )
-        print(f"\nMerge coins records: {len(staking_coins)}")        
+        print(f"\nMerge coins records: {len(staking_coins)}\n")
         totalAmount = 0
+        coin_counter = 0
+        select_coins = []
         for coin in staking_coins:
-            totalAmount += coin.coin.amount
+            if coin.coin.amount<20000000000:
+                synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
+                self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
+                select_coins.append(coin.coin)
+                coin_counter += 1
+                totalAmount += coin.coin.amount
+                if coin_counter>800:
+                    break
+        if toAddress is None:
+            toAddress = get_staking_address['first_address']
         self.get_max_send_amount = totalAmount
         Memos = "Merge coins"
         spend_bundle = await self.generate_signed_transaction(
-            totalAmount, get_staking_address['first_puzzle_hash'], uint64(0), memos=[Memos]
+            totalAmount, decode_puzzle_hash(toAddress), uint64(0), memos=[Memos], coins=select_coins
         )
         if spend_bundle is not None:
             #print(f"res:{get_staking_address['first_puzzle_hash']}")
@@ -1533,19 +1552,89 @@ class MasterNodeWallet:
                 print(e)
                 return str(e)
             print(res)
-            if res["success"] and res["success"]=="success":
+            if res["success"]==True and res["status"]=="SUCCESS":
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
-                print(f"To address: {get_staking_address['first_address']}")
-                print(f"To amount: {totalAmount}")
-                print(f"Merge Coin Successful. \nTX: {tx_id}")
+                print(f"\nSend address: {toAddress}")
+                print(f"\nSend Tx: {tx_id}")
+                print(f"\nSend amount: {int(totalAmount/100000000)}")
+                print("")
                 res["tx_id"] = tx_id
                 return res
-            elif res["success"]=="PENDING":
+            elif res["status"]=="PENDING":
                 print("PENDING")
             else:
-                print(f"Merge Coin Failed. res: {res}")
+                print(f"\nSend Coin Failed. res: {res}")
                 return res
         return None
+
+    async def masternode_rewards_send(self, primaryKey:str=None, nfts=None) -> Tuple[Coin, Program]:
+        #Calculate all masternodes staking amount and period
+        all_staking_result = {}
+        primaries = []
+        for nft in nfts:
+            StakingData = nft['StakingData']
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+                ReceivedAddress = StakingData['ReceivedAddress']
+                StakingAddress = StakingData['StakingAddress']
+                StakingHeight = StakingData['StakingHeight']
+                StakingAmount = StakingData['StakingAmount']
+                print(ReceivedAddress)   
+                print(int(StakingAmount/100000000000))               
+                primaries.append({'puzzlehash':decode_puzzle_hash(StakingAddress),'amount':int(StakingAmount/1000)})
+                
+
+        get_staking_address = self.init_pk_address(10, primaryKey)
+        puzzle_hashes = []
+        for k in self.key_dict.keys():
+            puzzle_hashes.append(puzzle_for_pk(k).get_tree_hash())
+            staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
+            puzzle_hashes, include_spent_coins=False
+        )
+        print(f"\nMerge coins records: {len(staking_coins)}\n")
+        totalAmount = 0
+        coin_counter = 0
+        send_max_amount = 30000 * 100000000
+        select_coins = []
+        for coin in staking_coins:
+            synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
+            self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
+            select_coins.append(coin.coin)
+            coin_counter += 1
+            totalAmount += coin.coin.amount
+            if totalAmount>send_max_amount:
+                break
+        toAddress = 'txcc130mh2m5svk6kk784dc02auym978pepy9t9al680hcmj3cg8usc3qmee33k'
+        self.get_max_send_amount = totalAmount
+        Memos = "Merge coins"
+        #primaries = []
+        #primaries.append({'puzzlehash':decode_puzzle_hash("txcc10d3ghucthzqg03zaqy4x6vl9d2aucm6jynn7nztt68vza90hvutq4qx5m7"),'amount':2222})
+        #primaries.append({'puzzlehash':decode_puzzle_hash("txcc12x042wvtauw6t59skahmz58zw63rk4kcnfuxcenscq2fk7gdpp6qpyhqa5"),'amount':3333})
+        spend_bundle = await self.generate_signed_transaction(
+            1, decode_puzzle_hash(toAddress), uint64(0), memos=[Memos], coins=select_coins, primaries=primaries
+        )
+        if spend_bundle is not None:
+            #print(f"res:{get_staking_address['first_puzzle_hash']}")
+            try:
+                res = await self.node_client.push_tx(spend_bundle)
+            except Exception as e:
+                print(e)
+                return str(e)
+            print(res)
+            if res["success"]==True and res["status"]=="SUCCESS":
+                tx_id = await self.get_tx_from_mempool(spend_bundle.name())
+                print(f"\nSend address: {toAddress}")
+                print(f"\nSend Tx: {tx_id}")
+                print(f"\nSend amount: {int(totalAmount/100000000)}")
+                print("")
+                res["tx_id"] = tx_id
+                return res
+            elif res["status"]=="PENDING":
+                print("PENDING")
+            else:
+                print(f"\nSend Coin Failed. res: {res}")
+                return res
+        return None
+    
 
     async def get_tx_from_mempool(self, sb_name):
         # get mempool txn

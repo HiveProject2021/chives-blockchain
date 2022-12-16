@@ -8,11 +8,11 @@ import WalletGraph from './WalletGraph';
 
 export type MasterNodeCardsProps = {
   walletId: number;
-  totalBalanceTooltip?: ReactElement<any>;
-  spendableBalanceTooltip?: ReactElement<any>;
-  pendingTotalBalanceTooltip?: ReactElement<any>;
-  pendingBalanceTooltip?: ReactElement<any>;
-  pendingChangeTooltip?: ReactElement<any>;
+  StakingAmountTip?: ReactElement<any>;
+  TotalNodesTip?: ReactElement<any>;
+  OnlineNodesTip?: ReactElement<any>;
+  HaveSendAmountTip?: ReactElement<any>;
+  RewardPoolAmount?: ReactElement<any>;
 };
 
 const StyledGraphContainer = styled.div`
@@ -26,11 +26,11 @@ const StyledGraphContainer = styled.div`
 export default function MasterNodeCards(props: MasterNodeCardsProps) {
   const {
     walletId,
-    totalBalanceTooltip,
-    spendableBalanceTooltip,
-    pendingTotalBalanceTooltip,
-    pendingBalanceTooltip,
-    pendingChangeTooltip,
+    StakingAmountTip,
+    TotalNodesTip,
+    OnlineNodesTip,
+    HaveSendAmountTip,
+    RewardPoolAmount,
   } = props;
 
   const { 
@@ -58,7 +58,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
           <CardSimple
           loading={isLoading}
           title={<Trans>Staking Amount</Trans>}
-          tooltip={totalBalanceTooltip}
+          tooltip={StakingAmountTip}
           value={MasterNodeStakingAmount}
           error={error}
         >
@@ -75,7 +75,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
                 loading={isLoading}
                 valueColor="secondary"
                 title={<Trans>Total Nodes</Trans>}
-                tooltip={spendableBalanceTooltip}
+                tooltip={TotalNodesTip}
                 value={MasterNodeCount}
                 error={error}
               />
@@ -85,7 +85,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
                 loading={isLoading}
                 valueColor="secondary"
                 title={<Trans>Online Nodes</Trans>}
-                tooltip={pendingTotalBalanceTooltip}
+                tooltip={OnlineNodesTip}
                 value={MasterNodeOnlineCount}
                 error={error}
               />
@@ -95,7 +95,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
                 loading={isLoading}
                 valueColor="secondary"
                 title={<Trans>Have Sent Amount</Trans>}
-                tooltip={pendingBalanceTooltip}
+                tooltip={HaveSendAmountTip}
                 value={MasterNodeRewardHaveSentAmount}
                 error={error}
               />
@@ -105,7 +105,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
                 loading={isLoading}
                 valueColor="secondary"
                 title={<Trans>Reward Pool Amount</Trans>}
-                tooltip={pendingChangeTooltip}
+                tooltip={RewardPoolAmount}
                 value={MasterNodeRewardPoolAmount}
                 error={error}
               />
@@ -118,9 +118,9 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
 }
 
 MasterNodeCards.defaultProps = {
-  totalBalanceTooltip: undefined,
-  spendableBalanceTooltip: undefined,
-  pendingTotalBalanceTooltip: undefined,
-  pendingBalanceTooltip: undefined,
-  pendingChangeTooltip: undefined,
+  StakingAmountTip: undefined,
+  TotalNodesTip: undefined,
+  OnlineNodesTip: undefined,
+  HaveSendAmountTip: undefined,
+  RewardPoolAmount: undefined,
 };

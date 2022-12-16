@@ -1312,6 +1312,10 @@ msgstr "Le chivesvi HD (Hierarchical Deterministic) sono un tipo di schema a chi
 #~ msgid "Hashgreen DEX URL"
 #~ msgstr "Hashgreen DEX URL"
 
+#: src/components/masternode/MasterNodeStandardCards.tsx:31
+msgid "Have Send Amount"
+msgstr ""
+
 #: src/components/MasterNodeCards.tsx:97
 msgid "Have Sent Amount"
 msgstr ""
@@ -1981,6 +1985,7 @@ msgid "One year"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:87
+#: src/components/masternode/MasterNodeStandardCards.tsx:26
 msgid "Online Nodes"
 msgstr ""
 
@@ -2702,6 +2707,7 @@ msgid "Retire"
 msgstr "Ritira"
 
 #: src/components/MasterNodeCards.tsx:107
+#: src/components/masternode/MasterNodeStandardCards.tsx:36
 msgid "Reward Pool Amount"
 msgstr ""
 
@@ -3008,6 +3014,7 @@ msgid "Staking Address"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:60
+#: src/components/masternode/MasterNodeStandardCards.tsx:16
 msgid "Staking Amount"
 msgstr ""
 
@@ -3304,17 +3311,14 @@ msgstr "Questo token di accesso è stato verificato"
 msgid "This is not a valid address for sending funds to"
 msgstr "Questo indirizzo non è valido per l'invio di fondi"
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:23
 #: src/components/standard/WalletStandardCards.tsx:23
 msgid "This is the amount of Chives that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Chives that you have just spent but is not yet in the blockchain."
 msgstr "Questo è l'ammontare di Chives che puoi utilizzare attualmente per fare transazioni. Non include le ricompense coltivate in sospeso, transazioni in entrata in sospeso, e Chives che tua hai appena speso ma non sono ancora nella blockchain."
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:44
 #: src/components/standard/WalletStandardCards.tsx:44
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
 msgstr "Questa è la modifica in sospeso, ovvero le monete di cambio che hai inviato a te stesso, ma che non sono state ancora confermate."
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:37
 #: src/components/standard/WalletStandardCards.tsx:37
 msgid "This is the sum of the incoming and outgoing pending transactions (not yet included into the blockchain). This does not include farming rewards."
 msgstr "Questa è la somma delle transazioni in sospeso in entrata e in uscita (non ancora incluse nella blockchain). Questo non include le ricompense coltivate."
@@ -3327,7 +3331,6 @@ msgstr "Questa è la somma delle transazioni in sospeso in entrata e in uscita (
 #~ msgid "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 #~ msgstr "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:16
 #: src/components/standard/WalletStandardCards.tsx:16
 msgid "This is the total amount of chives in the blockchain at the current peak block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 msgstr ""
@@ -3336,7 +3339,6 @@ msgstr ""
 #~ msgid "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 #~ msgstr "This is the total amount of chives in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
 
-#: src/components/masternode/MasterNodeStandardCards.tsx:31
 #: src/components/standard/WalletStandardCards.tsx:31
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
 msgstr "Questo è il bilancio totale + il bilancio in attesa: questo è il bilancio che apparirà dopo che tutte le transazioni in attesa saranno confermate."
@@ -3483,6 +3485,7 @@ msgstr "Bilancio Totale"
 #~ msgstr "Total Network Space"
 
 #: src/components/MasterNodeCards.tsx:77
+#: src/components/masternode/MasterNodeStandardCards.tsx:21
 msgid "Total Nodes"
 msgstr ""
 
