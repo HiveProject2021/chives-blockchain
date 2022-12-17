@@ -992,7 +992,7 @@ class WalletRpcApi:
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         if checkSyncedStatus < 2:
             return {
-                    "fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": fingerprint,
                     "wallet_id": wallet_id,
                     "success": False,
                     "message":checkSyncedStatusText
@@ -1000,15 +1000,15 @@ class WalletRpcApi:
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
-                    "fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": fingerprint,
                     "wallet_id": wallet_id,
                     "success": False,
                     "message":"choose wallet failed in manager section."
                     }
-        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=fingerprint)
         await manager.close()
         #Add a address filter in here
-        request["to_address"] = get_staking_address['first_address']
+        request["to_address"] = get_staking_address['ReceivedAddress']
         return await self.get_transactions(request)
     
     async def masternode_received_transaction_count(self, request: Dict) -> Dict:
@@ -1019,7 +1019,7 @@ class WalletRpcApi:
         checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
         if checkSyncedStatus < 2:
             return {
-                    "fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": fingerprint,
                     "wallet_id": wallet_id,
                     "success": False,
                     "message":checkSyncedStatusText,
@@ -1028,13 +1028,13 @@ class WalletRpcApi:
         chooseWallet = await manager.chooseWallet(wallet_id)
         if chooseWallet is False:
             return {
-                    "fingerprint": self.service.logged_in_fingerprint,
+                    "fingerprint": fingerprint,
                     "wallet_id": wallet_id,
                     "success": False,
                     "message":"choose wallet failed in manager section.",
                     "count": 0
                     }
-        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=fingerprint)
         await manager.close()
         #Add a address filter in here
         to_address = get_staking_address['first_address']

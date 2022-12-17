@@ -445,32 +445,49 @@ class MasterNodeManager:
         counter = 0
         masternode_list_json = []
         for nft in nfts:
-            counter += 1
-            masternode_list_json.append(self.json_masternode(nft,counter))
+            StakingData = nft['StakingData']
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+                counter += 1
+                masternode_list_json.append(self.json_masternode(nft,counter))
         return masternode_list_json
 
     async def masternode_list(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         nfts = await self.get_all_masternodes()
         counter = 0
         for nft in nfts:
-            counter += 1
-            self.print_masternode(nft,counter)
+            StakingData = nft['StakingData']
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+                counter += 1
+                self.print_masternode(nft,counter)
     
     async def masternode_summary_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         nfts = await self.get_all_masternodes()
         MasterNodeStakingAmount = 0
         MasterNodeCount = 0
         for nft in nfts:
-            NftDataJson = json.loads(nft['nft_data'][1].decode("utf-8"))
-            if "StakingAmount" in NftDataJson and NftDataJson['StakingAmount']!='NOT USE':
-                MasterNodeStakingAmount += int(NftDataJson['StakingAmount'])
-                MasterNodeCount += 1
+            StakingData = nft['StakingData']
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+                ReceivedAddress = StakingData['ReceivedAddress']
+                StakingAddress = StakingData['StakingAddress']
+                StakingHeight = StakingData['StakingHeight']
+                MasterNodeStakingAmount += StakingData['StakingAmount']
+                MasterNodeCount += 1     
+                #print(StakingData)   
+                #all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingAddress),False,160000)
+                #print(all_staking_coins[0].coin.amount/100000000) 
+        
+
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash("txcc124dcndk6hawzk729j6cu84dalqkcptx57j33dnm3y4csufnwkgsqdkq0aa"),False,160000)
+        UnAssignCoin = 0
+        for coin_record in all_staking_coins:
+            UnAssignCoin += coin_record.coin.amount
+
         result = {}
         result['MasterNodeCount'] = MasterNodeCount
-        result['MasterNodeStakingAmount'] = MasterNodeStakingAmount
-        result['MasterNodeRewardHaveSentAmount'] = 56789
-        result['MasterNodeRewardPoolAmount'] = 12345
-        result['MasterNodeOnlineCount'] = 2
+        result['MasterNodeStakingAmount'] = int(MasterNodeStakingAmount/100000000)
+        result['MasterNodeRewardHaveSentAmount'] = 0
+        result['MasterNodeRewardPoolAmount'] = int(UnAssignCoin/100000000)
+        result['MasterNodeOnlineCount'] = MasterNodeCount
         return result
 
     async def masternode_summary(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -889,9 +906,9 @@ class MasterNodeManager:
         
         if rows is not None and len(rows)>0 and rows[0] is not None:
             jsonResult = await self.masternode_mynode_json(args, wallet_client, fingerprint)
-            jsonResult['title'] = "Chives Masternode Register Success"
+            jsonResult['title'] = "Chives Masternode Is Running"
             jsonResult['success'] = True
-            jsonResult['message'] = "Chives Masternode Register Success"
+            jsonResult['message'] = "Chives Masternode Is Running"
             jsonResult['register_record'] = rows
             jsonResult['launcher_id'] = rows[0]
             return jsonResult
@@ -1132,6 +1149,8 @@ class MasterNodeWallet:
     secret_key_store = SecretKeyStore()
     fingerprint = 0
 
+    allow_staking_amount = [100000,300000,500000,1000000]
+
     @classmethod
     async def create(cls, wrapper: DBWrapper, node_client, fingerprint: Optional[int]):
         self = cls()
@@ -1286,7 +1305,9 @@ class MasterNodeWallet:
             all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingData['StakingAddress']),False)
             StakingAmount = 0
             for coin_record in all_staking_coins:
-                StakingAmount += coin_record.coin.amount
+                amount = (coin_record.coin.amount/100000000)
+                if amount in self.allow_staking_amount:
+                    StakingAmount += coin_record.coin.amount
         #print(f"StakingAmount:{StakingAmount}")
         #print(f"StakingAmount:{StakingData['StakingAddress']}")        
         cursor = await self.db_connection.execute(
@@ -1580,7 +1601,7 @@ class MasterNodeWallet:
                 StakingAmount = StakingData['StakingAmount']
                 print(ReceivedAddress)   
                 print(int(StakingAmount/100000000000))               
-                primaries.append({'puzzlehash':decode_puzzle_hash(StakingAddress),'amount':int(StakingAmount/1000)})
+                primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
                 
 
         get_staking_address = self.init_pk_address(10, primaryKey)
