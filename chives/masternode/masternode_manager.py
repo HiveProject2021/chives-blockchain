@@ -838,7 +838,7 @@ class MasterNodeManager:
         if STAKING_COIN is not None and len(STAKING_COIN)>0:
             for target_xcc_coin in STAKING_COIN:
                 StakingAccountAmount += target_xcc_coin.coin.amount
-                isHaveStakingCoin = True;
+                isHaveStakingCoin = True
         
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -975,12 +975,16 @@ class MasterNodeManager:
         get_staking_address_result = self.masternode_wallet.get_staking_address()
         # check staking status in blockchain
         STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
-        if STAKING_ADDRESS is not None:
-            isHaveStakingCoin = True
-            StakingAddress = STAKING_ADDRESS
-            StakingAccountAmount = STAKING_COIN[0].coin.amount
-            StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
-            #print(STAKING_COIN)
+        print("=======================")
+        print(STAKING_COIN)
+        if STAKING_COIN is not None and len(STAKING_COIN)>0:
+            for target_xcc_coin in STAKING_COIN:
+                StakingAccountAmount += target_xcc_coin.coin.amount
+                isHaveStakingCoin = True
+                StakingAddress = STAKING_ADDRESS
+                StakingAccountAmount = STAKING_COIN[0].coin.amount
+                StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
+                #print(STAKING_COIN)
 
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -995,6 +999,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
+        jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
         jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
         jsonResult['data'].append({"Staking Address One Year":get_staking_address_result['STAKING_ADDRESS_ONE_YEAR']})
         jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
@@ -1150,6 +1155,7 @@ class MasterNodeWallet:
     fingerprint = 0
 
     allow_staking_amount = [100000,300000,500000,1000000]
+    mojo_per_unit = 100000000
 
     @classmethod
     async def create(cls, wrapper: DBWrapper, node_client, fingerprint: Optional[int]):
@@ -1358,6 +1364,14 @@ class MasterNodeWallet:
         STAKING_PUZZLE = result['STAKING_PUZZLE_TEST']
         STAKING_PERIOD = 0
         all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
+        all_staking_coins_filter = None
+        if all_staking_coins is not None and len(all_staking_coins)>0:
+            all_staking_coins_filter = []
+            for all_staking_coin in all_staking_coins:
+                if int(all_staking_coin.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
+                    all_staking_coins_filter.append(all_staking_coin)
+        all_staking_coins = all_staking_coins_filter
+        
         if all_staking_coins is not None and len(all_staking_coins)>0:
             return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TEST'],STAKING_PERIOD,STAKING_PUZZLE
         else:
@@ -1366,6 +1380,14 @@ class MasterNodeWallet:
             STAKING_PUZZLE = result['STAKING_PUZZLE_ONE_YEAR']
             STAKING_PERIOD = 1
             all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
+            all_staking_coins_filter = None
+            if all_staking_coins is not None and len(all_staking_coins)>0:
+                all_staking_coins_filter = []
+                for all_staking_coin in all_staking_coins:
+                    if int(all_staking_coin.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
+                        all_staking_coins_filter.append(all_staking_coin)
+            all_staking_coins = all_staking_coins_filter
+            
             if all_staking_coins is not None and len(all_staking_coins)>0:
                 return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_ONE_YEAR'],STAKING_PERIOD,STAKING_PUZZLE
             else:
@@ -1374,6 +1396,13 @@ class MasterNodeWallet:
                 STAKING_PUZZLE = result['STAKING_PUZZLE_TWO_YEAR']
                 STAKING_PERIOD = 2
                 all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH,False,160000)
+                all_staking_coins_filter = None
+                if all_staking_coins is not None and len(all_staking_coins)>0:
+                    all_staking_coins_filter = []
+                    for all_staking_coin in all_staking_coins:
+                        if int(all_staking_coin.coin.amount/self.mojo_per_unit) in self.allow_staking_amount:
+                            all_staking_coins_filter.append(all_staking_coin)
+                all_staking_coins = all_staking_coins_filter
                 if all_staking_coins is not None and len(all_staking_coins)>0:
                     return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TWO_YEAR'],STAKING_PERIOD,STAKING_PUZZLE
                 else:
@@ -1592,6 +1621,7 @@ class MasterNodeWallet:
         #Calculate all masternodes staking amount and period
         all_staking_result = {}
         primaries = []
+        counter = 0 
         for nft in nfts:
             StakingData = nft['StakingData']
             if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
@@ -1599,6 +1629,8 @@ class MasterNodeWallet:
                 StakingAddress = StakingData['StakingAddress']
                 StakingHeight = StakingData['StakingHeight']
                 StakingAmount = StakingData['StakingAmount']
+                counter += 1
+                print(counter)
                 print(ReceivedAddress)   
                 print(int(StakingAmount/100000000000))               
                 primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
