@@ -713,14 +713,14 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
                     "error":checkSyncedStatusText
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -743,14 +743,14 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
                     "wallet_id": wallet_id,
                     "error":checkSyncedStatusText
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -771,7 +771,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -779,7 +779,7 @@ class WalletRpcApi:
                     "success": False,
                     "message":checkSyncedStatusText
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -805,7 +805,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -814,7 +814,7 @@ class WalletRpcApi:
                     "success": False,
                     "message": checkSyncedStatusText,
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -861,7 +861,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -869,7 +869,7 @@ class WalletRpcApi:
                     "success": False,
                     "message": checkSyncedStatusText,
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -895,7 +895,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -903,7 +903,7 @@ class WalletRpcApi:
                     "success": False,
                     "message":checkSyncedStatusText
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -925,7 +925,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -934,7 +934,7 @@ class WalletRpcApi:
                     "message":checkSyncedStatusText,
                     "count": 0
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -956,7 +956,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -964,7 +964,7 @@ class WalletRpcApi:
                     "success": False,
                     "message":checkSyncedStatusText
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": self.service.logged_in_fingerprint,
@@ -989,7 +989,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": fingerprint,
@@ -997,7 +997,7 @@ class WalletRpcApi:
                     "success": False,
                     "message":checkSyncedStatusText
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": fingerprint,
@@ -1016,7 +1016,7 @@ class WalletRpcApi:
         manager = MasterNodeManager()
         await manager.connect()
         wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
         if checkSyncedStatus < 2:
             return {
                     "fingerprint": fingerprint,
@@ -1025,7 +1025,7 @@ class WalletRpcApi:
                     "message":checkSyncedStatusText,
                     "count": 0
                     }
-        chooseWallet = await manager.chooseWallet(wallet_id)
+        chooseWallet = await manager.chooseWallet(fingerprint)
         if chooseWallet is False:
             return {
                     "fingerprint": fingerprint,
@@ -1148,6 +1148,7 @@ class WalletRpcApi:
         return {
             "count": count,
             "wallet_id": wallet_id,
+            "self.service.logged_in_fingerprint":self.service.logged_in_fingerprint,
         }
 
     # this function is just here for backwards-compatibility. It will probably

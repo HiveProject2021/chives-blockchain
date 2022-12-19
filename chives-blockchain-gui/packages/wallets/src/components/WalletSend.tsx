@@ -54,6 +54,8 @@ export default function WalletSend(props: SendCardProps) {
     },
   });
 
+  console.log("walletId===WalletSend=========", walletId)
+
   const addressValue = useWatch<string>({
     control: methods.control,
     name: 'address',

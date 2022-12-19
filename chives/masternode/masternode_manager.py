@@ -171,10 +171,9 @@ class MasterNodeManager:
             return False
         
 
-    async def checkSyncedStatus(self) -> None:
+    async def checkSyncedStatus(self, logged_in_fingerprint=None) -> None:
         checkSyncedStatus = 0
         checkSyncedStatusText = []
-        logged_in_fingerprint = None
         blockchain_state = await self.node_client.get_blockchain_state()
         if blockchain_state is None:
             checkSyncedStatusText.append("There is no blockchain found yet. Try again shortly")
@@ -223,7 +222,8 @@ class MasterNodeManager:
         #######################################################
         is_synced: bool = await self.wallet_client.get_synced()
         is_syncing: bool = await self.wallet_client.get_sync_status()
-        logged_in_fingerprint: Optional[int] = await self.wallet_client.get_logged_in_fingerprint()
+        if logged_in_fingerprint is None:
+            logged_in_fingerprint: Optional[int] = await self.wallet_client.get_logged_in_fingerprint()
         if logged_in_fingerprint is None:
             checkSyncedStatusText.append("Not selected which chives wallet")
             return checkSyncedStatus,checkSyncedStatusText,logged_in_fingerprint
@@ -706,7 +706,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
+        #jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":StakingAccountAmountText})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
@@ -844,7 +844,7 @@ class MasterNodeManager:
         jsonResult['status'] = "success"
         jsonResult['message'] = "Chives Masternode Cancel Success. You will receive your coin in 3-5 minutes."
         jsonResult['data'] = []
-        jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
+        #jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
@@ -975,8 +975,8 @@ class MasterNodeManager:
         get_staking_address_result = self.masternode_wallet.get_staking_address()
         # check staking status in blockchain
         STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
-        print("=======================")
-        print(STAKING_COIN)
+        #print("=======================")
+        #print(STAKING_COIN)
         if STAKING_COIN is not None and len(STAKING_COIN)>0:
             for target_xcc_coin in STAKING_COIN:
                 StakingAccountAmount += target_xcc_coin.coin.amount
@@ -985,6 +985,16 @@ class MasterNodeManager:
                 StakingAccountAmount = STAKING_COIN[0].coin.amount
                 StakingAccountAmountCoin = StakingAccountAmount/mojo_per_unit
                 #print(STAKING_COIN)
+        
+        isHaveRegisterNode = False
+        if isHaveStakingCoin is True:
+            query = f"SELECT launcher_id FROM masternode_list WHERE StakingAddress = ?"
+            cursor = await self.masternode_wallet.db_connection.execute(query, (STAKING_ADDRESS,))
+            rows = await cursor.fetchone()
+            await cursor.close()
+            #print(f"rows:{rows}")        
+            if rows is not None and len(rows)>0 and rows[0] is not None:
+                isHaveRegisterNode = True
 
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -995,9 +1005,10 @@ class MasterNodeManager:
         jsonResult['data'].append({"Wallet Max Sent":str(max_send_amount)})
         jsonResult['data'].append({"Wallet Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"":""})
-        jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
+        #jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
-        jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Account Status":isHaveRegisterNode})
+        jsonResult['data'].append({"Staking Register MasterNode":isHaveStakingCoin})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
         jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
@@ -1010,6 +1021,7 @@ class MasterNodeManager:
         dictResult['StakingAddressNotUse'] = get_staking_address_result['address']
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
+        dictResult['StakingRegisterMasterNode'] = isHaveRegisterNode
         dictResult['StakingCancelAddress'] = get_staking_address_result['first_address']
         dictResult['StakingReceivedAddress'] = get_staking_address_result['ReceivedAddress']
         dictResult['StakingAddressForTest'] = get_staking_address_result['STAKING_ADDRESS_TEST']
@@ -1069,10 +1081,11 @@ class MasterNodeManager:
         get_all_masternodes = []
         for launcher_id in launcher_ids:            
             nft = await self.masternode_wallet.get_nft_by_launcher_id(hexstr_to_bytes(launcher_id))
-            if nft['StakingData']['StakingAmount']>0:
+            StakingData = nft['StakingData']
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 and int(StakingData['StakingAmount']/self.mojo_per_unit) in self.allow_staking_amount:
                 get_all_masternodes.append(nft)
         return get_all_masternodes
-    
+
     async def get_all_masternodes_count(self) -> List:
         nfts = await self.get_all_masternodes()
         return len(nfts)

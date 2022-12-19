@@ -22,6 +22,8 @@ export default function StandardWallet(props: StandardWalletProps) {
     'summary' | 'send' | 'receive'
   >('summary');
 
+  console.log("walletId===StandardWallet=========", walletId)
+
   function handleCreateOffer() {
     navigate('/dashboard/offers/create', {
       state: {

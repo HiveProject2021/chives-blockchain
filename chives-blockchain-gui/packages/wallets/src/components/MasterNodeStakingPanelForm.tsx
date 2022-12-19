@@ -36,6 +36,7 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   const stakingPeriod: number = MyCard?.stakingPeriod;
 
   console.log("MyCard==========================", MyCard)
+  console.log("walletId==========================", walletId)
 
   const methods = useForm<FormData>({
     defaultValues: {
@@ -87,6 +88,7 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
 
     console.log("--takeMasterNodeStaking--response--------------")
     console.log(response)
+    console.log("walletId", walletId)
 
     const resultDialog = CreateWalletSendTransactionResultDialog({success: response['data']['success'], message: response['data']['message']});
 

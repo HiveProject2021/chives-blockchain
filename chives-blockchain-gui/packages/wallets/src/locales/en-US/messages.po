@@ -201,7 +201,7 @@ msgstr "Adding {0} token"
 msgid "Address"
 msgstr "Address"
 
-#: src/components/WalletSend.tsx:156
+#: src/components/WalletSend.tsx:158
 #: src/components/cat/WalletCATSend.tsx:195
 #: src/components/rateLimited/WalletRateLimited.jsx:700
 msgid "Address / Puzzle hash"
@@ -221,7 +221,7 @@ msgstr "Address / Puzzle hash"
 
 #: src/components/MasterNodeReceivedList.tsx:228
 #: src/components/WalletHistory.tsx:228
-#: src/components/WalletSend.tsx:166
+#: src/components/WalletSend.tsx:168
 #: src/components/cat/WalletCATSend.tsx:206
 #: src/components/rateLimited/WalletRateLimited.jsx:719
 msgid "Amount"
@@ -441,7 +441,7 @@ msgstr "Cancel Staking"
 #~ msgid "Cancel on blockchain"
 #~ msgstr "Cancel on blockchain"
 
-#: src/components/WalletSend.tsx:103
+#: src/components/WalletSend.tsx:105
 #: src/components/cat/WalletCATSend.tsx:118
 msgid "Cannot send chives to coloured address. Please enter a chives address."
 msgstr "Cannot send chives to coloured address. Please enter a chives address."
@@ -712,7 +712,7 @@ msgid "Create New Wallet"
 msgstr "Create New Wallet"
 
 #: src/components/cat/WalletCAT.tsx:129
-#: src/components/standard/WalletStandard.tsx:53
+#: src/components/standard/WalletStandard.tsx:55
 msgid "Create Offer"
 msgstr "Create Offer"
 
@@ -736,7 +736,7 @@ msgstr "Create Rate Limited User Wallet"
 #~ msgid "Create Trade Offer"
 #~ msgstr "Create Trade Offer"
 
-#: src/components/WalletSend.tsx:138
+#: src/components/WalletSend.tsx:140
 #: src/components/cat/WalletCATSend.tsx:176
 #: src/components/rateLimited/WalletRateLimited.jsx:683
 msgid "Create Transaction"
@@ -1127,7 +1127,7 @@ msgstr "Error the entered address appears to be for a different colour."
 #~ msgid "Failed to update passphrase: {error}"
 #~ msgstr "Failed to update passphrase: {error}"
 
-#: src/components/WalletSend.tsx:186
+#: src/components/WalletSend.tsx:188
 #: src/components/cat/WalletCATSend.tsx:240
 msgid "Farm"
 msgstr "Farm"
@@ -1191,7 +1191,7 @@ msgstr "Farm"
 
 #: src/components/MasterNodeReceivedList.tsx:240
 #: src/components/WalletHistory.tsx:240
-#: src/components/WalletSend.tsx:177
+#: src/components/WalletSend.tsx:179
 #: src/components/cat/WalletCATSend.tsx:219
 #: src/components/create/createRLAdmin.jsx:243
 #: src/components/create/createRLAdmin.jsx:271
@@ -1967,7 +1967,7 @@ msgstr "Offer Accepted"
 #~ msgid "Offers you created"
 #~ msgstr "Offers you created"
 
-#: src/components/WalletSend.tsx:141
+#: src/components/WalletSend.tsx:143
 #: src/components/cat/WalletCATSend.tsx:179
 msgid "On average there is one minute between each transaction block. Unless there is congestion you can expect your transaction to be included in less than a minute."
 msgstr "On average there is one minute between each transaction block. Unless there is congestion you can expect your transaction to be included in less than a minute."
@@ -2166,7 +2166,7 @@ msgstr "Please enter a valid initial coin amount"
 msgid "Please enter a valid integer of 0 or greater for the number of Backup IDs needed for recovery."
 msgstr "Please enter an integer value of 0 or greater for the number of Backup IDs needed for recovery."
 
-#: src/components/WalletSend.tsx:93
+#: src/components/WalletSend.tsx:95
 #: src/components/cat/WalletCATSend.tsx:104
 #: src/components/rateLimited/WalletRateLimited.jsx:638
 msgid "Please enter a valid numeric amount"
@@ -2176,7 +2176,7 @@ msgstr "Please enter a valid numeric amount"
 msgid "Please enter a valid numeric amount."
 msgstr "Please enter a numeric amount."
 
-#: src/components/WalletSend.tsx:98
+#: src/components/WalletSend.tsx:100
 #: src/components/cat/WalletCATSend.tsx:109
 #: src/components/create/createRLAdmin.jsx:149
 #: src/components/rateLimited/WalletRateLimited.jsx:648
@@ -2221,10 +2221,10 @@ msgstr "Please enter valid wallet name"
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:75
-#: src/components/MasterNodeStakingPanelStep4.tsx:35
+#: src/components/MasterNodeStakingPanelForm.tsx:76
+#: src/components/MasterNodeStakingPanelStep4.tsx:36
 #: src/components/MasterNodeStakingPanelStep5.tsx:29
-#: src/components/WalletSend.tsx:88
+#: src/components/WalletSend.tsx:90
 #: src/components/cat/WalletCATSend.tsx:95
 #: src/components/rateLimited/WalletRateLimited.jsx:622
 msgid "Please finish syncing before making a transaction"
@@ -2850,7 +2850,7 @@ msgstr "Selected recovery file:"
 #~ msgstr "Sell"
 
 #: src/components/WalletHeader.tsx:59
-#: src/components/WalletSend.tsx:196
+#: src/components/WalletSend.tsx:198
 #: src/components/cat/WalletCATSend.tsx:250
 #: src/components/rateLimited/WalletRateLimited.jsx:747
 msgid "Send"
@@ -3027,7 +3027,7 @@ msgstr "Staking Balance"
 msgid "Staking Information"
 msgstr "Staking Information"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:57
+#: src/components/MasterNodeStakingPanelStep4.tsx:58
 msgid "Staking Operation"
 msgstr "Staking Operation"
 
@@ -3043,7 +3043,7 @@ msgstr "Staking Received Address"
 msgid "Staking Status"
 msgstr "Staking Status"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:62
+#: src/components/MasterNodeStakingPanelStep4.tsx:63
 msgid "Staking a masternode requires at least 100000 xcc in your wallet."
 msgstr "Staking a masternode requires at least 100000 xcc in your wallet."
 
@@ -3075,11 +3075,11 @@ msgstr "StakingAmount"
 msgid "Standard Wallet"
 msgstr "Standard Wallet"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:103
+#: src/components/MasterNodeStakingPanelStep4.tsx:111
 msgid "Start Register MasterNode"
 msgstr "Start Register MasterNode"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:82
+#: src/components/MasterNodeStakingPanelStep4.tsx:83
 msgid "Start Staking"
 msgstr "Start Staking"
 
@@ -3389,11 +3389,11 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 #~ msgid "This step will register your masternode to blockchain."
 #~ msgstr "This step will register your masternode to blockchain."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:89
+#: src/components/MasterNodeStakingPanelStep4.tsx:97
 msgid "This step will register your masternode to the blockchain."
 msgstr "This step will register your masternode to the blockchain."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:69
+#: src/components/MasterNodeStakingPanelStep4.tsx:70
 msgid "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
 msgstr "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
 
@@ -3994,6 +3994,10 @@ msgstr "Your coin have staking in a smart coin base on Lisp, you can cancel it w
 #: src/components/app/AppKeyringMigrator.tsx:112
 #~ msgid "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 #~ msgstr "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:90
+msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
 
 #: src/components/offers/OfferShareDialog.tsx:707
 #~ msgid "Your offer has been successfully posted to Keybase."

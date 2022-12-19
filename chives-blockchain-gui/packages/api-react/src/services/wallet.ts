@@ -810,11 +810,11 @@ export const walletApi = apiWithTag.injectEndpoints({
         return result
           ? [
               ...result.map(
-                ({ name }) => ({ type: 'Transactions', id: name } as const)
+                ({ name }) => ({ type: 'MasterNodeLists', id: name } as const)
               ),
-              { type: 'Transactions', id: 'LIST' },
+              { type: 'MasterNodeLists', id: 'LIST' },
             ]
-          : [{ type: 'Transactions', id: 'LIST' }];
+          : [{ type: 'MasterNodeLists', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
@@ -848,7 +848,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       }),
       transformResponse: (response: any) => response?.count,
       providesTags: (result, _error, { walletId }) =>
-        result ? [{ type: 'TransactionCount', id: walletId }] : [],
+        result ? [{ type: 'MasterNodeListsCount', id: walletId }] : [],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
           command: 'onCoinAdded',
@@ -888,11 +888,11 @@ export const walletApi = apiWithTag.injectEndpoints({
         return result
           ? [
               ...result.map(
-                ({ name }) => ({ type: 'Transactions', id: name } as const)
+                ({ name }) => ({ type: 'MasterNodeReceivedLists', id: name } as const)
               ),
-              { type: 'Transactions', id: 'LIST' },
+              { type: 'MasterNodeReceivedLists', id: 'LIST' },
             ]
-          : [{ type: 'Transactions', id: 'LIST' }];
+          : [{ type: 'MasterNodeReceivedLists', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
@@ -926,7 +926,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       }),
       transformResponse: (response: any) => response?.count,
       providesTags: (result, _error, { walletId }) =>
-        result ? [{ type: 'TransactionCount', id: walletId }] : [],
+        result ? [{ type: 'MasterNodeReceivedListsCount', id: walletId }] : [],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
           command: 'onCoinAdded',
@@ -946,7 +946,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       ]),
     }),
 
-    getMasterNodeMyCard: build.query<
+    getMasterNodeMyCard: build.mutation<
       string,
       {
         walletId: number;
@@ -960,7 +960,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       transformResponse: (response: any) => response?.result,
     }),
 
-    getMasterNodeSummary: build.query<
+    getMasterNodeSummary: build.mutation<
       string,
       {
         walletId: number;

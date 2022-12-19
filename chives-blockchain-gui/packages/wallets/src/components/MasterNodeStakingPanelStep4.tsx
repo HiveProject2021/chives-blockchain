@@ -22,6 +22,7 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
   const { step, myCard, syncing, walletId, isSendTransactionLoading } = props;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
   const StakingAccountBalance: number = myCard?.StakingAccountBalance;
+  const StakingRegisterMasterNode: number = myCard?.StakingRegisterMasterNode;
 
   const openDialog = useOpenDialog();
   const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();
@@ -84,14 +85,21 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
                 </Flex>
               )}
 
-              {StakingAccountStatus && (
+              {StakingAccountStatus && StakingRegisterMasterNode && (
+                <Typography color="textSecondary">
+                    <Trans>
+                    Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day.
+                    </Trans>
+                </Typography>
+              )}
+              {StakingAccountStatus && !StakingRegisterMasterNode && (
                 <Typography color="textSecondary">
                     <Trans>
                     This step will register your masternode to the blockchain.
                     </Trans>
                 </Typography>
               )}
-              {StakingAccountStatus && (
+              {StakingAccountStatus && !StakingRegisterMasterNode && (
                 <Flex justifyContent="flex-end">
                     <ButtonLoading
                         loading={isSendTransactionLoadingRegister}
