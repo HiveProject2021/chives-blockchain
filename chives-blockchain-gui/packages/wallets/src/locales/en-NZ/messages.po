@@ -1329,8 +1329,8 @@ msgstr ""
 #~ msgstr "Header hash"
 
 #: src/components/MasterNodeList.tsx:137
-msgid "Height"
-msgstr "Height"
+#~ msgid "Height"
+#~ msgstr "Height"
 
 #: src/electron/main.tsx:365
 #~ msgid "Help"
@@ -1674,7 +1674,7 @@ msgstr "Manage token list"
 #~ msgid "MasterNode Count"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:200
+#: src/components/MasterNodeList.tsx:214
 msgid "MasterNode List"
 msgstr ""
 
@@ -1813,7 +1813,7 @@ msgstr "Nickname"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
-#: src/components/MasterNodeList.tsx:216
+#: src/components/MasterNodeList.tsx:230
 msgid "No MasterNode Data"
 msgstr ""
 
@@ -3069,6 +3069,14 @@ msgstr ""
 
 #: src/components/MasterNodeList.tsx:118
 msgid "StakingAmount"
+msgstr ""
+
+#: src/components/MasterNodeList.tsx:148
+msgid "StakingCanCancelHeight"
+msgstr ""
+
+#: src/components/MasterNodeList.tsx:137
+msgid "StakingHeight"
 msgstr ""
 
 #: src/constants/WalletName.ts:5

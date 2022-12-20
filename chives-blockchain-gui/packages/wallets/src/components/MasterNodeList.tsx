@@ -130,11 +130,22 @@ const getCols = (type: WalletType, isSyncing, getOfferRecord, navigate) => [
     field: (row: Row) => {
       return (
         <>
-          {row.Height}
+          {row.StakingHeight}
         </>
       );
     },
-    title: <Trans>Height</Trans>,
+    title: <Trans>StakingHeight</Trans>,
+  },
+  {
+    width: '100%',
+    field: (row: Row) => {
+      return (
+        <>
+          {row.StakingCanCancelHeight}
+        </>
+      );
+    },
+    title: <Trans>StakingCanCancelHeight</Trans>,
   }
 ];
 
@@ -157,6 +168,9 @@ export default function MasterNodeList(props: Props) {
     count,
     pageChange,
   } = useWalletMasterNodeLists(walletId, 10, 0, 'RELEVANCE');
+
+  console.log("transactions==============")
+  console.log(transactions)
 
   const feeUnit = useCurrencyCode();
   const [getOfferRecord] = useGetOfferRecordMutation();

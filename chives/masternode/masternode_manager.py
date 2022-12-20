@@ -318,7 +318,7 @@ class MasterNodeManager:
         
         #Create MasterNode ID Must Have Staking Coin.            
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         if STAKING_ADDRESS is None:
             return ("No finish staking coin","No finish staking coin")
             
@@ -412,6 +412,12 @@ class MasterNodeManager:
             print(f"StakingAmount:   0")
         if 'StakingPeriod' in StakingData:
             print(f"StakingPeriod:   {StakingData['StakingPeriod']} Year")
+            if int(StakingData['StakingPeriod'])==0:
+                print(f"Can Cancel Height:  {int(nft['launcher_rec'].spent_block_index)+10}")
+            if int(StakingData['StakingPeriod'])==1:
+                print(f"Can Cancel Height:  {int(nft['launcher_rec'].spent_block_index)+1681920}")
+            if int(StakingData['StakingPeriod'])==2:
+                print(f"Can Cancel Height:  {int(nft['launcher_rec'].spent_block_index)+3363840}")
         else:
             print(f"StakingPeriod:   For test (10 minutes)")
 
@@ -425,7 +431,7 @@ class MasterNodeManager:
         json_masternode['counter'] = counter
         json_masternode['MasterNodeType'] = str(nft['nft_data'][0].decode('utf-8'))
         json_masternode['MasterNodeID'] = nft['launcher_id'].hex()
-        json_masternode['Height'] = nft['launcher_rec'].spent_block_index
+        json_masternode['StakingHeight'] = nft['launcher_rec'].spent_block_index
         json_masternode['CreateTime'] = nft['launcher_rec'].timestamp
         StakingData = nft['StakingData']
         StakingAmount = StakingData['StakingAmount']
@@ -436,6 +442,13 @@ class MasterNodeManager:
             StakingData['StakingAmount'] = str(round(Decimal(StakingAmount/self.mojo_per_unit),8))
         else:
             StakingData['StakingAmount'] = 0
+        if int(StakingData['StakingPeriod'])==0:
+            json_masternode['StakingCanCancelHeight'] = int(nft['launcher_rec'].spent_block_index)+10
+        if int(StakingData['StakingPeriod'])==1:
+            json_masternode['StakingCanCancelHeight'] = int(nft['launcher_rec'].spent_block_index)+1681920
+        if int(StakingData['StakingPeriod'])==2:
+            json_masternode['StakingCanCancelHeight'] = int(nft['launcher_rec'].spent_block_index)+3363840
+            
         json_masternode['ReceivedAddress'] = StakingData['ReceivedAddress']
         json_masternode['NodeName'] = StakingData['NodeName']
         return json_masternode
@@ -666,7 +679,7 @@ class MasterNodeManager:
         StakingAccountAmountCoin = '0'
 
         # check staking status in blockchain
-        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         if STAKING_ADDRESS is not None:
             isHaveStakingCoin = True
             StakingAddress = STAKING_ADDRESS
@@ -827,7 +840,7 @@ class MasterNodeManager:
         mojo_per_unit = self.mojo_per_unit        
         memo = "Cancel coin for MasterNode"
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         
         #print(balances)
         #print(get_staking_address_result)
@@ -892,7 +905,7 @@ class MasterNodeManager:
         await self.masternode_wallet.sync_masternode()
         #Second step to check staking address is or not in database
         get_staking_address_result = self.masternode_wallet.get_staking_address()
-        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         #print(STAKING_ADDRESS)
         #print(STAKING_PUZZLE_HASH)
         #print(STAKING_COIN)
@@ -974,7 +987,7 @@ class MasterNodeManager:
         StakingAccountAmountCoin = '0'
         get_staking_address_result = self.masternode_wallet.get_staking_address()
         # check staking status in blockchain
-        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
+        STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         #print("=======================")
         #print(STAKING_COIN)
         if STAKING_COIN is not None and len(STAKING_COIN)>0:
@@ -988,11 +1001,10 @@ class MasterNodeManager:
         
         isHaveRegisterNode = False
         if isHaveStakingCoin is True:
-            query = f"SELECT launcher_id FROM masternode_list WHERE StakingAddress = ?"
+            query = f"SELECT * FROM masternode_list WHERE StakingAddress = ?"
             cursor = await self.masternode_wallet.db_connection.execute(query, (STAKING_ADDRESS,))
             rows = await cursor.fetchone()
             await cursor.close()
-            #print(f"rows:{rows}")        
             if rows is not None and len(rows)>0 and rows[0] is not None:
                 isHaveRegisterNode = True
 
@@ -1009,6 +1021,8 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveRegisterNode})
         jsonResult['data'].append({"Staking Register MasterNode":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Height":STAKING_HEIGHT})
+        jsonResult['data'].append({"Staking Can Cancel Height":STAKING_CAN_CANCEL_HEIGHT})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
         jsonResult['data'].append({"Staking Received Address":get_staking_address_result['ReceivedAddress']})
         jsonResult['data'].append({"Staking Address For Test":get_staking_address_result['STAKING_ADDRESS_TEST']})
@@ -1022,6 +1036,8 @@ class MasterNodeManager:
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
         dictResult['StakingRegisterMasterNode'] = isHaveRegisterNode
+        dictResult['StakingHeight'] = STAKING_HEIGHT
+        dictResult['StakingCanCancelHeight'] = STAKING_CAN_CANCEL_HEIGHT
         dictResult['StakingCancelAddress'] = get_staking_address_result['first_address']
         dictResult['StakingReceivedAddress'] = get_staking_address_result['ReceivedAddress']
         dictResult['StakingAddressForTest'] = get_staking_address_result['STAKING_ADDRESS_TEST']
@@ -1386,7 +1402,8 @@ class MasterNodeWallet:
         all_staking_coins = all_staking_coins_filter
         
         if all_staking_coins is not None and len(all_staking_coins)>0:
-            return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TEST'],STAKING_PERIOD,STAKING_PUZZLE
+            STAKING_CAN_CANCEL_HEIGHT = result['STAKING_HEIGHT_TEST'] + 10
+            return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TEST'],STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT
         else:
             STAKING_PUZZLE_HASH = result['STAKING_PUZZLE_HASH_ONE_YEAR']
             STAKING_ADDRESS = result['STAKING_ADDRESS_ONE_YEAR']
@@ -1402,7 +1419,8 @@ class MasterNodeWallet:
             all_staking_coins = all_staking_coins_filter
             
             if all_staking_coins is not None and len(all_staking_coins)>0:
-                return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_ONE_YEAR'],STAKING_PERIOD,STAKING_PUZZLE
+                STAKING_CAN_CANCEL_HEIGHT = result['STAKING_HEIGHT_ONE_YEAR'] + 1681920
+                return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_ONE_YEAR'],STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT
             else:
                 STAKING_PUZZLE_HASH = result['STAKING_PUZZLE_HASH_TWO_YEAR']
                 STAKING_ADDRESS = result['STAKING_ADDRESS_TWO_YEAR']
@@ -1417,9 +1435,10 @@ class MasterNodeWallet:
                             all_staking_coins_filter.append(all_staking_coin)
                 all_staking_coins = all_staking_coins_filter
                 if all_staking_coins is not None and len(all_staking_coins)>0:
-                    return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TWO_YEAR'],STAKING_PERIOD,STAKING_PUZZLE
+                    STAKING_CAN_CANCEL_HEIGHT = result['STAKING_HEIGHT_TWO_YEAR'] + 3363840
+                    return STAKING_ADDRESS,STAKING_PUZZLE_HASH,all_staking_coins,result['STAKING_HEIGHT_TWO_YEAR'],STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT
                 else:
-                    return None,None,None,None,0,None
+                    return None,None,None,None,0,None,None
 
     def get_staking_address(self):
         non_observer_derivation = False
