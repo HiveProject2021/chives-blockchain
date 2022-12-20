@@ -77,7 +77,11 @@ msgid "300,000"
 msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep2.tsx:38
-msgid "5 minutes(For test)"
+#~ msgid "5 minutes(For test)"
+#~ msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:38
+msgid "5 minutes(For test/No reward)"
 msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep3.tsx:49
@@ -1670,7 +1674,7 @@ msgstr ""
 #~ msgid "MasterNode Count"
 #~ msgstr ""
 
-#: src/components/MasterNodeList.tsx:214
+#: src/components/MasterNodeList.tsx:213
 msgid "MasterNode List"
 msgstr ""
 
@@ -1809,7 +1813,7 @@ msgstr "Spitzname"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
-#: src/components/MasterNodeList.tsx:230
+#: src/components/MasterNodeList.tsx:229
 msgid "No MasterNode Data"
 msgstr ""
 
@@ -2218,7 +2222,7 @@ msgstr ""
 #~ msgstr "Please enter your passphrase to proceed"
 
 #: src/components/MasterNodeStakingPanelForm.tsx:76
-#: src/components/MasterNodeStakingPanelStep4.tsx:36
+#: src/components/MasterNodeStakingPanelStep4.tsx:37
 #: src/components/MasterNodeStakingPanelStep5.tsx:29
 #: src/components/WalletSend.tsx:90
 #: src/components/cat/WalletCATSend.tsx:95
@@ -3023,7 +3027,7 @@ msgstr ""
 msgid "Staking Information"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:58
+#: src/components/MasterNodeStakingPanelStep4.tsx:59
 msgid "Staking Operation"
 msgstr ""
 
@@ -3039,13 +3043,17 @@ msgstr ""
 msgid "Staking Status"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:63
+#: src/components/MasterNodeStakingPanelStep4.tsx:64
 msgid "Staking a masternode requires at least 100000 xcc in your wallet."
 msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep3.tsx:28
-msgid "Staking xcc amount, only support these three items"
+msgid "Staking xcc amount, only support these four items"
 msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep3.tsx:28
+#~ msgid "Staking xcc amount, only support these three items"
+#~ msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep2.tsx:25
 #~ msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
@@ -3079,11 +3087,11 @@ msgstr ""
 msgid "Standard Wallet"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:111
+#: src/components/MasterNodeStakingPanelStep4.tsx:112
 msgid "Start Register MasterNode"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:83
+#: src/components/MasterNodeStakingPanelStep4.tsx:84
 msgid "Start Staking"
 msgstr ""
 
@@ -3393,11 +3401,11 @@ msgstr "Dies ist das Gesamtguthaben + ausstehende Guthaben: Das ist dein Guthabe
 #~ msgid "This step will register your masternode to blockchain."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:97
+#: src/components/MasterNodeStakingPanelStep4.tsx:98
 msgid "This step will register your masternode to the blockchain."
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:70
+#: src/components/MasterNodeStakingPanelStep4.tsx:71
 msgid "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
 msgstr ""
 
@@ -3999,7 +4007,7 @@ msgstr ""
 #~ msgid "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 #~ msgstr "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:90
+#: src/components/MasterNodeStakingPanelStep4.tsx:91
 msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
 msgstr ""
 

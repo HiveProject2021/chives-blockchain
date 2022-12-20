@@ -911,7 +911,7 @@ class WalletRpcApi:
                     "success": False,
                     "message":"choose wallet failed in manager section."
                     }
-        masternode_list_json = await manager.masternode_list_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
+        masternode_list_json = await manager.masternode_list_json(args={}, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint, request=request)
         await manager.close()
 
         return {

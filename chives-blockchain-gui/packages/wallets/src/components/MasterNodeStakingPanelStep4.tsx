@@ -22,6 +22,7 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
   const { step, myCard, syncing, walletId, isSendTransactionLoading } = props;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
   const StakingAccountBalance: number = myCard?.StakingAccountBalance;
+  const WalletMaxSent: number = myCard?.WalletMaxSent;
   const StakingRegisterMasterNode: number = myCard?.StakingRegisterMasterNode;
 
   const openDialog = useOpenDialog();
@@ -58,21 +59,21 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
     <CardStep step={step} title={<Trans>Staking Operation</Trans>}>
         <Grid spacing={2} direction="column" container>
             <Grid xs={12} md={12} lg={6} item>
-              {!StakingAccountStatus && StakingAccountBalance<100000 && (
+              {!StakingAccountStatus && WalletMaxSent<100000 && (
                 <Typography color="textSecondary">
                     <Trans>
                     Staking a masternode requires at least 100000 xcc in your wallet.
                     </Trans>
                 </Typography>
               )}
-              {!StakingAccountStatus && StakingAccountBalance>=100000 && (
+              {!StakingAccountStatus && WalletMaxSent>=100000 && (
                 <Typography color="textSecondary">
                     <Trans>
                     This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain.
                     </Trans>
                 </Typography>
               )}
-              {!StakingAccountStatus && StakingAccountBalance>=100000 && (
+              {!StakingAccountStatus && WalletMaxSent>=100000 && (
                 <Flex justifyContent="flex-end">
                     <ButtonLoading
                         loading={isSendTransactionLoading}

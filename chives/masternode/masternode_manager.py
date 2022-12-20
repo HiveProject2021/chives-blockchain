@@ -453,7 +453,13 @@ class MasterNodeManager:
         json_masternode['NodeName'] = StakingData['NodeName']
         return json_masternode
 
-    async def masternode_list_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+    async def masternode_list_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int, request: Dict = None) -> None:
+
+        start = request.get("start", 0)
+        end = request.get("end", 50)
+        sort_key = request.get("sort_key", None)
+        reverse = request.get("reverse", False)
+
         nfts = await self.get_all_masternodes()
         counter = 0
         masternode_list_json = []
@@ -461,7 +467,8 @@ class MasterNodeManager:
             StakingData = nft['StakingData']
             if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
                 counter += 1
-                masternode_list_json.append(self.json_masternode(nft,counter))
+                if counter>start and counter<=end:
+                    masternode_list_json.append(self.json_masternode(nft,counter))
         return masternode_list_json
 
     async def masternode_list(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -1030,7 +1037,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Address Two Year":get_staking_address_result['STAKING_ADDRESS_TWO_YEAR']})
         dictResult = {}
         dictResult['WalletBalance'] = str(confirmed_wallet_balance)
-        dictResult['WalletMaxSent'] = str(max_send_amount)
+        dictResult['WalletMaxSent'] = int(max_send_amount)
         dictResult['WalletAddress'] = get_staking_address_result['first_address']
         dictResult['StakingAddressNotUse'] = get_staking_address_result['address']
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)

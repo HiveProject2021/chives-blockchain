@@ -18,7 +18,7 @@ export type MasterNodeStakingPanelStep2Props = {
 export default function MasterNodeStakingPanelStep2(props: MasterNodeStakingPanelStep2Props) {
   const { step, myCard } = props;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
-  const StakingAccountBalance: number = myCard?.StakingAccountBalance;
+  const WalletMaxSent: number = myCard?.WalletMaxSent;
 
   return (
     <CardStep step={step} title={<Trans>Please choose staking period</Trans>}>
@@ -35,20 +35,20 @@ export default function MasterNodeStakingPanelStep2(props: MasterNodeStakingPane
                           <FormControlLabel
                           value={0}
                           control={<Radio />}
-                          label={<Trans>5 minutes(For test)</Trans>}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
+                          label={<Trans>5 minutes(For test/No reward)</Trans>}
+                          disabled={StakingAccountStatus || WalletMaxSent<100000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>One year</Trans>}
                           value={1}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
+                          disabled={StakingAccountStatus || WalletMaxSent<100000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>Two year</Trans>}
                           value={2}
-                          disabled={StakingAccountStatus || StakingAccountBalance<100000 || myCard==undefined}
+                          disabled={StakingAccountStatus || WalletMaxSent<100000 || myCard==undefined}
                           />
                       </Flex>
                     </RadioGroup>

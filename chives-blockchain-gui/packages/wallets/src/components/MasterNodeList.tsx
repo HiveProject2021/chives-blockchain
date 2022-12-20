@@ -169,8 +169,7 @@ export default function MasterNodeList(props: Props) {
     pageChange,
   } = useWalletMasterNodeLists(walletId, 10, 0, 'RELEVANCE');
 
-  console.log("transactions==============")
-  console.log(transactions)
+  
 
   const feeUnit = useCurrencyCode();
   const [getOfferRecord] = useGetOfferRecordMutation();
