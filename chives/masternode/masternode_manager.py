@@ -1128,6 +1128,26 @@ class MasterNodeManager:
         return masternode_rewards_send
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
 
+    def encode_data(self,data,filename):
+        from Crypto.Cipher import AES
+        from Crypto.Util.Padding import pad
+        from Crypto.Random import get_random_bytes
+        data = data.encode('utf-8')
+        key = get_random_bytes(16)
+        cipher = AES.new(key, AES.MODE_CBC)
+        encrypted_data = cipher.encrypt(pad(data, AES.block_size))
+        file_out = open(filename, "wb")
+        [file_out.write(x) for x in (key, cipher.iv,  encrypted_data)]
+    
+    def decode_data(self,filename):
+        from Crypto.Cipher import AES
+        from Crypto.Util.Padding import unpad
+        file_in = open(filename, "rb")
+        key, iv, encrypted_data = [file_in.read(x) for x in (16, AES.block_size, -1)]
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        data = unpad(cipher.decrypt(encrypted_data), AES.block_size)
+        return data.decode('utf-8')
+
 class MasterNodeCoin:
     def __init__(self, launcher_id: bytes32, coin: Coin, last_spend: CoinSpend = None, nft_data=None, royalty=None, StakingData=None):
         super().__init__(coin.parent_coin_info, coin.puzzle_hash, coin.amount)
@@ -1366,7 +1386,6 @@ class MasterNodeWallet:
         #print(f"save_launcher:{StakingData}")
         await cursor.close()
         await self.db_connection.commit()
-
         StakingData['StakingAmount'] = StakingAmount
         return StakingData
 
@@ -1655,26 +1674,45 @@ class MasterNodeWallet:
                 print(f"\nSend Coin Failed. res: {res}")
                 return res
         return None
-
+            
     async def masternode_rewards_send(self, primaryKey:str=None, nfts=None) -> Tuple[Coin, Program]:
         #Calculate all masternodes staking amount and period
-        all_staking_result = {}
         primaries = []
         counter = 0 
+        AddressToStakingAmount = {}
+        AddressToStakingAmountAddition = {}
+        AddressToStakingAmountAdditionSum = 0
+        StakingAmountAddition = {}
+        StakingAmountAddition[100000] = 1.0
+        StakingAmountAddition[300000] = 1.1
+        StakingAmountAddition[500000] = 1.2
+        StakingAmountAddition[1000000] = 1.3
+        TotalSendToAmount = 8640
+        #计算所有质押结点
         for nft in nfts:
             StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>0 :
                 ReceivedAddress = StakingData['ReceivedAddress']
                 StakingAddress = StakingData['StakingAddress']
                 StakingHeight = StakingData['StakingHeight']
-                StakingAmount = StakingData['StakingAmount']
+                StakingAmount = int(StakingData['StakingAmount']/self.mojo_per_unit)
+                AddressToStakingAmount[ReceivedAddress] = StakingAmount
+                AddressToStakingAmountAddition[ReceivedAddress] = int(StakingAmount*StakingAmountAddition[StakingAmount])
+                AddressToStakingAmountAdditionSum += AddressToStakingAmountAddition[ReceivedAddress]
+                #print(StakingData)               
+                #primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
+            else:
+                print(f"ReceivedAddress:{StakingData['ReceivedAddress']} StakingAmount:{int(StakingData['StakingAmount']/self.mojo_per_unit)} For Test") 
+        #print(AddressToStakingAmountAddition)
+        #计算加权系数
+        if AddressToStakingAmountAdditionSum>0:
+            for ReceivedAddress,AmountAddition in AddressToStakingAmountAddition.items():
+                ShouldToBeSendAmount = int(TotalSendToAmount*AmountAddition/AddressToStakingAmountAdditionSum)
+                #print(ShouldToBeSendAmount)
                 counter += 1
-                print(counter)
-                print(ReceivedAddress)   
-                print(int(StakingAmount/100000000000))               
-                primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
-                
-
+                print(f"counter:{counter} ReceivedAddress:{ReceivedAddress} AmountAddition:{AmountAddition} AmountAddition:{AmountAddition} Amount:{int(ShouldToBeSendAmount)}") 
+                primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(ShouldToBeSendAmount*self.mojo_per_unit)})
+        #发送金额
         get_staking_address = self.init_pk_address(10, primaryKey)
         puzzle_hashes = []
         for k in self.key_dict.keys():
@@ -1682,10 +1720,10 @@ class MasterNodeWallet:
             staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
             puzzle_hashes, include_spent_coins=False
         )
-        print(f"\nMerge coins records: {len(staking_coins)}\n")
+        print(f"\nCandicate Coins Number: {len(staking_coins)}\n")
         totalAmount = 0
         coin_counter = 0
-        send_max_amount = 30000 * 100000000
+        send_max_amount = TotalSendToAmount * self.mojo_per_unit
         select_coins = []
         for coin in staking_coins:
             synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
@@ -1714,9 +1752,9 @@ class MasterNodeWallet:
             print(res)
             if res["success"]==True and res["status"]=="SUCCESS":
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
-                print(f"\nSend address: {toAddress}")
+                #print(f"\nSend address: {toAddress}")
                 print(f"\nSend Tx: {tx_id}")
-                print(f"\nSend amount: {int(totalAmount/100000000)}")
+                print(f"\nChoose Coins Amount Sum: {int(totalAmount/100000000)}")
                 print("")
                 res["tx_id"] = tx_id
                 return res

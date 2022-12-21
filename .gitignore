@@ -304,3 +304,5 @@ tags
 /madmax/
 chives/masternode/mergecoin.py
 chives/masternode/masternode_rewards_send.py
+encrypted.bin
+chives/masternode/masternode_rewards_send.bin
