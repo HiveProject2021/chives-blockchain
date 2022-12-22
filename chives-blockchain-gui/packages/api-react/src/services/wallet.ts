@@ -51,6 +51,7 @@ const apiWithTag = api.enhanceEndpoints({
     'Wallets',
     'DerivationIndex',
     'MasterNode',
+    'MasterNodeMyCard',
   ],
 });
 
@@ -957,7 +958,32 @@ export const walletApi = apiWithTag.injectEndpoints({
         service: Wallet,
         args: [walletId, false],
       }),
+      keepUnusedDataFor: 5,
       transformResponse: (response: any) => response?.result,
+      providesTags: (result, _error, { walletId }) =>
+        result ? [{ type: 'MasterNode', id: walletId }] : [],
+      onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
+        {
+          command: 'onCoinAdded',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeMyCard,
+        },
+        {
+          command: 'onCoinRemoved',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeMyCard,
+        },
+        {
+          command: 'onPendingTransaction',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeMyCard,
+        },
+        {
+          command: 'onNewBlock',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeMyCard,
+        },
+      ]),
     }),
 
     getMasterNodeSummary: build.query<

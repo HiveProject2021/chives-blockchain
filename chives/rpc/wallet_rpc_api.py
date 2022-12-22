@@ -800,7 +800,7 @@ class WalletRpcApi:
                     }
     
     async def masternode_staking(self, request: Dict) -> Dict:        
-        print(f"0 api masternode_staking: {request}")
+        #print(f"0 api masternode_staking: {request}")
         from chives.masternode.masternode_manager import MasterNodeManager
         manager = MasterNodeManager()
         await manager.connect()
