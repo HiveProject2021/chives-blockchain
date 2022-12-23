@@ -1320,7 +1320,7 @@ msgstr ""
 msgid "Have Send Amount"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:97
+#: src/components/MasterNodeCards.tsx:98
 msgid "Have Sent Amount"
 msgstr ""
 
@@ -1984,7 +1984,7 @@ msgstr "У сярэднім паміж кожным блокам трансак�
 msgid "One year"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:87
+#: src/components/MasterNodeCards.tsx:88
 #: src/components/masternode/MasterNodeStandardCards.tsx:26
 msgid "Online Nodes"
 msgstr ""
@@ -2706,7 +2706,7 @@ msgstr ""
 msgid "Retire"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:107
+#: src/components/MasterNodeCards.tsx:108
 #: src/components/masternode/MasterNodeStandardCards.tsx:36
 msgid "Reward Pool Amount"
 msgstr ""
@@ -3013,7 +3013,7 @@ msgstr ""
 msgid "Staking Address"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:60
+#: src/components/MasterNodeCards.tsx:61
 #: src/components/masternode/MasterNodeStandardCards.tsx:16
 msgid "Staking Amount"
 msgstr ""
@@ -3496,7 +3496,7 @@ msgstr "Агульны баланс"
 #~ msgid "Total Network Space"
 #~ msgstr "Total Network Space"
 
-#: src/components/MasterNodeCards.tsx:77
+#: src/components/MasterNodeCards.tsx:78
 #: src/components/masternode/MasterNodeStandardCards.tsx:21
 msgid "Total Nodes"
 msgstr ""

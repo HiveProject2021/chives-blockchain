@@ -741,7 +741,6 @@ class MasterNodeManager:
         dictResult['WalletBalance'] = str(confirmed_wallet_balance)
         dictResult['WalletMaxSent'] = str(max_send_amount)
         dictResult['WalletAddress'] = get_staking_address_result['first_address']
-        dictResult['StakingAddressNotUse'] = get_staking_address_result['address']
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
         dictResult['StakingCancelAddress'] = get_staking_address_result['first_address']
@@ -1039,7 +1038,6 @@ class MasterNodeManager:
         dictResult['WalletBalance'] = str(confirmed_wallet_balance)
         dictResult['WalletMaxSent'] = int(max_send_amount)
         dictResult['WalletAddress'] = get_staking_address_result['first_address']
-        dictResult['StakingAddressNotUse'] = get_staking_address_result['address']
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
         dictResult['StakingRegisterMasterNode'] = isHaveRegisterNode
@@ -1681,6 +1679,7 @@ class MasterNodeWallet:
         counter = 0 
         AddressToStakingAmount = {}
         AddressToStakingAmountAddition = {}
+        AddressToStakingPeriod = {}
         AddressToStakingAmountAdditionSum = 0
         StakingAmountAddition = {}
         StakingAmountAddition[100000] = 1.0
@@ -1697,8 +1696,12 @@ class MasterNodeWallet:
                 StakingHeight = StakingData['StakingHeight']
                 StakingAmount = int(StakingData['StakingAmount']/self.mojo_per_unit)
                 AddressToStakingAmount[ReceivedAddress] = StakingAmount
-                AddressToStakingAmountAddition[ReceivedAddress] = int(StakingAmount*StakingAmountAddition[StakingAmount])
+                if int(StakingData['StakingPeriod'])==2:
+                    AddressToStakingAmountAddition[ReceivedAddress] = int(StakingAmount*StakingAmountAddition[StakingAmount]*1.1)
+                else:
+                    AddressToStakingAmountAddition[ReceivedAddress] = int(StakingAmount*StakingAmountAddition[StakingAmount])
                 AddressToStakingAmountAdditionSum += AddressToStakingAmountAddition[ReceivedAddress]
+                AddressToStakingPeriod[ReceivedAddress] = int(StakingData['StakingPeriod'])
                 #print(StakingData)               
                 #primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
             else:
@@ -1710,7 +1713,7 @@ class MasterNodeWallet:
                 ShouldToBeSendAmount = int(TotalSendToAmount*AmountAddition/AddressToStakingAmountAdditionSum)
                 #print(ShouldToBeSendAmount)
                 counter += 1
-                print(f"counter:{counter} ReceivedAddress:{ReceivedAddress} AmountAddition:{AmountAddition} AmountAddition:{AmountAddition} Amount:{int(ShouldToBeSendAmount)}") 
+                print(f"counter:{counter} ReceivedAddress:{ReceivedAddress} AmountAddition:{AmountAddition} AmountAddition:{AmountAddition} Amount:{int(ShouldToBeSendAmount)} StakingPeriod:{AddressToStakingPeriod[ReceivedAddress]}") 
                 primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(ShouldToBeSendAmount*self.mojo_per_unit)})
         #发送金额
         get_staking_address = self.init_pk_address(10, primaryKey)

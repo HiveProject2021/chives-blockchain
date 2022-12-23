@@ -5,6 +5,7 @@ import { Trans } from '@lingui/macro';
 import { CardSimple, Flex, TooltipIcon } from '@chives/core';
 import styled from 'styled-components';
 import WalletGraph from './WalletGraph';
+import MasterNodeReceivedGraph from './MasterNodeReceivedGraph';
 
 export type MasterNodeCardsProps = {
   walletId: number;
@@ -64,7 +65,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
         >
           <Flex flexGrow={1} />
           <StyledGraphContainer>
-            <WalletGraph walletId={walletId} height={80} />
+            <MasterNodeReceivedGraph walletId={walletId} height={80} />
           </StyledGraphContainer>
         </CardSimple>
         </Grid>
