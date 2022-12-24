@@ -486,7 +486,7 @@ class MasterNodeManager:
         MasterNodeCount = 0
         for nft in nfts:
             StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>0 :
                 ReceivedAddress = StakingData['ReceivedAddress']
                 StakingAddress = StakingData['StakingAddress']
                 StakingHeight = StakingData['StakingHeight']
@@ -936,15 +936,15 @@ class MasterNodeManager:
             tx_id, launcher_id = await self.launch_staking_storage()
             if tx_id is not None and len(tx_id)>=32:
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
-                self.print_masternode(nft,0)
+                #self.print_masternode(nft,0)
                 jsonResult = {}
                 jsonResult['status'] = "success"
                 jsonResult['title'] = "Chives Masternode Register Success"
                 jsonResult['data'] = []
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Transaction id":tx_id})
-                jsonResult['data'].append({"launcher_id":launcher_id})
-                jsonResult['data'].append({"result":"stake NFT Launched!!"})
+                jsonResult['data'].append({"Launcher_id":launcher_id})
+                jsonResult['data'].append({"Result":"Staking MasterNode Success, just need to keep your fullnode is running!!"})
                 jsonResult['success'] = True
                 jsonResult['message'] = "Chives Masternode Register Success"
                 jsonResult['launcher_id'] = str(launcher_id)

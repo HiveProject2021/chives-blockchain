@@ -89,7 +89,7 @@ async def launch_cmd(ctx) -> None:
     tx_id, launcher_id = await manager.launch_staking_storage()
     print(f"Transaction id: {tx_id}")
     nft = await manager.wait_for_confirmation(tx_id, launcher_id)
-    print("\n\n stake NFT Launched!!")
+    print("\n\n !!")
     print_nft(nft)
     await manager.close()
 

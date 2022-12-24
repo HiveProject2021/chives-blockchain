@@ -4,7 +4,6 @@ import { useGetMasterNodeSummaryQuery } from '@chives/api-react';
 import { Trans } from '@lingui/macro';
 import { CardSimple, Flex, TooltipIcon } from '@chives/core';
 import styled from 'styled-components';
-import WalletGraph from './WalletGraph';
 import MasterNodeReceivedGraph from './MasterNodeReceivedGraph';
 
 export type MasterNodeCardsProps = {
@@ -42,8 +41,6 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
     pollingInterval: 10000,
   });
 
-  console.log("==============")
-  console.log(MasterNodeSummary)
   const error = null;
   const isLoading = false;
   const MasterNodeStakingAmount = MasterNodeSummary?.MasterNodeStakingAmount;
