@@ -465,7 +465,7 @@ class MasterNodeManager:
         masternode_list_json = []
         for nft in nfts:
             StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>0 :
                 counter += 1
                 if counter>start and counter<=end:
                     masternode_list_json.append(self.json_masternode(nft,counter))
@@ -476,7 +476,7 @@ class MasterNodeManager:
         counter = 0
         for nft in nfts:
             StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 :
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>0 :
                 counter += 1
                 self.print_masternode(nft,counter)
     
@@ -1103,7 +1103,7 @@ class MasterNodeManager:
         for launcher_id in launcher_ids:            
             nft = await self.masternode_wallet.get_nft_by_launcher_id(hexstr_to_bytes(launcher_id))
             StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>=0 and int(StakingData['StakingAmount']/self.mojo_per_unit) in self.allow_staking_amount:
+            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod'])>0 and int(StakingData['StakingAmount']/self.mojo_per_unit) in self.allow_staking_amount:
                 get_all_masternodes.append(nft)
         return get_all_masternodes
 
