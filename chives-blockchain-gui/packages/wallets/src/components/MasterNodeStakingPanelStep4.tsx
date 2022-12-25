@@ -23,7 +23,8 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
   const StakingAccountBalance: number = myCard?.StakingAccountBalance;
   const WalletMaxSent: number = myCard?.WalletMaxSent;
-  const StakingRegisterMasterNode: number = myCard?.StakingRegisterMasterNode;
+  const StakingRegisterMasterNodeStatus: number = myCard?.StakingRegisterMasterNodeStatus;
+  const StakingRegisterMasterNodeID: number = myCard?.StakingRegisterMasterNodeID;
 
   const openDialog = useOpenDialog();
   const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();
@@ -41,8 +42,8 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
       walletId,
     });
 
-    console.log("takeMasterNodeRegister ------------------")
-    console.log(response)
+    //console.log("takeMasterNodeRegister ------------------")
+    //console.log(response)
 
     const resultDialog = CreateWalletSendTransactionResultDialog({success: response['data']['success'], message: response['data']['message']});
 
@@ -86,21 +87,22 @@ export default function MasterNodeStakingPanelStep4(props: MasterNodeStakingPane
                 </Flex>
               )}
 
-              {StakingAccountStatus && StakingRegisterMasterNode && (
+              {StakingAccountStatus && StakingRegisterMasterNodeStatus && (
                 <Typography color="textSecondary">
                     <Trans>
                     Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day.
+                    MasterNode ID: {StakingRegisterMasterNodeID}
                     </Trans>
                 </Typography>
               )}
-              {StakingAccountStatus && !StakingRegisterMasterNode && (
+              {StakingAccountStatus && !StakingRegisterMasterNodeStatus && (
                 <Typography color="textSecondary">
                     <Trans>
                     This step will register your masternode to the blockchain.
                     </Trans>
                 </Typography>
               )}
-              {StakingAccountStatus && !StakingRegisterMasterNode && (
+              {StakingAccountStatus && !StakingRegisterMasterNodeStatus && (
                 <Flex justifyContent="flex-end">
                     <ButtonLoading
                         loading={isSendTransactionLoadingRegister}

@@ -451,6 +451,7 @@ class MasterNodeManager:
             
         json_masternode['ReceivedAddress'] = StakingData['ReceivedAddress']
         json_masternode['NodeName'] = StakingData['NodeName']
+        json_masternode['StakingPeriod'] = int(StakingData['StakingPeriod'])
         return json_masternode
 
     async def masternode_list_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int, request: Dict = None) -> None:
@@ -634,8 +635,8 @@ class MasterNodeManager:
         #self.log.warning(f"2 masternode_staking_json get_staking_address_result: {get_staking_address_result}")
 
         # to choose staking period from three options
-        year = args['year']
-        amount = args['amount']
+        year = int(args['year'])
+        amount = int(args['amount'])
         if year == 0:
             StakingAddress = get_staking_address_result['STAKING_ADDRESS_TEST']
         elif year == 1:
@@ -765,6 +766,23 @@ class MasterNodeManager:
             jsonResult['success'] = True
             jsonResult['message'] = "You have staking coins. Not need to stake coin again."
             return jsonResult
+        
+        if year not in [0,1,2]:
+            jsonResult['data'].append({"":""})
+            jsonResult['data'].append({"Year only accept":"0 or 1 or 2"})
+            jsonResult['data'].append({"":""})
+            jsonResult['success'] = True
+            jsonResult['message'] = "Year only accept 0 or 1 or 2"
+            return jsonResult
+        
+        if int(stakingCoinAmount) not in self.allow_staking_amount:
+            jsonResult['data'].append({"":""})
+            jsonResult['data'].append({"Not support this amount":(stakingCoinAmount+fee)})
+            jsonResult['data'].append({"Only accept ":"100000,300000,500000,1000000"})
+            jsonResult['data'].append({"":""})
+            jsonResult['success'] = True
+            jsonResult['message'] = f"Not support this amount" + str(int(stakingCoinAmount)) + ", only accept 100000,300000,500000,1000000 "
+            return jsonResult
             
         #Wallet balance must more than 100000 XCC
         if confirmed_wallet_balance < (stakingCoinAmount+fee):
@@ -772,7 +790,7 @@ class MasterNodeManager:
             jsonResult['data'].append({"Wallet confirmed balance must more than":(stakingCoinAmount+fee)})
             jsonResult['data'].append({"":""})
             jsonResult['success'] = True
-            jsonResult['message'] = f"Wallet confirmed balance must more than " + str(stakingCoinAmount+fee)
+            jsonResult['message'] = f"Wallet confirmed balance must more than " + str(int(stakingCoinAmount+fee))
             return jsonResult
             
         #Merge small amount coins
@@ -1006,6 +1024,7 @@ class MasterNodeManager:
                 #print(STAKING_COIN)
         
         isHaveRegisterNode = False
+        RegisterNodeID = None
         if isHaveStakingCoin is True:
             query = f"SELECT * FROM masternode_list WHERE StakingAddress = ?"
             cursor = await self.masternode_wallet.db_connection.execute(query, (STAKING_ADDRESS,))
@@ -1013,6 +1032,7 @@ class MasterNodeManager:
             await cursor.close()
             if rows is not None and len(rows)>0 and rows[0] is not None:
                 isHaveRegisterNode = True
+                RegisterNodeID = rows[0]
 
         jsonResult = {}
         jsonResult['status'] = "success"
@@ -1026,7 +1046,8 @@ class MasterNodeManager:
         #jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status":isHaveRegisterNode})
-        jsonResult['data'].append({"Staking Register MasterNode":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Register MasterNode Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Register MasterNode ID":RegisterNodeID})
         jsonResult['data'].append({"Staking Height":STAKING_HEIGHT})
         jsonResult['data'].append({"Staking Can Cancel Height":STAKING_CAN_CANCEL_HEIGHT})
         jsonResult['data'].append({"Staking Cancel Address":get_staking_address_result['first_address']})
@@ -1040,7 +1061,8 @@ class MasterNodeManager:
         dictResult['WalletAddress'] = get_staking_address_result['first_address']
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount/self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
-        dictResult['StakingRegisterMasterNode'] = isHaveRegisterNode
+        dictResult['StakingRegisterMasterNodeStatus'] = isHaveRegisterNode
+        dictResult['StakingRegisterMasterNodeID'] = RegisterNodeID
         dictResult['StakingHeight'] = STAKING_HEIGHT
         dictResult['StakingCanCancelHeight'] = STAKING_CAN_CANCEL_HEIGHT
         dictResult['StakingCancelAddress'] = get_staking_address_result['first_address']

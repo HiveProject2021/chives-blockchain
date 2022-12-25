@@ -1320,7 +1320,7 @@ msgstr "HD or Hierarchical Deterministic keys are a type of public key/private k
 msgid "Have Send Amount"
 msgstr "Have Send Amount"
 
-#: src/components/MasterNodeCards.tsx:98
+#: src/components/MasterNodeCards.tsx:95
 msgid "Have Sent Amount"
 msgstr "Have Sent Amount"
 
@@ -1678,7 +1678,7 @@ msgstr "Manage token list"
 #~ msgid "MasterNode Count"
 #~ msgstr "MasterNode Count"
 
-#: src/components/MasterNodeList.tsx:213
+#: src/components/MasterNodeList.tsx:224
 msgid "MasterNode List"
 msgstr "MasterNode List"
 
@@ -1817,7 +1817,7 @@ msgstr "Nickname"
 #~ msgid "No 24 word seed, since this key is imported."
 #~ msgstr "No 24 word seed, since this key is imported."
 
-#: src/components/MasterNodeList.tsx:229
+#: src/components/MasterNodeList.tsx:240
 msgid "No MasterNode Data"
 msgstr "No MasterNode Data"
 
@@ -1988,7 +1988,7 @@ msgstr "On average there is one minute between each transaction block. Unless th
 msgid "One year"
 msgstr "One year"
 
-#: src/components/MasterNodeCards.tsx:88
+#: src/components/MasterNodeCards.tsx:85
 #: src/components/masternode/MasterNodeStandardCards.tsx:26
 msgid "Online Nodes"
 msgstr "Online Nodes"
@@ -2226,7 +2226,7 @@ msgstr "Please enter valid wallet name"
 #~ msgstr "Please enter your passphrase to proceed"
 
 #: src/components/MasterNodeStakingPanelForm.tsx:75
-#: src/components/MasterNodeStakingPanelStep4.tsx:37
+#: src/components/MasterNodeStakingPanelStep4.tsx:38
 #: src/components/MasterNodeStakingPanelStep5.tsx:29
 #: src/components/WalletSend.tsx:90
 #: src/components/cat/WalletCATSend.tsx:95
@@ -2710,7 +2710,7 @@ msgstr "Rename Wallet"
 msgid "Retire"
 msgstr "Retire"
 
-#: src/components/MasterNodeCards.tsx:108
+#: src/components/MasterNodeCards.tsx:105
 #: src/components/masternode/MasterNodeStandardCards.tsx:36
 msgid "Reward Pool Amount"
 msgstr "Reward Pool Amount"
@@ -3017,7 +3017,7 @@ msgstr "Staking Account Status"
 msgid "Staking Address"
 msgstr "Staking Address"
 
-#: src/components/MasterNodeCards.tsx:61
+#: src/components/MasterNodeCards.tsx:58
 #: src/components/masternode/MasterNodeStandardCards.tsx:16
 msgid "Staking Amount"
 msgstr "Staking Amount"
@@ -3031,7 +3031,7 @@ msgstr "Staking Balance"
 msgid "Staking Information"
 msgstr "Staking Information"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:59
+#: src/components/MasterNodeStakingPanelStep4.tsx:60
 msgid "Staking Operation"
 msgstr "Staking Operation"
 
@@ -3047,7 +3047,7 @@ msgstr "Staking Received Address"
 msgid "Staking Status"
 msgstr "Staking Status"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:64
+#: src/components/MasterNodeStakingPanelStep4.tsx:65
 msgid "Staking a masternode requires at least 100000 xcc in your wallet."
 msgstr "Staking a masternode requires at least 100000 xcc in your wallet."
 
@@ -3087,15 +3087,19 @@ msgstr "StakingCanCancelHeight"
 msgid "StakingHeight"
 msgstr "StakingHeight"
 
+#: src/components/MasterNodeList.tsx:159
+msgid "StakingPeriod"
+msgstr "StakingPeriod"
+
 #: src/constants/WalletName.ts:5
 msgid "Standard Wallet"
 msgstr "Standard Wallet"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:112
+#: src/components/MasterNodeStakingPanelStep4.tsx:114
 msgid "Start Register MasterNode"
 msgstr "Start Register MasterNode"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:84
+#: src/components/MasterNodeStakingPanelStep4.tsx:85
 msgid "Start Staking"
 msgstr "Start Staking"
 
@@ -3405,11 +3409,11 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 #~ msgid "This step will register your masternode to blockchain."
 #~ msgstr "This step will register your masternode to blockchain."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:98
+#: src/components/MasterNodeStakingPanelStep4.tsx:100
 msgid "This step will register your masternode to the blockchain."
 msgstr "This step will register your masternode to the blockchain."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:71
+#: src/components/MasterNodeStakingPanelStep4.tsx:72
 msgid "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
 msgstr "This step will stake your coins into a Lisp-based smartcoin and will take a few minutes to package into the blockchain."
 
@@ -3500,7 +3504,7 @@ msgstr "Total Balance"
 #~ msgid "Total Network Space"
 #~ msgstr "Total Network Space"
 
-#: src/components/MasterNodeCards.tsx:78
+#: src/components/MasterNodeCards.tsx:75
 #: src/components/masternode/MasterNodeStandardCards.tsx:21
 msgid "Total Nodes"
 msgstr "Total Nodes"
@@ -4012,8 +4016,12 @@ msgstr "Your coin have staking in a smart coin base on Lisp, you can cancel it w
 #~ msgstr "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:91
-msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
-msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+#~ msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:92
+msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
+msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
 
 #: src/components/offers/OfferShareDialog.tsx:707
 #~ msgid "Your offer has been successfully posted to Keybase."

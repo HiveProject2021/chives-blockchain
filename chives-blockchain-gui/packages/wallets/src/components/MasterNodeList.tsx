@@ -146,6 +146,17 @@ const getCols = (type: WalletType, isSyncing, getOfferRecord, navigate) => [
       );
     },
     title: <Trans>StakingCanCancelHeight</Trans>,
+  },
+  {
+    width: '100%',
+    field: (row: Row) => {
+      return (
+        <>
+          {row.StakingPeriod}
+        </>
+      );
+    },
+    title: <Trans>StakingPeriod</Trans>,
   }
 ];
 
