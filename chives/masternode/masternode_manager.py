@@ -304,13 +304,17 @@ class MasterNodeManager:
                     synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
                     self.key_dict[bytes(synth_sk.get_g1())] = synth_sk
                     return (coin_record.coin, puzzle)
-        raise ValueError("No spendable coins found")
+        raise ValueError("No spendable coins found", "No spendable coins found")
 
     async def launch_staking_storage(self) -> bytes:    
+        available_balance = await self.available_balance()
+        if available_balance<101:
+            return ("Need your wallet have at least 101 mojo","Need your wallet have at least 101 mojo")
+
         blockchain_state = await self.node_client.get_blockchain_state()
         if blockchain_state is None:
             print("There is no blockchain found yet. Try again shortly")
-            return None
+            return (None,None)
         new_height = blockchain_state["peak"].height
         node_id = blockchain_state["node_id"]
         synced = blockchain_state["sync"]["synced"]
@@ -596,7 +600,7 @@ class MasterNodeManager:
                 print("")
                 return
             tx_id = res.name
-            if tx_id is not None and len(tx_id)>=32:
+            if tx_id is not None and len(tx_id)==64:
                 print(f"Merge coin for MasterNode Transaction submitted to node.")
                 print(f"Fingerprint {fingerprint} \nTx 0x{tx_id} \nTo address: {address}")
                 print("")
@@ -834,7 +838,7 @@ class MasterNodeManager:
                 return jsonResult
 
             tx_id = res.name
-            if tx_id is not None and len(tx_id)>=32:
+            if tx_id is not None and len(tx_id)==64:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes.":""})
                 jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to StakingAddress: {StakingAddress} on stakingCoinAmount: {stakingCoinAmount} stakingYear: {year} ":""})
@@ -952,7 +956,7 @@ class MasterNodeManager:
         else:        
             #Third step: if staking address is not in database, will start a new nft mint process to finish the register
             tx_id, launcher_id = await self.launch_staking_storage()
-            if tx_id is not None and len(tx_id)>=32:
+            if tx_id is not None and len(tx_id)==64:
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
                 #self.print_masternode(nft,0)
                 jsonResult = {}
@@ -1045,8 +1049,8 @@ class MasterNodeManager:
         jsonResult['data'].append({"":""})
         #jsonResult['data'].append({"Staking Address (Not Use)":get_staking_address_result['address']})
         jsonResult['data'].append({"Staking Account Balance":str(StakingAccountAmount/self.mojo_per_unit)})
-        jsonResult['data'].append({"Staking Account Status":isHaveRegisterNode})
-        jsonResult['data'].append({"Staking Register MasterNode Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Account Status":isHaveStakingCoin})
+        jsonResult['data'].append({"Staking Register MasterNode Status":isHaveRegisterNode})
         jsonResult['data'].append({"Staking Register MasterNode ID":RegisterNodeID})
         jsonResult['data'].append({"Staking Height":STAKING_HEIGHT})
         jsonResult['data'].append({"Staking Can Cancel Height":STAKING_CAN_CANCEL_HEIGHT})

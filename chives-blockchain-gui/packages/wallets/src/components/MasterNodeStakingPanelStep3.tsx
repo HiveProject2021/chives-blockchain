@@ -19,6 +19,7 @@ export default function MasterNodeStakingPanelStep3(props: MasterNodeStakingPane
   const { step, myCard } = props;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
   const WalletMaxSent: number = myCard?.WalletMaxSent;
+  const stakingAmount: number = myCard?.stakingAmount;
 
   return (
     <CardStep step={step} title={<Trans>Please choose staking period</Trans>}>
@@ -29,26 +30,41 @@ export default function MasterNodeStakingPanelStep3(props: MasterNodeStakingPane
                     Staking xcc amount, only support these four items
                     </Trans>
                 </Typography>
-                <FormControl variant="filled" fullWidth>
+                {StakingAccountStatus && (
+                  <FormControl variant="filled" fullWidth>
+                    <RadioGroup name="stakingAmount" defaultValue={stakingAmount}>
+                      <Flex gap={2} flexWrap="wrap">
+                          <FormControlLabel
+                          value={stakingAmount}
+                          control={<Radio />}
+                          label={stakingAmount}
+                          disabled={StakingAccountStatus}
+                          />
+                      </Flex>
+                    </RadioGroup>
+                  </FormControl>
+                )}
+                {!StakingAccountStatus && (
+                  <FormControl variant="filled" fullWidth>
                     <RadioGroup name="stakingAmount" defaultValue={100000}>
                       <Flex gap={2} flexWrap="wrap">
                           <FormControlLabel
                           value={100000}
                           control={<Radio />}
                           label={<Trans>100,000</Trans>}
-                          disabled={StakingAccountStatus || WalletMaxSent<100000 || myCard==undefined}
+                          disabled={WalletMaxSent<100000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>300,000</Trans>}
                           value={300000}
-                          disabled={StakingAccountStatus || WalletMaxSent<300000 || myCard==undefined}
+                          disabled={WalletMaxSent<300000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
                           label={<Trans>500,000</Trans>}
                           value={500000}
-                          disabled={StakingAccountStatus || WalletMaxSent<500000 || myCard==undefined}
+                          disabled={WalletMaxSent<500000 || myCard==undefined}
                           />
                           <FormControlLabel
                           control={<Radio />}
@@ -58,7 +74,9 @@ export default function MasterNodeStakingPanelStep3(props: MasterNodeStakingPane
                           />
                       </Flex>
                     </RadioGroup>
-                </FormControl>
+                  </FormControl>
+                )}
+                
             </Grid>     
         </Grid> 
     </CardStep>

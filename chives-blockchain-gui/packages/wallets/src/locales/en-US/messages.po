@@ -60,11 +60,11 @@ msgstr "-"
 #~ msgid "0 automatically chooses bucket count"
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:55
+#: src/components/MasterNodeStakingPanelStep3.tsx:71
 msgid "1,000,000"
 msgstr "1,000,000"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:38
+#: src/components/MasterNodeStakingPanelStep3.tsx:54
 msgid "100,000"
 msgstr "100,000"
 
@@ -72,7 +72,7 @@ msgstr "100,000"
 #~ msgid "128 buckets is recommended"
 #~ msgstr "128 buckets is recommended"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:43
+#: src/components/MasterNodeStakingPanelStep3.tsx:59
 msgid "300,000"
 msgstr "300,000"
 
@@ -80,11 +80,11 @@ msgstr "300,000"
 #~ msgid "5 minutes(For test)"
 #~ msgstr "5 minutes(For test)"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:38
+#: src/components/MasterNodeStakingPanelStep2.tsx:56
 msgid "5 minutes(For test/No reward)"
 msgstr "5 minutes(For test/No reward)"
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:49
+#: src/components/MasterNodeStakingPanelStep3.tsx:65
 msgid "500,000"
 msgstr "500,000"
 
@@ -1984,7 +1984,7 @@ msgstr "On average there is one minute between each transaction block. Unless th
 #~ msgid "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 #~ msgstr "One or more unknown tokens are being offered. Please verify that the asset IDs of the tokens listed below match the asset IDs of the tokens you expect to receive."
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:43
+#: src/components/MasterNodeStakingPanelStep2.tsx:61
 msgid "One year"
 msgstr "One year"
 
@@ -2116,8 +2116,8 @@ msgstr "Pending Total Balance"
 #~ msgid "Please add a trade pair"
 #~ msgstr "Please add a trade pair"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:24
-#: src/components/MasterNodeStakingPanelStep3.tsx:24
+#: src/components/MasterNodeStakingPanelStep2.tsx:26
+#: src/components/MasterNodeStakingPanelStep3.tsx:25
 msgid "Please choose staking period"
 msgstr "Please choose staking period"
 
@@ -3051,7 +3051,7 @@ msgstr "Staking Status"
 msgid "Staking a masternode requires at least 100000 xcc in your wallet."
 msgstr "Staking a masternode requires at least 100000 xcc in your wallet."
 
-#: src/components/MasterNodeStakingPanelStep3.tsx:28
+#: src/components/MasterNodeStakingPanelStep3.tsx:29
 msgid "Staking xcc amount, only support these four items"
 msgstr "Staking xcc amount, only support these four items"
 
@@ -3063,7 +3063,7 @@ msgstr "Staking xcc amount, only support these four items"
 #~ msgid "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 #~ msgstr "Staking xcc will storage in a smart coin base lisp, only staking period finished, xcc will can withdrawal."
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:28
+#: src/components/MasterNodeStakingPanelStep2.tsx:30
 msgid "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 msgstr "Staking xcc will storage in a smart coin, only staking period finished, xcc will can be withdrawal."
 
@@ -3573,7 +3573,7 @@ msgstr "Transactions"
 #~ msgid "Trip"
 #~ msgstr "Trip"
 
-#: src/components/MasterNodeStakingPanelStep2.tsx:49
+#: src/components/MasterNodeStakingPanelStep2.tsx:67
 msgid "Two year"
 msgstr "Two year"
 
@@ -4144,6 +4144,10 @@ msgstr ""
 #: src/components/offers/OfferViewer.tsx:95
 #~ msgid "{mojos, plural, one {mojo} other {mojos}}"
 #~ msgstr "{mojos, plural, one {mojo} other {mojos}}"
+
+#: src/components/MasterNodeStakingPanelStep2.tsx:42
+msgid "{stakingPeriod} Year"
+msgstr "{stakingPeriod} Year"
 
 #: src/components/plot/add/PlotAddChoosePlotter.tsx:118
 #~ msgid "{warning}"
