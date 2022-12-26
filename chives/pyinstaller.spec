@@ -134,6 +134,7 @@ datas = []
 
 datas.append((f"{ROOT}/chives/util/english.txt", "chives/util"))
 datas.append((f"{ROOT}/chives/util/initial-config.yaml", "chives/util"))
+datas.append((f"{ROOT}/chives/wallet/puzzles/*.clvm", "chives/wallet/puzzles"))
 datas.append((f"{ROOT}/chives/wallet/puzzles/*.hex", "chives/wallet/puzzles"))
 datas.append((f"{ROOT}/chives/masternode/clsp/*.clsp", "chives/masternode/clsp"))
 datas.append((f"{ROOT}/chives/masternode/clsp/*.hex", "chives/masternode/clsp"))

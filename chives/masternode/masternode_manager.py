@@ -71,6 +71,8 @@ from chives.wallet.secret_key_store import SecretKeyStore
 from chives.wallet.wallet_puzzle_store import WalletPuzzleStore
 
 from clvm_tools.clvmc import compile_clvm
+from chives.wallet.puzzles.load_clvm import load_clvm
+
 
 def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/")]):
     base = Path().parent.resolve()
@@ -80,7 +82,6 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
     compile_clvm(source, target, searches)
     clvm = target.read_text()
     clvm_blob = bytes.fromhex(clvm)
-
     sp = SerializedProgram.from_bytes(clvm_blob)
     return Program.from_bytes(bytes(sp))
 
@@ -89,12 +90,15 @@ ROOT = pathlib.Path(importlib.import_module("chives").__file__).absolute().paren
 log = logging.getLogger(__name__)
 SINGLETON_MOD = load_clvm("singleton_top_layer.clvm")
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
-LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
+#LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
+LAUNCHER_PUZZLE = load_clvm("nft_launcher.clvm")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 
-STAKING_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/staking_fixed_height.clsp")
+#STAKING_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/staking_fixed_height.clsp")
+STAKING_MOD = load_clvm("staking_fixed_height.clvm")
 
-INNER_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/creator_nft.clsp")
+#INNER_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/creator_nft.clsp")
+INNER_MOD = load_clvm("creator_nft.clvm")
 ESCAPE_VALUE = -113
 MELT_CONDITION = [ConditionOpcode.CREATE_COIN, 0, ESCAPE_VALUE]
 
