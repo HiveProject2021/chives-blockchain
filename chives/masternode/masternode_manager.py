@@ -71,6 +71,8 @@ from chives.wallet.secret_key_store import SecretKeyStore
 from chives.wallet.wallet_puzzle_store import WalletPuzzleStore
 
 from clvm_tools.clvmc import compile_clvm
+from chives.wallet.puzzles.load_clvm import load_clvm
+
 
 def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/")]):
     base = Path().parent.resolve()
@@ -80,22 +82,23 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
     compile_clvm(source, target, searches)
     clvm = target.read_text()
     clvm_blob = bytes.fromhex(clvm)
-
     sp = SerializedProgram.from_bytes(clvm_blob)
     return Program.from_bytes(bytes(sp))
 
 
 ROOT = pathlib.Path(importlib.import_module("chives").__file__).absolute().parent.parent
-
 log = logging.getLogger(__name__)
 SINGLETON_MOD = load_clvm("singleton_top_layer.clvm")
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
-LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
+#LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
+LAUNCHER_PUZZLE = load_clvm("nft_launcher.clvm")
 LAUNCHER_PUZZLE_HASH = LAUNCHER_PUZZLE.get_tree_hash()
 
-STAKING_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/staking_fixed_height.clsp")
+#STAKING_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/staking_fixed_height.clsp")
+STAKING_MOD = load_clvm("staking_fixed_height.clvm")
 
-INNER_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/creator_nft.clsp")
+#INNER_MOD = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/creator_nft.clsp")
+INNER_MOD = load_clvm("creator_nft.clvm")
 ESCAPE_VALUE = -113
 MELT_CONDITION = [ConditionOpcode.CREATE_COIN, 0, ESCAPE_VALUE]
 
@@ -288,6 +291,10 @@ class MasterNodeManager:
         balance_data = await self.wallet_client.get_wallet_balance(1)
         return balance_data["confirmed_wallet_balance"]
 
+    async def available_max_sent(self) -> int:
+        balance_data = await self.wallet_client.get_wallet_balance(1)
+        return balance_data["max_send_amount"]
+
     async def choose_std_coin(self, amount: int) -> Tuple[Coin, Program]:
         # check that wallet_balance is greater than amount
         assert await self.available_balance() > amount
@@ -307,10 +314,10 @@ class MasterNodeManager:
         raise ValueError("No spendable coins found", "No spendable coins found")
 
     async def launch_staking_storage(self) -> bytes:    
-        available_balance = await self.available_balance()
-        if available_balance<101:
+        available_max_sent = await self.available_max_sent()
+        if available_max_sent<101:
             return ("Need your wallet have at least 101 mojo","Need your wallet have at least 101 mojo")
-
+                    
         blockchain_state = await self.node_client.get_blockchain_state()
         if blockchain_state is None:
             print("There is no blockchain found yet. Try again shortly")
@@ -631,7 +638,7 @@ class MasterNodeManager:
             confirmed_wallet_balance = round(Decimal(balances["confirmed_wallet_balance"]/mojo_per_unit),8)
         else:
             confirmed_wallet_balance = 0
-        fee = 1
+        fee = 0
         override = False
         memo = "Merge coin for MasterNode"
         #self.log.warning(f"1 masternode_staking_json args: {args}")
@@ -854,7 +861,7 @@ class MasterNodeManager:
                 return jsonResult  
             else:
                 jsonResult['data'].append({"Staking coin for MasterNode not yet submitted to nodes":""})
-                jsonResult['data'].append({"tx":{tx_id}})
+                jsonResult['data'].append({"tx":{str(tx_id)}})
                 jsonResult['success'] = True
                 jsonResult['message'] = "Staking coin for MasterNode not yet submitted to nodes"
                 return jsonResult 
@@ -956,7 +963,7 @@ class MasterNodeManager:
         else:        
             #Third step: if staking address is not in database, will start a new nft mint process to finish the register
             tx_id, launcher_id = await self.launch_staking_storage()
-            if tx_id is not None and len(tx_id)==64:
+            if tx_id is not None and len(str(tx_id))==64:
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
                 #self.print_masternode(nft,0)
                 jsonResult = {}
@@ -964,7 +971,7 @@ class MasterNodeManager:
                 jsonResult['title'] = "Chives Masternode Register Success"
                 jsonResult['data'] = []
                 jsonResult['data'].append({"":""})
-                jsonResult['data'].append({"Transaction id":tx_id})
+                jsonResult['data'].append({"Transaction id":str(tx_id)})
                 jsonResult['data'].append({"Launcher_id":launcher_id})
                 jsonResult['data'].append({"Result":"Staking MasterNode Success, just need to keep your fullnode is running!!"})
                 jsonResult['success'] = True
