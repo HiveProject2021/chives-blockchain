@@ -148,6 +148,23 @@ class MasterNodeManager:
         self.fingerprints = await self.wallet_client.get_public_keys()
         self.log = logging.getLogger(__name__)
 
+    async def getWalletPk(self, fingerprint: int = 0, sk = None) -> bool:
+        if fingerprint is None:
+            return None
+        if fingerprint == 0:
+            fingerprint = 1
+        if fingerprint<10000:
+            fingerprint = fingerprint - 1
+            fingerprint = self.fingerprints[fingerprint]
+        self.fingerprint = fingerprint
+        try:
+            self.masternode_wallet = await MasterNodeWallet.create(self.db_wrapper, self.node_client, self.fingerprint)
+            log_in_response = await self.wallet_client.log_in(fingerprint)
+            private_key = await self.wallet_client.get_private_key(fingerprint)
+            return private_key["sk"]
+        except Exception:
+            return False
+
     async def chooseWallet(self, fingerprint: int = 0, sk = None) -> bool:
         if fingerprint is None:
             return None
@@ -1663,12 +1680,11 @@ class MasterNodeWallet:
             staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
             puzzle_hashes, include_spent_coins=False, start_height=start_height
         )
-        print(f"\nMerge coins records: {len(staking_coins)}\n")
         totalAmount = 0
         coin_counter = 0
         select_coins = []
         for coin in staking_coins:
-            if coin.coin.amount<20000000000:
+            if coin.coin.amount<50000000000:
                 synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
                 self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
                 select_coins.append(coin.coin)
@@ -1679,7 +1695,12 @@ class MasterNodeWallet:
         if toAddress is None:
             toAddress = get_staking_address['first_address']
         self.get_max_send_amount = totalAmount
+
+        print(f"\nReady to merge coins number: {len(select_coins)}\n")
         Memos = "Merge coins"
+        if len(select_coins)==0:
+            print("No small coin need to merge\n")
+            return None
         spend_bundle = await self.generate_signed_transaction(
             totalAmount, decode_puzzle_hash(toAddress), uint64(0), memos=[Memos], coins=select_coins
         )
@@ -1720,6 +1741,8 @@ class MasterNodeWallet:
         StakingAmountAddition[500000] = 1.2
         StakingAmountAddition[1000000] = 1.3
         TotalSendToAmount = 8640
+
+        MasterNumber = 0
         #计算所有质押结点
         for nft in nfts:
             StakingData = nft['StakingData']
@@ -1735,6 +1758,7 @@ class MasterNodeWallet:
                     AddressToStakingAmountAddition[ReceivedAddress] = int(StakingAmount*StakingAmountAddition[StakingAmount])
                 AddressToStakingAmountAdditionSum += AddressToStakingAmountAddition[ReceivedAddress]
                 AddressToStakingPeriod[ReceivedAddress] = int(StakingData['StakingPeriod'])
+                MasterNumber += 1
                 #print(StakingData)               
                 #primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
             else:
@@ -1747,7 +1771,9 @@ class MasterNodeWallet:
                 #print(ShouldToBeSendAmount)
                 counter += 1
                 print(f"counter:{counter} ReceivedAddress:{ReceivedAddress} AmountAddition:{AmountAddition} AmountAddition:{AmountAddition} Amount:{int(ShouldToBeSendAmount)} StakingPeriod:{AddressToStakingPeriod[ReceivedAddress]}") 
-                primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(ShouldToBeSendAmount*self.mojo_per_unit)})
+                memos = 'MasterNode:'+str(MasterNumber)
+                memos = [memos.encode("utf-8")]
+                primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(ShouldToBeSendAmount*self.mojo_per_unit),'memos':memos})
         #发送金额
         get_staking_address = self.init_pk_address(10, primaryKey)
         puzzle_hashes = []
@@ -1771,7 +1797,7 @@ class MasterNodeWallet:
                 break
         toAddress = 'txcc130mh2m5svk6kk784dc02auym978pepy9t9al680hcmj3cg8usc3qmee33k'
         self.get_max_send_amount = totalAmount
-        Memos = "Merge coins"
+        Memos = "MasterNode".encode("utf-8")
         #primaries = []
         #primaries.append({'puzzlehash':decode_puzzle_hash("txcc10d3ghucthzqg03zaqy4x6vl9d2aucm6jynn7nztt68vza90hvutq4qx5m7"),'amount':2222})
         #primaries.append({'puzzlehash':decode_puzzle_hash("txcc12x042wvtauw6t59skahmz58zw63rk4kcnfuxcenscq2fk7gdpp6qpyhqa5"),'amount':3333})
