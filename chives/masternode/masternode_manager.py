@@ -330,7 +330,7 @@ class MasterNodeManager:
                     return (coin_record.coin, puzzle)
         raise ValueError("No spendable coins found", "No spendable coins found")
 
-    async def launch_staking_storage(self) -> bytes:    
+    async def launch_staking_storage(self, wallet_client: WalletRpcClient, fingerprint: int) -> bytes:    
         available_max_sent = await self.available_max_sent()
         if available_max_sent<101:
             return ("Need your wallet have at least 101 mojo","Need your wallet have at least 101 mojo")
@@ -345,7 +345,7 @@ class MasterNodeManager:
         sync_mode = blockchain_state["sync"]["sync_mode"]        
         
         #Create MasterNode ID Must Have Staking Coin.            
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
         STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         if STAKING_ADDRESS is None:
             return ("No finish staking coin","No finish staking coin")
@@ -510,6 +510,7 @@ class MasterNodeManager:
                 self.print_masternode(nft,counter)
     
     async def masternode_summary_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        await self.masternode_wallet.sync_masternode()
         nfts = await self.get_all_masternodes()
         MasterNodeStakingAmount = 0
         MasterNodeCount = 0
@@ -559,11 +560,9 @@ class MasterNodeManager:
         fee = 1
         override = False
         memo = "Merge coin for MasterNode"
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
-        address = get_staking_address_result['address']
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
+        address = get_staking_address_result['first_address']
         amount = max_send_amount
-        #Staking Amount
-        stakingCoinAmount = 100000
         #print(balances)
         #print(get_staking_address_result)
         #To check is or not have this staking coin record
@@ -640,8 +639,8 @@ class MasterNodeManager:
         jsonResult = await self.masternode_staking_json(args, wallet_client, fingerprint)
         self.printJsonResult(jsonResult)
 
-    def get_staking_address(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
-        return self.masternode_wallet.get_staking_address()
+    async def get_staking_address(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        return await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
 
     async def masternode_staking_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         wallet_id: int = 1
@@ -659,7 +658,7 @@ class MasterNodeManager:
         override = False
         memo = "Merge coin for MasterNode"
         #self.log.warning(f"1 masternode_staking_json args: {args}")
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
         #self.log.warning(f"2 masternode_staking_json get_staking_address_result: {get_staking_address_result}")
 
         # to choose staking period from three options
@@ -891,7 +890,7 @@ class MasterNodeManager:
     async def masternode_cancel_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         mojo_per_unit = self.mojo_per_unit        
         memo = "Cancel coin for MasterNode"
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
         STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         
         #print(balances)
@@ -922,7 +921,7 @@ class MasterNodeManager:
         #取消质押
         if isHaveStakingCoin is True:
             jsonResult['data'].append({"Cancel staking coin for MasterNode Submitting transaction...":""})
-            cancel_masternode_staking_coins = await self.cancel_masternode_staking_coins(STAKING_ADDRESS,STAKING_PUZZLE)
+            cancel_masternode_staking_coins = await self.cancel_masternode_staking_coins(STAKING_ADDRESS,STAKING_PUZZLE,wallet_client, fingerprint)
             #print(f"cancel_masternode_staking_coins:{cancel_masternode_staking_coins}")
             if cancel_masternode_staking_coins is not None and "tx_id" in cancel_masternode_staking_coins:
                 jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes":""})
@@ -956,7 +955,7 @@ class MasterNodeManager:
         #First step to syncing data from blockchain
         await self.masternode_wallet.sync_masternode()
         #Second step to check staking address is or not in database
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
         STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         #print(STAKING_ADDRESS)
         #print(STAKING_PUZZLE_HASH)
@@ -979,7 +978,7 @@ class MasterNodeManager:
             return jsonResult
         else:        
             #Third step: if staking address is not in database, will start a new nft mint process to finish the register
-            tx_id, launcher_id = await self.launch_staking_storage()
+            tx_id, launcher_id = await self.launch_staking_storage(wallet_client, fingerprint)
             if tx_id is not None and len(str(tx_id))==64:
                 nft = await self.wait_for_confirmation(tx_id, launcher_id)
                 #self.print_masternode(nft,0)
@@ -1023,7 +1022,7 @@ class MasterNodeManager:
         mojo_per_unit = self.mojo_per_unit
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
-        get_address_by_index = await wallet_client.get_address_by_index(0)
+        #get_address_by_index = await wallet_client.get_address_by_index(0)
         #print(get_address_by_index['address'])
 
         if balances["max_send_amount"]>0:
@@ -1041,7 +1040,8 @@ class MasterNodeManager:
         isHaveStakingCoin = False
         StakingAccountAmount = 0        
         StakingAccountAmountCoin = '0'
-        get_staking_address_result = self.masternode_wallet.get_staking_address()
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
+        
         # check staking status in blockchain
         STAKING_ADDRESS,STAKING_PUZZLE_HASH,STAKING_COIN,STAKING_HEIGHT,STAKING_PERIOD,STAKING_PUZZLE,STAKING_CAN_CANCEL_HEIGHT = await self.masternode_wallet.get_staking_address_and_amount_in_use(get_staking_address_result)
         #print("=======================")
@@ -1165,8 +1165,8 @@ class MasterNodeManager:
         nfts = await self.get_all_masternodes()
         return len(nfts)
     
-    async def cancel_masternode_staking_coins(self,STAKING_ADDRESS,STAKING_PUZZLE) -> List:
-        cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins_from_staking_coin(STAKING_ADDRESS,STAKING_PUZZLE)
+    async def cancel_masternode_staking_coins(self, STAKING_ADDRESS, STAKING_PUZZLE, wallet_client: WalletRpcClient, fingerprint: int) -> List:
+        cancel_staking_coins = await self.masternode_wallet.cancel_staking_coins_from_staking_coin(STAKING_ADDRESS,STAKING_PUZZLE,wallet_client, fingerprint)
         return cancel_staking_coins
         #print(f"cancel_staking_coins:{cancel_staking_coins}")
     
@@ -1518,60 +1518,57 @@ class MasterNodeWallet:
                 else:
                     return None,None,None,None,0,None,None
 
-    def get_staking_address(self):
+    async def get_staking_address(self, wallet_client: WalletRpcClient, fingerprint: int):
+
+        private_key = await wallet_client.get_private_key(fingerprint)
+        sk_data = binascii.unhexlify(private_key["sk"])
+        self.master_sk = PrivateKey.from_bytes(sk_data)
+
         non_observer_derivation = False
         root_path = DEFAULT_ROOT_PATH
         config = load_config(root_path, "config.yaml")
-        private_keys = Keychain().get_all_private_keys()
         selected = config["selected_network"]
         prefix = config["network_overrides"]["config"][selected]["address_prefix"]
-        if len(private_keys) == 0:
-            print("There are no saved private keys")
-            return None
+        
         result = {}
-        # Standard wallet keys
-        for sk, seed in private_keys:   
-            if self.fingerprint == sk.get_g1().get_fingerprint():
-                privateKey = _derive_path_unhardened(sk, [12381, 9699, 2, 0])
-                publicKey = privateKey.get_g1()
-                puzzle = puzzle_for_pk(bytes(publicKey))
-                puzzle_hash = puzzle.get_tree_hash()
-                #print(puzzle_hash)
-                first_address = encode_puzzle_hash(puzzle_hash, prefix)
-                result['first_address'] = first_address;      
-                result['first_puzzle_hash'] = puzzle_hash;   
+        privateKey = _derive_path_unhardened(self.master_sk, [12381, 9699, 2, 0])
+        publicKey = privateKey.get_g1()
+        puzzle = puzzle_for_pk(bytes(publicKey))
+        puzzle_hash = puzzle.get_tree_hash()
+        #print(puzzle_hash)
+        first_address = encode_puzzle_hash(puzzle_hash, prefix)
+        result['first_address'] = first_address;      
+        result['first_puzzle_hash'] = puzzle_hash;   
 
         # Standard wallet keys
-        for sk, seed in private_keys:   
-            if self.fingerprint == sk.get_g1().get_fingerprint():
-                privateKey = _derive_path_unhardened(sk, [12381, 9699, 2, 10])
-                publicKey = privateKey.get_g1()
-                puzzle = puzzle_for_pk(bytes(publicKey))
-                puzzle_hash = puzzle.get_tree_hash()
-                #print(puzzle_hash)
-                first_address = encode_puzzle_hash(puzzle_hash, prefix)
-                result['ReceivedAddress'] = first_address;      
-                result['ReceivedAddressPuzzleHash'] = puzzle_hash;  
-                
-        # Masternode wallet keys   
-        for sk, seed in private_keys:   
-            if self.fingerprint == sk.get_g1().get_fingerprint():
-                privateKey = _derive_path(sk, [12381, 9699, 99, 0])
-                publicKey = privateKey.get_g1()
-                puzzle = puzzle_for_pk(bytes(publicKey))
-                puzzle_hash = puzzle.get_tree_hash()
-                #print(puzzle_hash)
-                address = encode_puzzle_hash(puzzle_hash, prefix)
-                #print(address)        
-                result['privateKey'] = privateKey
-                result['publicKey'] = publicKey
-                result['puzzle_hash'] = puzzle_hash
-                result['address'] = address
-                result['StakingAmount'] = 100000
-                self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
-                self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
-                self.puzzlehash_to_publickey[puzzle_hash] = publicKey
-                self.key_dict[bytes(publicKey)] = privateKey
+        privateKey = _derive_path_unhardened(self.master_sk, [12381, 9699, 2, 10])
+        publicKey = privateKey.get_g1()
+        puzzle = puzzle_for_pk(bytes(publicKey))
+        puzzle_hash = puzzle.get_tree_hash()
+        #print(puzzle_hash)
+        first_address = encode_puzzle_hash(puzzle_hash, prefix)
+        result['ReceivedAddress'] = first_address;      
+        result['ReceivedAddressPuzzleHash'] = puzzle_hash; 
+
+        '''
+        privateKey = _derive_path(self.master_sk, [12381, 9699, 99, 0])
+        publicKey = privateKey.get_g1()
+        puzzle = puzzle_for_pk(bytes(publicKey))
+        puzzle_hash = puzzle.get_tree_hash()
+        #print(puzzle_hash)
+        address = encode_puzzle_hash(puzzle_hash, prefix)
+        #print(address)        
+        result['privateKey'] = privateKey
+        result['publicKey'] = publicKey
+        result['puzzle_hash'] = puzzle_hash
+        result['address'] = address
+        result['StakingAmount'] = 100000
+        self.puzzle_for_puzzle_hash[puzzle_hash] = puzzle
+        self.puzzlehash_to_privatekey[puzzle_hash] = privateKey
+        self.puzzlehash_to_publickey[puzzle_hash] = publicKey
+        self.key_dict[bytes(publicKey)] = privateKey
+        '''
+
         # Staking fixed height smart coin for test
         STAKING_REQUIRED_HEIGHT = 10
         STAKING_PUZZLE_HASH,STAKING_PUZZLE,STAKING_ADDRESS = self.MakeUserStakingAddressBaseOnStaking(result['first_address'], STAKING_REQUIRED_HEIGHT)
@@ -1637,8 +1634,8 @@ class MasterNodeWallet:
     def print_json(self,dict):
         print(json.dumps(dict, sort_keys=True, indent=4))
 
-    async def cancel_staking_coins_from_staking_coin(self,STAKING_ADDRESS,STAKING_PUZZLE) -> Tuple[Coin, Program]:
-        get_staking_address = self.get_staking_address()
+    async def cancel_staking_coins_from_staking_coin(self,STAKING_ADDRESS,STAKING_PUZZLE,wallet_client: WalletRpcClient, fingerprint: int) -> Tuple[Coin, Program]:
+        get_staking_address = await self.get_staking_address(wallet_client, fingerprint)
         STAKING_PUZZLE_HASH = decode_puzzle_hash(STAKING_ADDRESS)
         STAKING_PUZZLE = STAKING_PUZZLE
         #print(STAKING_ADDRESS)
