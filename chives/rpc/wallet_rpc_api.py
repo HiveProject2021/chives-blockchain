@@ -987,64 +987,22 @@ class WalletRpcApi:
                     }
 
     async def masternode_received_transactions(self, request: Dict) -> Dict:
-        from chives.masternode.masternode_manager import MasterNodeManager
-        manager = MasterNodeManager()
-        await manager.connect()
-        wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
-        if checkSyncedStatus < 2:
-            return {
-                    "fingerprint": fingerprint,
-                    "wallet_id": wallet_id,
-                    "success": False,
-                    "message":checkSyncedStatusText
-                    }
-        chooseWallet = await manager.chooseWallet(fingerprint)
-        if chooseWallet is False:
-            return {
-                    "fingerprint": fingerprint,
-                    "wallet_id": wallet_id,
-                    "success": False,
-                    "message":"choose wallet failed in manager section."
-                    }
-        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=fingerprint)
-        await manager.close()
-        #Add a address filter in here
-        request["to_address"] = get_staking_address['ReceivedAddress']
+        assert self.service.wallet_state_manager is not None
+        derivation_record = await self.service.wallet_state_manager.get_puzzle_hash_by_index(wallet_id=uint32(int(request["wallet_id"])), index=10)
+        assert derivation_record is not None
+        selected = self.service.config["selected_network"]
+        prefix = self.service.config["network_overrides"]["config"][selected]["address_prefix"]
+        request["to_address"] = encode_puzzle_hash(derivation_record.puzzle_hash, prefix)
         return await self.get_transactions(request)
     
     async def masternode_received_transaction_count(self, request: Dict) -> Dict:
-        from chives.masternode.masternode_manager import MasterNodeManager
-        manager = MasterNodeManager()
-        await manager.connect()
-        wallet_id = uint32(int(request["wallet_id"]))
-        checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
-        if checkSyncedStatus < 2:
-            return {
-                    "fingerprint": fingerprint,
-                    "wallet_id": wallet_id,
-                    "success": False,
-                    "message":checkSyncedStatusText,
-                    "count": 0
-                    }
-        chooseWallet = await manager.chooseWallet(fingerprint)
-        if chooseWallet is False:
-            return {
-                    "fingerprint": fingerprint,
-                    "wallet_id": wallet_id,
-                    "success": False,
-                    "message":"choose wallet failed in manager section.",
-                    "count": 0
-                    }
-        get_staking_address = manager.get_staking_address(args={}, wallet_client=manager.wallet_client, fingerprint=fingerprint)
-        await manager.close()
-        #Add a address filter in here
-        to_address = get_staking_address['first_address']
-        to_puzzle_hash = decode_puzzle_hash(to_address)
-        count = await self.service.wallet_state_manager.tx_store.get_transaction_count_for_wallet_filter_by_puzzle_hash(wallet_id,to_puzzle_hash)
+        assert self.service.wallet_state_manager is not None
+        derivation_record = await self.service.wallet_state_manager.get_puzzle_hash_by_index(wallet_id=uint32(int(request["wallet_id"])), index=10)
+        assert derivation_record is not None
+        count = await self.service.wallet_state_manager.tx_store.get_transaction_count_for_wallet_filter_by_puzzle_hash(wallet_id=uint32(int(request["wallet_id"])), to_puzzle_hash=derivation_record.puzzle_hash)
         return {
             "count": count,
-            "wallet_id": wallet_id,
+            "wallet_id": uint32(int(request["wallet_id"])),
         }
 
     ##########################################################################################
