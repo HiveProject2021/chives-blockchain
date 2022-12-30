@@ -847,6 +847,7 @@ class WalletRpcApi:
         log.warning("2 api masternode_staking.fingerprint: %s", str(self.service.logged_in_fingerprint))
         masternode_staking_json = await manager.masternode_staking_json(args, wallet_client=manager.wallet_client, fingerprint=self.service.logged_in_fingerprint)
         await manager.close()
+        log.warning(masternode_staking_json)
 
         return  {
                     "fingerprint": self.service.logged_in_fingerprint,

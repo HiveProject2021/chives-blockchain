@@ -853,6 +853,7 @@ class MasterNodeManager:
                 #self.log.warning(f"8 masternode_staking_json send_transaction begin: {jsonResult}")
                 res = await wallet_client.send_transaction(str(wallet_id), final_amount, StakingAddress, final_fee, memos)
                 #self.log.warning(f"9 masternode_staking_json send_transaction end: {jsonResult}")
+                #print(res)
             else:
                 jsonResult['data'].append({"":""})
                 jsonResult['data'].append({"Only standard wallet is supported":""})
@@ -866,7 +867,7 @@ class MasterNodeManager:
                 jsonResult['data'].append({f"Staking coin for MasterNode Transaction submitted to nodes.":""})
                 jsonResult['data'].append({f"fingerprint {fingerprint} tx 0x{tx_id} to StakingAddress: {StakingAddress} on stakingCoinAmount: {stakingCoinAmount} stakingYear: {year} ":""})
                 #self.printJsonResult(jsonResult)
-                await self.wait_tx_for_confirmation(tx_id)
+                #await self.wait_tx_for_confirmation(tx_id)
                 #jsonResult = {}
                 jsonResult['status'] = "success"
                 jsonResult['title'] = "Chives Masternode Staking Information:"
