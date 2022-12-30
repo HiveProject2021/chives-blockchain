@@ -99,6 +99,7 @@ class WalletRpcApi:
             "/get_transactions": self.get_transactions,
             "/get_transaction_count": self.get_transaction_count,
             "/get_next_address": self.get_next_address,
+            "/get_address_by_index": self.get_address_by_index,            
             "/send_transaction": self.send_transaction,
             "/send_transaction_multi": self.send_transaction_multi,
             "/get_farmed_amount": self.get_farmed_amount,
@@ -1180,6 +1181,26 @@ class WalletRpcApi:
         else:
             raise ValueError(f"Wallet type {wallet.type()} cannot create puzzle hashes")
 
+        return {
+            "wallet_id": wallet_id,
+            "address": address,
+        }
+
+    async def get_address_by_index(self, request: Dict) -> Dict:
+        """
+        get_address_by_index
+        """
+        assert self.service.wallet_state_manager is not None
+        wallet_id = uint32(int(1))
+        index = uint32(int(request["index"]))
+        wallet = self.service.wallet_state_manager.wallets[wallet_id]
+        selected = self.service.config["selected_network"]
+        prefix = self.service.config["network_overrides"]["config"][selected]["address_prefix"]
+        if wallet.type() == WalletType.STANDARD_WALLET:
+            raw_puzzle_hash = await wallet.get_puzzle_hash_by_index(index)
+            address = encode_puzzle_hash(raw_puzzle_hash, prefix)
+        else:
+            raise ValueError(f"Wallet type {wallet.type()} cannot create puzzle hashes")
         return {
             "wallet_id": wallet_id,
             "address": address,

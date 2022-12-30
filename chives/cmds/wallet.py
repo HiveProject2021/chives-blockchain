@@ -401,7 +401,6 @@ def masternode_register_cmd(
 def show_cmd(wallet_rpc_port: Optional[int], fingerprint: int, wallet_type: Optional[str]) -> None:
     import asyncio
     from .wallet_funcs import execute_with_wallet, print_balances
-
     args: Dict[str, Any] = {}
     if wallet_type is not None:
         args["type"] = WalletType[wallet_type.upper()]

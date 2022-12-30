@@ -1019,9 +1019,13 @@ class MasterNodeManager:
         self.printJsonResult(jsonResult)
 
     async def masternode_mynode_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        
         mojo_per_unit = self.mojo_per_unit
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
+        get_address_by_index = await wallet_client.get_address_by_index(0)
+        #print(get_address_by_index['address'])
+
         if balances["max_send_amount"]>0:
             max_send_amount = round(Decimal(balances["max_send_amount"]/mojo_per_unit),8)
         else:
