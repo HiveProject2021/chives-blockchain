@@ -85,8 +85,12 @@ async def getAllUnspentCoins(STAKING_PUZZLE_HASH, STAKING_PUZZLE):
                     signature,
                 )
             #print_json(spend_bundle.to_json_dict())
-            status = await node_client.push_tx(spend_bundle)
-            print_json(status['status'])            
+            try:
+                status = await node_client.push_tx(spend_bundle)
+                print_json(status['status'])  
+            except Exception:
+                print(Exception)
+                      
     finally:
         node_client.close()
         await node_client.await_closed()

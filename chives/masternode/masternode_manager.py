@@ -147,6 +147,18 @@ class MasterNodeManager:
         self.db_wrapper = DBWrapper(self.connection)
         self.fingerprints = await self.wallet_client.get_public_keys()
         self.log = logging.getLogger(__name__)
+    
+    async def find_all_fullnode(self, wallet_index: int = 0) -> None:
+        connections = await self.node_client.get_connections()
+        for connection in connections:
+            peer_host = connection['peer_host']
+            peer_port = connection['peer_port']
+            node_id = connection['node_id']
+            last_message_time = connection['last_message_time']
+            if peer_host != "127.0.0.1":
+                print(f"peer_host:{peer_host}")
+                await self.node_client.open_connection(peer_host, int(peer_port))
+                print(connection)
 
     async def getWalletPk(self, fingerprint: int = 0, sk = None) -> bool:
         if fingerprint is None:
@@ -1794,7 +1806,8 @@ class MasterNodeWallet:
             self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
             select_coins.append(coin.coin)
             coin_counter += 1
-            totalAmount += coin.coin.amount
+            if coin.coin.amount>20000000000:
+                totalAmount += coin.coin.amount
             if totalAmount>send_max_amount:
                 break
         toAddress = 'txcc130mh2m5svk6kk784dc02auym978pepy9t9al680hcmj3cg8usc3qmee33k'
