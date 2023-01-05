@@ -16,6 +16,7 @@ SERVICES_FOR_GROUP = {
     "crawler": "chives_crawler".split(),
     "seeder": "chives_crawler chives_seeder".split(),
     "seeder-only": "chives_seeder".split(),
+    "masternode": "chives_masternode".split(),
 }
 
 

@@ -101,6 +101,7 @@ if getattr(sys, "frozen", False):
         "chives_full_node_simulator": "start_simulator",
         "chives_seeder": "start_seeder",
         "chives_crawler": "start_crawler",
+        "chives_masternode": "start_masternode",
     }
 
     def executable_for_service(service_name: str) -> str:

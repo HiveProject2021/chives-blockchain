@@ -195,6 +195,7 @@ for server in SERVERS:
 
 add_binary("start_crawler", f"{ROOT}/chives/seeder/start_crawler.py", COLLECT_ARGS)
 add_binary("start_seeder", f"{ROOT}/chives/seeder/dns_server.py", COLLECT_ARGS)
+add_binary("start_masternode", f"{ROOT}/chives/seeder/start_masternode.py", COLLECT_ARGS)
 
 COLLECT_KWARGS = dict(
     strip=False,
