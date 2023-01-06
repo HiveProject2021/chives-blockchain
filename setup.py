@@ -133,7 +133,7 @@ kwargs = dict(
             "chives_timelord = chives.server.start_timelord:main",
             "chives_timelord_launcher = chives.timelord.timelord_launcher:main",
             "chives_full_node_simulator = chives.simulator.start_simulator:main",
-            "chives_masternode = chives.seeder.start_masternode:main",
+            "chives_masternode = chives.masternode.start_masternode:main",
         ]
     },
     package_data={
