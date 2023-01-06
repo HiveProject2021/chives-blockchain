@@ -12,6 +12,7 @@ import importlib
 from decimal import Decimal
 from typing import Dict, List, Set, Tuple, Optional, Union, Any
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
+import requests
 
 from chives.cmds.units import units
 from chives.types.blockchain_format.coin import Coin
@@ -27,6 +28,7 @@ from chives.wallet.util.wallet_types import AmountWithPuzzlehash, WalletType
 from chives.wallet.transaction_record import TransactionRecord
 from chives.util.keychain import Keychain, bytes_from_mnemonic, bytes_to_mnemonic, generate_mnemonic, mnemonic_to_seed, unlocks_keyring
 from chives.util.condition_tools import ConditionOpcode
+from chives.util.chives_logging import initialize_logging
 from chives.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (  # standard_transaction
     puzzle_for_pk,
     calculate_synthetic_secret_key,
@@ -88,7 +90,6 @@ def load_clsp_relative(filename: str, search_paths: List[Path] = [Path("include/
 
 
 ROOT = pathlib.Path(importlib.import_module("chives").__file__).absolute().parent.parent
-log = logging.getLogger(__name__)
 SINGLETON_MOD = load_clvm("singleton_top_layer.clvm")
 SINGLETON_MOD_HASH = SINGLETON_MOD.get_tree_hash()
 # LAUNCHER_PUZZLE = load_clsp_relative(f"{ROOT}/chives/masternode/clsp/nft_launcher.clsp")
@@ -110,6 +111,8 @@ if config["selected_network"] == "testnet10":
                                                                     ]["AGG_SIG_ME_ADDITIONAL_DATA"]
     DEFAULT_CONSTANTS = DEFAULT_CONSTANTS.replace_str_to_bytes(**{"AGG_SIG_ME_ADDITIONAL_DATA": testnet_agg_sig_data})
 
+initialize_logging("masternode", config["logging"], DEFAULT_ROOT_PATH)
+log = logging.getLogger(__name__)
 self_hostname = config["self_hostname"]
 rpc_port = config["full_node"]["rpc_port"]
 prefix = config["network_overrides"]["config"][selected]["address_prefix"]
@@ -286,7 +289,7 @@ class MasterNodeManager:
             checkSyncedStatusText.append('-' * 64)
         except:
             pass
-        
+
         return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
 
     async def close(self) -> None:
@@ -531,6 +534,42 @@ class MasterNodeManager:
                 counter += 1
                 self.print_masternode(nft, counter)
 
+    async def masternode_heartbeat_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+        root_path = DEFAULT_ROOT_PATH
+        config = load_config(root_path, "config.yaml")
+        get_staking_address_result = await self.masternode_wallet.get_staking_address(wallet_client, fingerprint)
+        result = {}
+        result['selected_network'] = config["selected_network"]
+        result['fingerprint'] = fingerprint
+        result['first_address'] = get_staking_address_result['first_address']
+        result['ReceivedAddress'] = get_staking_address_result['ReceivedAddress']
+
+        # node id
+        blockchain_state = await self.node_client.get_blockchain_state()
+        if blockchain_state is not None and blockchain_state["sync"]["synced"] == True:
+            result['difficulty'] = blockchain_state["difficulty"]
+            result['node_id'] = blockchain_state["node_id"]
+            result['space'] = blockchain_state["space"]
+            result['sub_slot_iters'] = blockchain_state["sub_slot_iters"]
+
+        MasterNodeHeartBeat = json.dumps(result, indent=4, sort_keys=True)
+
+        result = {}
+        try:
+            content = requests.post('https://community.chivescoin.org/masternode/',
+                                    data={'MasterNodeHeartBeat': MasterNodeHeartBeat}, timeout=3)
+            result['result'] = content.text
+            result['status'] = "OK"
+        except requests.exceptions.ConnectionError:
+            result['result'] = "Masternode Heartbeat ConnectionError -- please wait 600 seconds"
+            result['status'] = "ERROR"
+        except:
+            result['result'] = "Masternode Heartbeat Unfortunitely -- An Unknow Error Happened, Please wait 600 seconds"
+            result['status'] = "ERROR"
+        self.log.warning(result)
+
+        return result
+
     async def masternode_summary_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
         await self.masternode_wallet.sync_masternode()
         nfts = await self.get_all_masternodes()
@@ -553,12 +592,21 @@ class MasterNodeManager:
         for coin_record in all_staking_coins:
             UnAssignCoin += coin_record.coin.amount
 
+        config = load_config(DEFAULT_ROOT_PATH, "config.yaml")
+        selected_network = config["selected_network"]
+        MasterNodeOnlineCount = 0
+        try:
+            MasterNodeOnlineCount = requests.get(
+                'https://community.chivescoin.org/masternode/online_nodes.php?chain=' + selected_network, data={}, timeout=2)
+            MasterNodeOnlineCount = int(str(MasterNodeOnlineCount.text))
+        except:
+            pass
         result = {}
         result['MasterNodeCount'] = MasterNodeCount
         result['MasterNodeStakingAmount'] = int(MasterNodeStakingAmount / 100000000)
         result['MasterNodeRewardHaveSentAmount'] = 0
         result['MasterNodeRewardPoolAmount'] = int(UnAssignCoin / 100000000)
-        result['MasterNodeOnlineCount'] = MasterNodeCount
+        result['MasterNodeOnlineCount'] = MasterNodeOnlineCount
         return result
 
     async def masternode_summary(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:

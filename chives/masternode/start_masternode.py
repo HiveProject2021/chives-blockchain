@@ -46,6 +46,7 @@ from chives.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (  # stan
 SERVICE_NAME = "full_node"
 log = logging.getLogger(__name__)
 
+
 async def masternode_update_status_interval(selected_network, config) -> None:
 
     while True:
@@ -114,14 +115,16 @@ async def masternode_update_status_interval(selected_network, config) -> None:
                 log.warning('ChunkedEncodingError -- please wait 600 seconds............................')
             except:
                 log.warning('Unfortunitely -- An Unknow Error Happened, Please wait 600 seconds............................')
-        
+
         except:
             pass
 
-        time.sleep(60)
+        log.warning("begin sleep ***** " * 5)
+        time.sleep(600)
 
 
 def main():
+    time.sleep(60)
     config = load_config_cli(DEFAULT_ROOT_PATH, "config.yaml", "seeder")
     selected_network = config["selected_network"]
     root_path = DEFAULT_ROOT_PATH
