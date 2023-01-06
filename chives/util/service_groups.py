@@ -10,7 +10,7 @@ SERVICES_FOR_GROUP = {
     "timelord": "chives_timelord_launcher chives_timelord chives_full_node".split(),
     "timelord-only": "chives_timelord".split(),
     "timelord-launcher-only": "chives_timelord_launcher".split(),
-    "wallet": "chives_wallet".split(),
+    "wallet": "chives_wallet chives_masternode".split(),
     "introducer": "chives_introducer".split(),
     "simulator": "chives_full_node_simulator".split(),
     "crawler": "chives_crawler".split(),
