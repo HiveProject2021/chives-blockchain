@@ -89,6 +89,7 @@ async def masternode_update_status_interval(selected_network, config) -> None:
             puzzle = puzzle_for_pk(bytes(publicKey))
             puzzle_hash = puzzle.get_tree_hash()
             ReceivedAddress = encode_puzzle_hash(puzzle_hash, prefix)
+            result['ReceivedAddress'] = ReceivedAddress
 
             # node id
             blockchain_state = await node_client.get_blockchain_state()

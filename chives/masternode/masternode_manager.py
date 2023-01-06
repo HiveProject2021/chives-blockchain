@@ -146,10 +146,13 @@ class MasterNodeManager:
             self.wallet_client = await WalletRpcClient.create(
                 rpc_host, uint16(wallet_rpc_port), Path(DEFAULT_ROOT_PATH), config
             )
-        self.connection = await aiosqlite.connect(Path(self.db_name))
-        self.db_wrapper = DBWrapper(self.connection)
-        self.fingerprints = await self.wallet_client.get_public_keys()
-        self.log = logging.getLogger(__name__)
+        try:
+            self.connection = await aiosqlite.connect(Path(self.db_name))
+            self.db_wrapper = DBWrapper(self.connection)
+            self.fingerprints = await self.wallet_client.get_public_keys()
+            self.log = logging.getLogger(__name__)
+        except:
+            pass
 
     async def find_all_fullnode(self, wallet_index: int = 0) -> None:
         connections = await self.node_client.get_connections()
@@ -256,30 +259,34 @@ class MasterNodeManager:
             return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
 
         #######################################################
-        is_synced: bool = await self.wallet_client.get_synced()
-        is_syncing: bool = await self.wallet_client.get_sync_status()
-        if logged_in_fingerprint is None:
-            logged_in_fingerprint: Optional[int] = await self.wallet_client.get_logged_in_fingerprint()
-        if logged_in_fingerprint is None:
-            checkSyncedStatusText.append("Not selected which chives wallet")
-            return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
-        self.fingerprint = logged_in_fingerprint
-        log_in_response = await self.wallet_client.log_in(logged_in_fingerprint)
+        try:
+            is_synced: bool = await self.wallet_client.get_synced()
+            is_syncing: bool = await self.wallet_client.get_sync_status()
+            if logged_in_fingerprint is None:
+                logged_in_fingerprint: Optional[int] = await self.wallet_client.get_logged_in_fingerprint()
+            if logged_in_fingerprint is None:
+                checkSyncedStatusText.append("Not selected which chives wallet")
+                return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
+            self.fingerprint = logged_in_fingerprint
+            log_in_response = await self.wallet_client.log_in(logged_in_fingerprint)
 
-        checkSyncedStatusText.append(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
-        if is_syncing:
-            checkSyncedStatusText.append("Chives Wallet Sync Status: Syncing...")
-            await self.close()
-            return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
-        elif is_synced:
-            checkSyncedStatusText.append("Chives Wallet Sync Status: Synced")
-            checkSyncedStatusText.append(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
-            checkSyncedStatus += 1
-        else:
-            checkSyncedStatusText.append("Chives Wallet Sync Status: Not synced")
-            await self.close()
-            return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
-        checkSyncedStatusText.append('-' * 64)
+            checkSyncedStatusText.append(f"Chives Wallet height: {await self.wallet_client.get_height_info()}")
+            if is_syncing:
+                checkSyncedStatusText.append("Chives Wallet Sync Status: Syncing...")
+                await self.close()
+                return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
+            elif is_synced:
+                checkSyncedStatusText.append("Chives Wallet Sync Status: Synced")
+                checkSyncedStatusText.append(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
+                checkSyncedStatus += 1
+            else:
+                checkSyncedStatusText.append("Chives Wallet Sync Status: Not synced")
+                await self.close()
+                return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
+            checkSyncedStatusText.append('-' * 64)
+        except:
+            pass
+        
         return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
 
     async def close(self) -> None:
