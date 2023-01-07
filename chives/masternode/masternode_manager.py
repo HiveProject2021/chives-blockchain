@@ -601,6 +601,8 @@ class MasterNodeManager:
             MasterNodeOnlineCount = int(str(MasterNodeOnlineCount.text))
         except:
             pass
+        if MasterNodeOnlineCount>MasterNodeCount:
+            MasterNodeOnlineCount = MasterNodeCount
         result = {}
         result['MasterNodeCount'] = MasterNodeCount
         result['MasterNodeStakingAmount'] = int(MasterNodeStakingAmount / 100000000)
