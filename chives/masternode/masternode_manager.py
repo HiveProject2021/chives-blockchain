@@ -601,7 +601,7 @@ class MasterNodeManager:
             MasterNodeOnlineCount = int(str(MasterNodeOnlineCount.text))
         except:
             pass
-        if MasterNodeOnlineCount>MasterNodeCount:
+        if MasterNodeOnlineCount > MasterNodeCount:
             MasterNodeOnlineCount = MasterNodeCount
         result = {}
         result['MasterNodeCount'] = MasterNodeCount
@@ -1141,6 +1141,18 @@ class MasterNodeManager:
                 isHaveRegisterNode = True
                 RegisterNodeID = rows[0]
 
+        MasterNodeIsOnline = "None"
+        root_path = DEFAULT_ROOT_PATH
+        config = load_config(root_path, "config.yaml")
+        selected_network = config["selected_network"]
+        try:
+            MasterNodeIsOnline = requests.get(
+                'https://community.chivescoin.org/masternode/online_check.php?chain=' + selected_network + '&ReceivedAddress=' + get_staking_address_result['ReceivedAddress'] , data={}, timeout=2)
+            MasterNodeIsOnline = str(MasterNodeIsOnline.text)
+            #MasterNodeIsOnline = "Online"
+        except:
+            pass
+
         jsonResult = {}
         jsonResult['status'] = "success"
         jsonResult['title'] = "Chives Masternode Staking Information:"
@@ -1154,6 +1166,7 @@ class MasterNodeManager:
         jsonResult['data'].append({"Staking Account Balance": str(StakingAccountAmount / self.mojo_per_unit)})
         jsonResult['data'].append({"Staking Account Status": isHaveStakingCoin})
         jsonResult['data'].append({"Staking Register MasterNode Status": isHaveRegisterNode})
+        jsonResult['data'].append({"Staking Register MasterNode Online": MasterNodeIsOnline})
         jsonResult['data'].append({"Staking Register MasterNode ID": RegisterNodeID})
         jsonResult['data'].append({"Staking Height": STAKING_HEIGHT})
         jsonResult['data'].append({"Staking Can Cancel Height": STAKING_CAN_CANCEL_HEIGHT})
@@ -1169,6 +1182,7 @@ class MasterNodeManager:
         dictResult['StakingAccountBalance'] = int(StakingAccountAmount / self.mojo_per_unit)
         dictResult['StakingAccountStatus'] = isHaveStakingCoin
         dictResult['StakingRegisterMasterNodeStatus'] = isHaveRegisterNode
+        dictResult['StakingRegisterMasterNodeOnline'] = MasterNodeIsOnline
         dictResult['StakingRegisterMasterNodeID'] = RegisterNodeID
         dictResult['StakingHeight'] = STAKING_HEIGHT
         dictResult['StakingCanCancelHeight'] = STAKING_CAN_CANCEL_HEIGHT

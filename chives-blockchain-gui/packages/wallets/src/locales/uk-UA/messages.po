@@ -1674,8 +1674,16 @@ msgstr ""
 #~ msgid "MasterNode Count"
 #~ msgstr ""
 
+#: src/components/MasterNodeStakingPanelStep4.tsx:98
+msgid "MasterNode ID: {StakingRegisterMasterNodeID}"
+msgstr ""
+
 #: src/components/MasterNodeList.tsx:224
 msgid "MasterNode List"
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:103
+msgid "MasterNode Online Statue: {StakingRegisterMasterNodeOnline}"
 msgstr ""
 
 #: src/components/MasterNodeReceivedList.tsx:310
@@ -3091,7 +3099,7 @@ msgstr ""
 msgid "Standard Wallet"
 msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:114
+#: src/components/MasterNodeStakingPanelStep4.tsx:125
 msgid "Start Register MasterNode"
 msgstr ""
 
@@ -3405,7 +3413,7 @@ msgstr "Це сукупний баланс + очікуваний баланс: 
 #~ msgid "This step will register your masternode to blockchain."
 #~ msgstr ""
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:100
+#: src/components/MasterNodeStakingPanelStep4.tsx:111
 msgid "This step will register your masternode to the blockchain."
 msgstr ""
 
@@ -4011,13 +4019,17 @@ msgstr ""
 #~ msgid "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 #~ msgstr "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:91
-#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+#: src/components/MasterNodeStakingPanelStep4.tsx:93
+msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+msgstr ""
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:92
+#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
 #~ msgstr ""
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:92
-msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
-msgstr ""
+#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}MasterNode Online Statue: {StakingRegisterMasterNodeOnline}"
+#~ msgstr ""
 
 #: src/components/offers/OfferShareDialog.tsx:707
 #~ msgid "Your offer has been successfully posted to Keybase."

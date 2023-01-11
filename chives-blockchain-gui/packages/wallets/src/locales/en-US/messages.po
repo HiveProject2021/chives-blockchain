@@ -1678,9 +1678,17 @@ msgstr "Manage token list"
 #~ msgid "MasterNode Count"
 #~ msgstr "MasterNode Count"
 
+#: src/components/MasterNodeStakingPanelStep4.tsx:98
+msgid "MasterNode ID: {StakingRegisterMasterNodeID}"
+msgstr "MasterNode ID: {StakingRegisterMasterNodeID}"
+
 #: src/components/MasterNodeList.tsx:224
 msgid "MasterNode List"
 msgstr "MasterNode List"
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:103
+msgid "MasterNode Online Statue: {StakingRegisterMasterNodeOnline}"
+msgstr "MasterNode Online Statue: {StakingRegisterMasterNodeOnline}"
 
 #: src/components/MasterNodeReceivedList.tsx:310
 msgid "MasterNode Reward Records"
@@ -3095,7 +3103,7 @@ msgstr "StakingPeriod"
 msgid "Standard Wallet"
 msgstr "Standard Wallet"
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:114
+#: src/components/MasterNodeStakingPanelStep4.tsx:125
 msgid "Start Register MasterNode"
 msgstr "Start Register MasterNode"
 
@@ -3409,7 +3417,7 @@ msgstr "This is the total balance + pending balance: it is what your balance wil
 #~ msgid "This step will register your masternode to blockchain."
 #~ msgstr "This step will register your masternode to blockchain."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:100
+#: src/components/MasterNodeStakingPanelStep4.tsx:111
 msgid "This step will register your masternode to the blockchain."
 msgstr "This step will register your masternode to the blockchain."
 
@@ -4015,13 +4023,17 @@ msgstr "Your coin have staking in a smart coin base on Lisp, you can cancel it w
 #~ msgid "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 #~ msgstr "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 
-#: src/components/MasterNodeStakingPanelStep4.tsx:91
-#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
-#~ msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+#: src/components/MasterNodeStakingPanelStep4.tsx:93
+msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
+msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day."
 
 #: src/components/MasterNodeStakingPanelStep4.tsx:92
-msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
-msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
+#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
+#~ msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}"
+
+#: src/components/MasterNodeStakingPanelStep4.tsx:92
+#~ msgid "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}MasterNode Online Statue: {StakingRegisterMasterNodeOnline}"
+#~ msgstr "Your masternode is running, you need keep Chives fullnode and wallet is running and then will receive the reward every day. MasterNode ID: {StakingRegisterMasterNodeID}MasterNode Online Statue: {StakingRegisterMasterNodeOnline}"
 
 #: src/components/offers/OfferShareDialog.tsx:707
 #~ msgid "Your offer has been successfully posted to Keybase."

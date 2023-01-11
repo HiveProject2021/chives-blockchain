@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
-import { CardStep,CopyToClipboard, Loading} from '@chives/core';
+import { CardStep, CopyToClipboard, Loading } from '@chives/core';
 
 import {
   Box,
@@ -21,12 +21,12 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
   const WalletMaxSent = myCard?.WalletMaxSent;
   const StakingAccountStatus: boolean = myCard?.StakingAccountStatus;
   const StakingReceivedAddress = myCard?.StakingReceivedAddress;
-  
+
   return (
     <CardStep step={step} title={<Trans>Staking Information</Trans>}>
-        <Grid spacing={2} direction="row" container>
-          {!StakingAccountStatus && (
-            <>
+      <Grid spacing={2} direction="row" container>
+        {!StakingAccountStatus && (
+          <>
             <Grid item xs={6}>
               <Box display="flex">
                 <Box flexGrow={1}>
@@ -77,11 +77,11 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                 </Box>
               </Box>
             </Grid>
-            </> 
-          )}
+          </>
+        )}
 
-          {StakingAccountStatus && (
-            <>
+        {StakingAccountStatus && (
+          <>
             <Grid item xs={6}>
               <Box display="flex">
                 <Box flexGrow={1}>
@@ -132,10 +132,10 @@ export default function MasterNodeStakingPanelStep1(props: MasterNodeStakingPane
                 </Box>
               </Box>
             </Grid>
-            </> 
-          )}
+          </>
+        )}
 
-        </Grid> 
+      </Grid>
     </CardStep>
 
   );
