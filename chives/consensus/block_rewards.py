@@ -13,7 +13,7 @@ def calculate_pool_reward(height: uint32) -> uint64:
     (3 years, etc), due to fluctuations in difficulty. They will likely come early, if the network space and VDF
     rates increase continuously.
     """
-    if height > 162000:
+    if height > 2600000:
         if height == 0:
             return uint64(int((7 / 8) * 0 * 0.45 * 100 * _mojo_per_chives))
         elif height < 3 * _blocks_per_year:
@@ -50,7 +50,7 @@ def calculate_base_farmer_reward(height: uint32) -> uint64:
     (3 years, etc), due to fluctuations in difficulty. They will likely come early, if the network space and VDF
     rates increase continuously.
     """
-    if height > 162000:
+    if height > 2600000:
         if height == 0:
             return uint64(int((1 / 8) * 0 * 0.45 * 100 * _mojo_per_chives))
         elif height < 3 * _blocks_per_year:
@@ -81,7 +81,7 @@ def calculate_base_community_reward(height: uint32) -> uint64:
     """
     Community Rewards: 10% every block at stage 1 & 2 & 3
     """
-    if height > 162000:
+    if height > 2600000:
         if height == 0:
             return uint64(int(0.55 * 0 * _mojo_per_chives))
         elif height < 3 * _blocks_per_year:
