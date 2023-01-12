@@ -1531,7 +1531,7 @@ class MasterNodeWallet:
         return StakingData
 
     async def get_all_nft_ids(self):
-        query = "SELECT launcher_id FROM masternode_list"
+        query = "SELECT launcher_id FROM masternode_list order by Height desc"
         cursor = await self.db_connection.execute(query)
         rows = await cursor.fetchall()
         await cursor.close()
