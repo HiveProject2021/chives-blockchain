@@ -52,6 +52,7 @@ const apiWithTag = api.enhanceEndpoints({
     'DerivationIndex',
     'MasterNode',
     'MasterNodeMyCard',
+    'MasterNodeSummary',
   ],
 });
 
@@ -154,9 +155,9 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags(result) {
         return result
           ? [
-              ...result.map(({ id }) => ({ type: 'Wallets', id } as const)),
-              { type: 'Wallets', id: 'LIST' },
-            ]
+            ...result.map(({ id }) => ({ type: 'Wallets', id } as const)),
+            { type: 'Wallets', id: 'LIST' },
+          ]
           : [{ type: 'Wallets', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
@@ -419,8 +420,8 @@ export const walletApi = apiWithTag.injectEndpoints({
       async queryFn(args, queryApi, _extraOptions, fetchWithBQ) {
         let subscribeResponse:
           | {
-              data: Function;
-            }
+            data: Function;
+          }
           | undefined;
 
         function unsubscribe() {
@@ -538,9 +539,9 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags: keys =>
         keys
           ? [
-              ...keys.map(key => ({ type: 'Keys', id: key } as const)),
-              { type: 'Keys', id: 'LIST' },
-            ]
+            ...keys.map(key => ({ type: 'Keys', id: key } as const)),
+            { type: 'Keys', id: 'LIST' },
+          ]
           : [{ type: 'Keys', id: 'LIST' }],
     }),
 
@@ -732,11 +733,11 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags(result) {
         return result
           ? [
-              ...result.map(
-                ({ name }) => ({ type: 'Transactions', id: name } as const)
-              ),
-              { type: 'Transactions', id: 'LIST' },
-            ]
+            ...result.map(
+              ({ name }) => ({ type: 'Transactions', id: name } as const)
+            ),
+            { type: 'Transactions', id: 'LIST' },
+          ]
           : [{ type: 'Transactions', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
@@ -810,11 +811,11 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags(result) {
         return result
           ? [
-              ...result.map(
-                ({ name }) => ({ type: 'Transactions', id: name } as const)
-              ),
-              { type: 'Transactions', id: 'LIST' },
-            ]
+            ...result.map(
+              ({ name }) => ({ type: 'Transactions', id: name } as const)
+            ),
+            { type: 'Transactions', id: 'LIST' },
+          ]
           : [{ type: 'Transactions', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
@@ -888,11 +889,11 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags(result) {
         return result
           ? [
-              ...result.map(
-                ({ name }) => ({ type: 'Transactions', id: name } as const)
-              ),
-              { type: 'Transactions', id: 'LIST' },
-            ]
+            ...result.map(
+              ({ name }) => ({ type: 'Transactions', id: name } as const)
+            ),
+            { type: 'Transactions', id: 'LIST' },
+          ]
           : [{ type: 'Transactions', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
@@ -961,7 +962,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       keepUnusedDataFor: 5,
       transformResponse: (response: any) => response?.result,
       providesTags: (result, _error, { walletId }) =>
-        result ? [{ type: 'MasterNode', id: walletId }] : [],
+        result ? [{ type: 'MasterNodeMyCard', id: walletId }] : [],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
           command: 'onCoinAdded',
@@ -998,6 +999,30 @@ export const walletApi = apiWithTag.injectEndpoints({
         args: [walletId, false],
       }),
       transformResponse: (response: any) => response?.result,
+      providesTags: (result, _error, { walletId }) =>
+        result ? [{ type: 'MasterNodeSummary', id: walletId }] : [],
+      onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
+        {
+          command: 'onCoinAdded',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
+        },
+        {
+          command: 'onCoinRemoved',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
+        },
+        {
+          command: 'onPendingTransaction',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
+        },
+        {
+          command: 'onNewBlock',
+          service: Wallet,
+          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
+        },
+      ]),
     }),
 
     getCurrentAddress: build.query<
@@ -1179,12 +1204,12 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags: connections =>
         connections
           ? [
-              ...connections.map(
-                ({ nodeId }) =>
-                  ({ type: 'WalletConnections', id: nodeId } as const)
-              ),
-              { type: 'WalletConnections', id: 'LIST' },
-            ]
+            ...connections.map(
+              ({ nodeId }) =>
+                ({ type: 'WalletConnections', id: nodeId } as const)
+            ),
+            { type: 'WalletConnections', id: 'LIST' },
+          ]
           : [{ type: 'WalletConnections', id: 'LIST' }],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
@@ -1288,12 +1313,12 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags(result) {
         return result
           ? [
-              ...result.map(
-                ({ tradeId }) =>
-                  ({ type: 'OfferTradeRecord', id: tradeId } as const)
-              ),
-              { type: 'OfferTradeRecord', id: 'LIST' },
-            ]
+            ...result.map(
+              ({ tradeId }) =>
+                ({ type: 'OfferTradeRecord', id: tradeId } as const)
+            ),
+            { type: 'OfferTradeRecord', id: 'LIST' },
+          ]
           : [{ type: 'OfferTradeRecord', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
@@ -1575,8 +1600,8 @@ export const walletApi = apiWithTag.injectEndpoints({
       async queryFn(args, queryApi, _extraOptions, fetchWithBQ) {
         let subscribeResponse:
           | {
-              data: Function;
-            }
+            data: Function;
+          }
           | undefined;
 
         function unsubscribe() {
@@ -2122,9 +2147,9 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags(result) {
         return result
           ? [
-              ...result.map(({ id }) => ({ type: 'DIDWallet', id } as const)),
-              { type: 'DIDWallet', id: 'LIST' },
-            ]
+            ...result.map(({ id }) => ({ type: 'DIDWallet', id } as const)),
+            { type: 'DIDWallet', id: 'LIST' },
+          ]
           : [{ type: 'DIDWallet', id: 'LIST' }];
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
@@ -2224,13 +2249,13 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags: (nftsByWalletId, _error) =>
         nftsByWalletId
           ? [
-              ...Object.entries(nftsByWalletId).flatMap(([_walletId, nfts]) => {
-                return nfts.map(
-                  nft => ({ type: 'NFTInfo', id: nft.launcherId } as const)
-                );
-              }),
-              { type: 'NFTInfo', id: 'LIST' },
-            ]
+            ...Object.entries(nftsByWalletId).flatMap(([_walletId, nfts]) => {
+              return nfts.map(
+                nft => ({ type: 'NFTInfo', id: nft.launcherId } as const)
+              );
+            }),
+            { type: 'NFTInfo', id: 'LIST' },
+          ]
           : [{ type: 'NFTInfo', id: 'LIST' }],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
@@ -2261,11 +2286,11 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags: (result, _error) =>
         result
           ? [
-              ...result.map(({ walletId }) => ({
-                NFTWalletWithDID: walletId,
-              })),
-              { NFTWalletWithDID: 'LIST' },
-            ]
+            ...result.map(({ walletId }) => ({
+              NFTWalletWithDID: walletId,
+            })),
+            { NFTWalletWithDID: 'LIST' },
+          ]
           : [{ type: 'NFTWalletWithDID', id: 'LIST' }],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
@@ -2352,10 +2377,10 @@ export const walletApi = apiWithTag.injectEndpoints({
       invalidatesTags: (result, _error, { nftLauncherId }) =>
         result
           ? [
-              { type: 'NFTInfo', id: 'LIST' },
-              { type: 'NFTWalletWithDID', id: 'LIST' },
-              { type: 'DIDWallet', id: 'LIST' },
-            ]
+            { type: 'NFTInfo', id: 'LIST' },
+            { type: 'NFTWalletWithDID', id: 'LIST' },
+            { type: 'DIDWallet', id: 'LIST' },
+          ]
           : [],
     }),
 
