@@ -280,7 +280,7 @@ class MasterNodeManager:
                 return checkSyncedStatus, checkSyncedStatusText, logged_in_fingerprint
             elif is_synced:
                 checkSyncedStatusText.append("Chives Wallet Sync Status: Synced")
-                checkSyncedStatusText.append(f"Chives Wallet Derivation ndex: {self.get_current_derivation_index}")
+                checkSyncedStatusText.append(f"Chives Wallet Derivation index: {self.get_current_derivation_index}")
                 checkSyncedStatus += 1
             else:
                 checkSyncedStatusText.append("Chives Wallet Sync Status: Not synced")
@@ -997,9 +997,9 @@ class MasterNodeManager:
             cancel_masternode_staking_coins = await self.cancel_masternode_staking_coins(STAKING_ADDRESS, STAKING_PUZZLE, wallet_client, fingerprint)
             # print(f"cancel_masternode_staking_coins:{cancel_masternode_staking_coins}")
             if cancel_masternode_staking_coins is not None and "tx_id" in cancel_masternode_staking_coins:
-                jsonResult['data'].append({"Canncel staking coins for MasterNode have submitted to nodes": ""})
+                jsonResult['data'].append({"Cancel staking coins for MasterNode have submitted to nodes": ""})
                 jsonResult['data'].append(
-                    {"You have canncel staking coins. Waiting 1-3 minutes, will see your coins in wallet.": ""})
+                    {"You have cancel staking coins. Waiting 1-3 minutes, will see your coins in wallet.": ""})
                 jsonResult['data'].append({"": ""})
                 jsonResult['data'].append({"Tx id": cancel_masternode_staking_coins['tx_id']})
                 jsonResult['success'] = True
@@ -1759,7 +1759,7 @@ class MasterNodeWallet:
                 return res
             elif res["status"] == "PENDING":
                 res['success'] = True
-                res["error"] = "Cancel Staking Coin Failed. Maybe it can only be canceled after reaching the specified block height. If you choose for test purpose, it will can canncel after 10 minutes."
+                res["error"] = "Cancel Staking Coin Failed. Maybe it can only be canceled after reaching the specified block height. If you choose for test purpose, it will can cancel after 10 minutes."
                 return res
             else:
                 return res
