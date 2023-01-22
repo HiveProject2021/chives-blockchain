@@ -270,6 +270,16 @@ async def masternode_mergecoin_by_fullnode(args: dict, wallet_client: WalletRpcC
         await manager.masternode_mergecoin_by_fullnode(0,getWalletPk)
     await manager.close()
 
+async def create_account_and_address(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+    manager = MasterNodeManager()
+    await manager.connect()
+    checkSyncedStatus,checkSyncedStatusText,fingerprint = await manager.checkSyncedStatus()
+    getWalletPk = await manager.getWalletPk(fingerprint)
+    if getWalletPk is not False:
+        create_account_and_address = await manager.create_account_and_address(prefix=args['prefix'], HDDNumber=args['hddnumber'], addressNumber=args['addressnumber'], mnemonicUserDefine=args['mnemonic'])
+        print(create_account_and_address)
+    await manager.close()
+
 async def masternode_staking(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()

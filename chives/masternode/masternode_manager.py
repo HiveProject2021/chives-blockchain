@@ -1268,6 +1268,11 @@ class MasterNodeManager:
         return masternode_rewards_send
         # print(f"cancel_staking_coins:{cancel_staking_coins}")
 
+    async def create_account_and_address(self, prefix='xcc', HDDNumber=9699, addressNumber=5, mnemonicUserDefine='') -> List:
+        create_account_and_address = await self.masternode_wallet.create_account_and_address(prefix, HDDNumber, addressNumber, mnemonicUserDefine)
+        return create_account_and_address
+        
+
     def encode_data(self, data, filename):
         from Crypto.Cipher import AES
         from Crypto.Util.Padding import pad
@@ -1766,60 +1771,61 @@ class MasterNodeWallet:
         return None
 
     async def masternode_mergecoin_by_fullnode(self, start_height=0, primaryKey: str = None, toAddress: str = None) -> Tuple[Coin, Program]:
-        get_staking_address = self.init_pk_address(10, primaryKey)
+        get_staking_address = self.init_pk_address(100, primaryKey)
         puzzle_hashes = []
         for k in self.key_dict.keys():
             puzzle_hashes.append(puzzle_for_pk(k).get_tree_hash())
             staking_coins = await self.node_client.get_coin_records_by_puzzle_hashes(
                 puzzle_hashes, include_spent_coins=False, start_height=start_height
             )
-        totalAmount = 0
-        coin_counter = 0
-        select_coins = []
-        for coin in staking_coins:
-            if coin.coin.amount < 50000000000:
-                synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
-                self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
-                select_coins.append(coin.coin)
-                coin_counter += 1
-                totalAmount += coin.coin.amount
-                if coin_counter > 500:
-                    break
-        if toAddress is None:
-            toAddress = get_staking_address['first_address']
-        self.get_max_send_amount = totalAmount
+        print(f"\nTotal staking_coins:{len(staking_coins)}")
+        tempInsertListCoin = []
+        for i in range(10):
+            totalAmount = 0
+            coin_counter = 0
+            select_coins = []
+            for coin in staking_coins:
+                if coin.coin.amount < 500000000000000 and coin.coin.name() not in tempInsertListCoin:
+                    synth_sk = calculate_synthetic_secret_key(self.key_dict[k], DEFAULT_HIDDEN_PUZZLE_HASH)
+                    self.key_dict_synth_sk[bytes(synth_sk.get_g1())] = synth_sk
+                    select_coins.append(coin.coin)
+                    tempInsertListCoin.append(coin.coin.name())
+                    coin_counter += 1
+                    totalAmount += coin.coin.amount
+                    if coin_counter > 500:
+                        break
+            if toAddress is None:
+                toAddress = get_staking_address['first_address']
+            self.get_max_send_amount = totalAmount
 
-        print(f"\nReady to merge coins number: {len(select_coins)}\n")
-        Memos = "Merge coins"
-        if len(select_coins) == 0:
-            print("No small coin need to merge\n")
-            return None
-        spend_bundle = await self.generate_signed_transaction(
-            totalAmount, decode_puzzle_hash(toAddress), uint64(0), memos=[Memos], coins=select_coins
-        )
-        if spend_bundle is not None:
-            # print(f"res:{get_staking_address['first_puzzle_hash']}")
-            try:
-                res = await self.node_client.push_tx(spend_bundle)
-            except Exception as e:
-                print(e)
-                return str(e)
-            print(res)
-            if res["success"] == True and res["status"] == "SUCCESS":
-                tx_id = await self.get_tx_from_mempool(spend_bundle.name())
-                print(f"\nSend address: {toAddress}")
-                print(f"\nSend Tx: {tx_id}")
-                print(f"\nSend amount: {int(totalAmount/100000000)}")
-                print("")
-                res["tx_id"] = tx_id
-                return res
-            elif res["status"] == "PENDING":
-                print("PENDING")
-            else:
-                print(f"\nSend Coin Failed. res: {res}")
-                return res
+            print(f"\nReady to merge coins number: {len(select_coins)}\n")
+            Memos = "Merge coins"
+            if len(select_coins) == 0:
+                print("No small coin need to merge\n")
+                return None
+            spend_bundle = await self.generate_signed_transaction(
+                totalAmount, decode_puzzle_hash(toAddress), uint64(0), memos=[Memos], coins=select_coins
+            )
+            if spend_bundle is not None:
+                # print(f"res:{get_staking_address['first_puzzle_hash']}")
+                try:
+                    res = await self.node_client.push_tx(spend_bundle)
+                except Exception as e:
+                    print(e)
+                print(res)
+                if res["success"] == True and res["status"] == "SUCCESS":
+                    tx_id = await self.get_tx_from_mempool(spend_bundle.name())
+                    print(f"\nSend address: {toAddress}")
+                    print(f"\nSend Tx: {tx_id}")
+                    print(f"\nSend amount: {int(totalAmount/100000000)}")
+                    print("")
+                    res["tx_id"] = tx_id
+                elif res["status"] == "PENDING":
+                    print("PENDING")
+                else:
+                    print(f"\nSend Coin Failed. res: {res}")
         return None
-
+    
     async def masternode_rewards_send(self, primaryKey: str = None, nfts=None) -> Tuple[Coin, Program]:
         # Calculate all masternodes staking amount and period
         primaries = []
@@ -1934,6 +1940,95 @@ class MasterNodeWallet:
             if mem_sb_name == sb_name:
                 return tx_id
         raise ValueError("No tx found in mempool. Check if confirmed")
+
+    async def create_account_and_address(self, prefix='xcc', HDDNumber=9699, addressNumber=5, mnemonicUserDefine=''):
+        mnemonicUserDefineArray     = []
+        if(mnemonicUserDefine!=""):
+            #使用指定的助记词语
+            mnemonic = mnemonicUserDefine
+        else:
+            #产生新的助记词语
+            mnemonic = generate_mnemonic()
+            
+        seed = mnemonic_to_seed(mnemonic, "")
+        seed_key = AugSchemeMPL.key_gen(seed)
+        masterPublicKey = seed_key.get_g1()
+        fingerprint = masterPublicKey.get_fingerprint()
+
+        RS = {}
+        RS['mnemonic'] = mnemonic
+        RS['seed'] = bytes(seed).hex()
+        RS['masterPrivateKey'] = bytes(seed_key).hex()
+        RS['masterPublicKey'] = bytes(masterPublicKey).hex()
+        RS['fingerprint'] = fingerprint
+        RS['prefix'] = prefix
+        RS['addressNumber'] = addressNumber
+        RS['HDDNumber'] = HDDNumber
+        RS['time'] = time.time()
+
+        PairKeysDict = {}
+        PairKeysDict2 = {}
+        PairKeysDict5 = {}
+        puzzlehashs = []
+        private_keys = []
+        public_keys = []
+        addresses = []
+
+        for i in range(0, addressNumber):
+            path = [12381, HDDNumber, 2, i]
+            child = _derive_path(seed_key, path)
+            child_puk = bytes(child.get_g1()).hex()
+            child_prk = bytes(child).hex()
+            puzzle = puzzle_for_pk(child.get_g1())
+            puzzle_hash = puzzle.get_tree_hash()
+            address = encode_puzzle_hash(puzzle_hash, prefix)
+            PairKeys = {}
+            PairKeys['index'] = i
+            PairKeys['private_key'] = child_prk
+            PairKeys['public_key'] = child_puk
+            PairKeys['puzzlehash'] = puzzle_hash.hex()
+            PairKeys['address'] = address
+            PairKeysDict[i] = PairKeys
+
+        RS['PairKeysDict'] = PairKeysDict
+        
+        for i in range(0, addressNumber):
+            path = [12381, HDDNumber, 2, i]
+            child = _derive_path_unhardened(seed_key, path)
+            child_puk = bytes(child.get_g1()).hex()
+            child_prk = bytes(child).hex()
+            puzzle = puzzle_for_pk(child.get_g1())
+            puzzle_hash = puzzle.get_tree_hash()
+            address = encode_puzzle_hash(puzzle_hash, prefix)
+            PairKeys = {}
+            PairKeys['index'] = i
+            PairKeys['private_key'] = child_prk
+            PairKeys['public_key'] = child_puk
+            PairKeys['puzzlehash'] = puzzle_hash.hex()
+            PairKeys['address'] = address
+            PairKeysDict2[i] = PairKeys
+
+        RS['PairKeysDict2'] = PairKeysDict2
+            
+        for i in range(0, addressNumber):
+            path = [12381, HDDNumber, 5, i]
+            child = _derive_path(seed_key, path)
+            child_puk = bytes(child.get_g1()).hex()
+            child_prk = bytes(child).hex()
+            puzzle = puzzle_for_pk(child.get_g1())
+            puzzle_hash = puzzle.get_tree_hash()
+            address = encode_puzzle_hash(puzzle_hash, prefix)
+            PairKeys = {}
+            PairKeys['index'] = i
+            PairKeys['private_key'] = child_prk
+            PairKeys['public_key'] = child_puk
+            PairKeys['puzzlehash'] = puzzle_hash.hex()
+            PairKeys['address'] = address
+            PairKeysDict5[i] = PairKeys
+                  
+        RS['PairKeysDict5'] = PairKeysDict5
+        y = json.dumps(RS)
+        return y
 
     # ###############################################################################
     # 标准钱包功能

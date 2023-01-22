@@ -181,6 +181,38 @@ def send_cmd(
 
 
 # ##############################################################################
+
+#Generate account and account, just for dev purpose, will not generate account in your local wallet.
+@wallet_cmd.command("create_account_and_address", short_help="Generate account and account, just for dev purpose, will not generate account in your local wallet.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+@click.option("-p", "--prefix", help="xcc or txcc.", type=str, default='xcc')
+@click.option("-H", "--hddnumber", help="9699 for Chives.", type=int, default=9699)
+@click.option("-a", "--addressnumber", help="addresses number to generate", type=int, default=5)
+@click.option("-m", "--mnemonic", help="mnemonic you need to generate address, empty mnemonic will help you generate a new mnemonic.", type=str, default='')
+def create_account_and_address_cmd(
+    prefix: str,
+    hddnumber: int,
+    addressnumber: int,
+    mnemonic: str,
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    args = {}
+    args['prefix'] = prefix
+    args['hddnumber'] = hddnumber
+    args['addressnumber'] = addressnumber
+    args['mnemonic'] = mnemonic
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, create_account_and_address
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, args, create_account_and_address))
+
 #Merge many little amount coins to one large amount coin for MasterNode
 @wallet_cmd.command("masternode_mergecoin_by_fullnode", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
 @click.option(
