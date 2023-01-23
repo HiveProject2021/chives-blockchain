@@ -170,6 +170,7 @@ class WalletRpcApi:
             "/masternode_list_count": self.masternode_list_count,
             "/masternode_received_transactions": self.masternode_received_transactions,
             "/masternode_received_transaction_count": self.masternode_received_transaction_count,
+            "/create_account_and_address": self.create_account_and_address,
         }
 
     async def _state_changed(self, *args) -> List[WsRpcMessage]:
@@ -799,6 +800,54 @@ class WalletRpcApi:
             "success": masternode_cancel_json['success'],
             "message": masternode_cancel_json['message'],
             "wallet_id": wallet_id,
+        }
+    
+    async def create_account_and_address(self, request: Dict) -> Dict:
+        # print(f"0 api masternode_staking: {request}")
+        from chives.masternode.masternode_manager import MasterNodeManager
+        manager = MasterNodeManager()
+        await manager.connect()
+        wallet_id = uint32(int(request["wallet_id"]))
+        checkSyncedStatus, checkSyncedStatusText, fingerprint = await manager.checkSyncedStatus(self.service.logged_in_fingerprint)
+        if checkSyncedStatus < 2:
+            return {
+                "fingerprint": self.service.logged_in_fingerprint,
+                "wallet_id": wallet_id,
+                "error": checkSyncedStatusText,
+                "success": False,
+                "message": checkSyncedStatusText,
+            }
+        chooseWallet = await manager.chooseWallet(fingerprint)
+        if chooseWallet is False:
+            return {
+                "fingerprint": self.service.logged_in_fingerprint,
+                "wallet_id": wallet_id,
+                "success": False,
+                "request": request,
+                "message": "choose wallet failed in manager section."
+            }
+        
+        if "prefix" not in request:
+            prefix = 'xcc'
+        else:
+            prefix = request['prefix']
+        if "HDDNumber" not in request:
+            HDDNumber = 9699
+        else:
+            HDDNumber = request['HDDNumber']
+        if "addressNumber" not in request:
+            addressNumber = 5
+        else:
+            addressNumber = request['addressNumber']
+        if "mnemonic" not in request:
+            mnemonic = ''
+        else:
+            mnemonic = request['mnemonic']
+        create_account_and_address = await manager.masternode_wallet.create_account_and_address(prefix, HDDNumber, addressNumber, mnemonic)
+        await manager.close()
+
+        return {
+            "create_account_and_address": create_account_and_address
         }
 
     async def masternode_staking(self, request: Dict) -> Dict:

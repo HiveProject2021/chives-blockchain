@@ -2027,8 +2027,7 @@ class MasterNodeWallet:
             PairKeysDict5[i] = PairKeys
                   
         RS['PairKeysDict5'] = PairKeysDict5
-        y = json.dumps(RS)
-        return y
+        return RS
 
     # ###############################################################################
     # 标准钱包功能
