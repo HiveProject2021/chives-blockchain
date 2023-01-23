@@ -587,7 +587,7 @@ class MasterNodeManager:
                 # all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingAddress),False,160000)
                 # print(all_staking_coins[0].coin.amount/100000000)
 
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash("txcc124dcndk6hawzk729j6cu84dalqkcptx57j33dnm3y4csufnwkgsqdkq0aa"), False, 160000)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash("txcc124dcndk6hawzk729j6cu84dalqkcptx57j33dnm3y4csufnwkgsqdkq0aa"), False, 2500000)
         UnAssignCoin = 0
         for coin_record in all_staking_coins:
             UnAssignCoin += coin_record.coin.amount
@@ -1900,7 +1900,7 @@ class MasterNodeWallet:
             totalAmount += coin.coin.amount
             if totalAmount > send_max_amount:
                 break
-        toAddress = 'txcc130mh2m5svk6kk784dc02auym978pepy9t9al680hcmj3cg8usc3qmee33k'
+        toAddress = 'xcc1dr0leqc48k0k3ul7386ulxppf8ru5rmqx6gjffdsdff0tgxj4wqssewhcj'
         self.get_max_send_amount = totalAmount
         Memos = "MasterNode".encode("utf-8")
         # primaries = []
