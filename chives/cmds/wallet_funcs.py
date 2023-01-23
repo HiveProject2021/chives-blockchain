@@ -280,6 +280,23 @@ async def create_account_and_address(args: dict, wallet_client: WalletRpcClient,
         print(create_account_and_address)
     await manager.close()
 
+async def masternode_rewards_send(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
+    manager = MasterNodeManager()
+    await manager.connect()
+    checkSyncedStatus, checkSyncedStatusText, fingerprint = await manager.checkSyncedStatus()
+    if checkSyncedStatus == 2:
+        await manager.chooseWallet(fingerprint)
+        if args['path'] == '':
+            await manager.close()
+            return None
+        data = manager.decode_data(args['path'])
+        nfts = await manager.get_all_masternodes()
+        await manager.sync_masternode_from_blockchain()
+        await manager.masternode_rewards_send(data, nfts)
+    else:
+        print("Wallet and full node not synced.")
+    await manager.close()
+    
 async def masternode_staking(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
     manager = MasterNodeManager()
     await manager.connect()

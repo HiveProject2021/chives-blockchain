@@ -232,6 +232,29 @@ def masternode_mergecoin_by_fullnode_cmd(
     from .wallet_funcs import execute_with_wallet, masternode_mergecoin_by_fullnode
     asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, extra_params, masternode_mergecoin_by_fullnode))
 
+#masternode_rewards_send
+@wallet_cmd.command("masternode_rewards_send", short_help="masternode_rewards_send.")
+@click.option(
+    "-wp",
+    "--wallet-rpc-port",
+    help="Set the port where the Wallet is hosting the RPC interface. See the rpc_port under wallet in config.yaml",
+    type=int,
+    default=None,
+)
+@click.option("-p", "--path", help="data path", type=str, default='')
+@click.option("-f", "--fingerprint", help="Set the fingerprint to specify which wallet to use", type=int)
+def masternode_rewards_send_cmd(
+    path: str,
+    wallet_rpc_port: Optional[int],
+    fingerprint: int,
+) -> None:
+    args = {}
+    args['path'] = path
+    import asyncio
+    from .wallet_funcs import execute_with_wallet, masternode_rewards_send
+    asyncio.run(execute_with_wallet(wallet_rpc_port, fingerprint, args, masternode_rewards_send))
+
+
 #Merge many little amount coins to one large amount coin for MasterNode
 @wallet_cmd.command("masternode_merge", short_help="Merge little amount coin to a large coin. To sure one transaction can finish staking process.")
 @click.option(
