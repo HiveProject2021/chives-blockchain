@@ -170,11 +170,11 @@ export default function NFTOfferPreview(props: NFTOfferPreviewProps) {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => viewOnExplorer(nft, NFTExplorer.SkyNFT)}
+            onClick={() => viewOnExplorer(nft, NFTExplorer.ChivesNFT)}
             style={{ width: '100%' }}
           >
             <Typography variant="caption" color="secondary">
-              <Trans>Check Provenance on SkyNFT</Trans>
+              <Trans>Check Provenance on ChivesNFT</Trans>
             </Typography>
           </Button>
         </Flex>

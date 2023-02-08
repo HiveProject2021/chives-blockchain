@@ -47,14 +47,14 @@ export enum NFTContextualActionTypes {
   Download = 1 << 8, // 256
 
   All = CreateOffer |
-    Transfer |
-    MoveToProfile |
-    CancelUnconfirmedTransaction |
-    CopyNFTId |
-    CopyURL |
-    ViewOnExplorer |
-    OpenInBrowser |
-    Download,
+  Transfer |
+  MoveToProfile |
+  CancelUnconfirmedTransaction |
+  CopyNFTId |
+  CopyURL |
+  ViewOnExplorer |
+  OpenInBrowser |
+  Download,
 }
 
 type NFTContextualActionProps = {
@@ -530,7 +530,7 @@ export default function NFTContextualActions(props: NFTContextualActionsProps) {
     label = <Trans>Actions</Trans>,
     selection,
     availableActions = NFTContextualActionTypes.CreateOffer |
-      NFTContextualActionTypes.Transfer,
+    NFTContextualActionTypes.Transfer,
     ...rest
   } = props;
 
@@ -560,8 +560,8 @@ export default function NFTContextualActions(props: NFTContextualActionsProps) {
         {
           action: NFTViewOnExplorerContextualAction,
           props: {
-            title: <Trans>View on SkyNFT</Trans>,
-            explorer: NFTExplorer.SkyNFT,
+            title: <Trans>View on ChivesNFT</Trans>,
+            explorer: NFTExplorer.ChivesNFT,
           },
         },
       ],

@@ -5,37 +5,34 @@ import useOpenExternal from './useOpenExternal';
 /* ========================================================================== */
 
 function getMintGardenURL(nft: NFTInfo, testnet: boolean) {
-  const url = `https://${testnet ? 'testnet.' : ''}mintgarden.io/nfts/${
-    nft.$nftId
-  }`;
+  const url = `https://${testnet ? 'testnet.' : ''}mintgarden.io/nfts/${nft.$nftId
+    }`;
   return url;
 }
 
-function getSkyNFTURL(nft: NFTInfo, testnet: boolean) {
+function getChivesNFTURL(nft: NFTInfo, testnet: boolean) {
   const launcherId = nft.launcherId.startsWith('0x')
     ? nft.launcherId.substring(2)
     : nft.launcherId;
-  const url = `https://${
-    testnet ? 'test.' : ''
-  }chives.skynft.org/item.php?NFTID=${launcherId}`;
+  const url = `https://${testnet ? 'test.' : ''
+    }chivescoin.net/item.php?NFTID=${launcherId}`;
   return url;
 }
 
 function getSpacescanURL(nft: NFTInfo, testnet: boolean) {
-  const url = `https://spacescan.io/${testnet ? 'txch10' : 'xcc'}/nft/${
-    nft.$nftId
-  }`;
+  const url = `https://spacescan.io/${testnet ? 'txch10' : 'xcc'}/nft/${nft.$nftId
+    }`;
   return url;
 }
 
 /* ========================================================================== */
 
 export enum NFTExplorer {
-  SkyNFT = 'skynft',
+  ChivesNFT = 'ChivesNFT',
 }
 
 const UrlBuilderMapping = {
-  [NFTExplorer.SkyNFT]: getSkyNFTURL,
+  [NFTExplorer.ChivesNFT]: getChivesNFTURL,
 };
 
 export default function useViewNFTOnExplorer() {
