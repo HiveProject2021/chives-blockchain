@@ -58,15 +58,12 @@ async def masternode_update_status_interval(selected_network, config) -> None:
         wallet_rpc_port = config["wallet"]["rpc_port"]
 
         try:
-            log.warning("000000000000000000")
             node_client = await FullNodeRpcClient.create(
                 rpc_host, uint16(full_node_rpc_port), Path(DEFAULT_ROOT_PATH), config
             )
-            log.warning("11111111111111111")
             wallet_client = await WalletRpcClient.create(
                 rpc_host, uint16(wallet_rpc_port), Path(DEFAULT_ROOT_PATH), config
             )
-            log.warning("222222222222222222")
             log.warning("*" * 64)
             log.warning(f"[{selected_network}] Masternode heartbeat {x} ")
             fingerprint = await wallet_client.get_logged_in_fingerprint()
@@ -126,7 +123,7 @@ async def masternode_update_status_interval(selected_network, config) -> None:
             pass
 
         log.warning("begin sleep ***** " * 5)
-        time.sleep(5)
+        time.sleep(600)
 
 
 def main():
