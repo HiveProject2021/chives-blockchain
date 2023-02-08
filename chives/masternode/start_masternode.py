@@ -58,12 +58,15 @@ async def masternode_update_status_interval(selected_network, config) -> None:
         wallet_rpc_port = config["wallet"]["rpc_port"]
 
         try:
+            log.warning("000000000000000000")
             node_client = await FullNodeRpcClient.create(
                 rpc_host, uint16(full_node_rpc_port), Path(DEFAULT_ROOT_PATH), config
             )
+            log.warning("11111111111111111")
             wallet_client = await WalletRpcClient.create(
                 rpc_host, uint16(wallet_rpc_port), Path(DEFAULT_ROOT_PATH), config
             )
+            log.warning("222222222222222222")
             log.warning("*" * 64)
             log.warning(f"[{selected_network}] Masternode heartbeat {x} ")
             fingerprint = await wallet_client.get_logged_in_fingerprint()
@@ -100,8 +103,10 @@ async def masternode_update_status_interval(selected_network, config) -> None:
                 result['space'] = blockchain_state["space"]
                 result['sub_slot_iters'] = blockchain_state["sub_slot_iters"]
 
-            node_client.close()
-            wallet_client.close()
+            if node_client:
+                node_client.close()
+            if wallet_client:
+                wallet_client.close()
 
             MasterNodeHeartBeat = json.dumps(result, indent=4, sort_keys=True)
 
@@ -117,24 +122,27 @@ async def masternode_update_status_interval(selected_network, config) -> None:
                 log.warning('Unfortunitely -- An Unknow Error Happened, Please wait 600 seconds............................')
 
         except:
+            log.warning('Unfortunitely -- An Unknow except Happened, Please wait 600 seconds............................')
             pass
 
         log.warning("begin sleep ***** " * 5)
-        time.sleep(600)
+        time.sleep(5)
 
 
 def main():
-    time.sleep(60)
-    config = load_config_cli(DEFAULT_ROOT_PATH, "config.yaml", "seeder")
-    selected_network = config["selected_network"]
-    root_path = DEFAULT_ROOT_PATH
-    net_config = load_config(root_path, "config.yaml")
-    config = net_config["timelord_launcher"]
-    initialize_logging("masternode", config["logging"], DEFAULT_ROOT_PATH)
-
-    log = logging.getLogger(__name__)
-
-    return asyncio.run(masternode_update_status_interval(selected_network, config))
+    try:
+        config = load_config_cli(DEFAULT_ROOT_PATH, "config.yaml", "seeder")
+        selected_network = config["selected_network"]
+        root_path = DEFAULT_ROOT_PATH
+        net_config = load_config(root_path, "config.yaml")
+        config = net_config["timelord_launcher"]
+        initialize_logging("masternode", config["logging"], DEFAULT_ROOT_PATH)
+        log = logging.getLogger(__name__)
+        asyncio.run(masternode_update_status_interval(selected_network, config))
+    except:
+        log.warning(
+            'Unfortunitely -- An Unknow except Happened in main function, Please wait 600 seconds............................')
+        pass
 
 
 if __name__ == "__main__":

@@ -49,92 +49,91 @@ log = logging.getLogger(__name__)
 
 async def masternode_update_status_interval(selected_network, config) -> None:
 
-    while True:
-        x = datetime.datetime.now()
+    x = datetime.datetime.now()
 
-        config = load_config(Path(DEFAULT_ROOT_PATH), "config.yaml")
-        rpc_host = config["self_hostname"]
-        full_node_rpc_port = config["full_node"]["rpc_port"]
-        wallet_rpc_port = config["wallet"]["rpc_port"]
+    config = load_config(Path(DEFAULT_ROOT_PATH), "config.yaml")
+    rpc_host = config["self_hostname"]
+    full_node_rpc_port = config["full_node"]["rpc_port"]
+    wallet_rpc_port = config["wallet"]["rpc_port"]
+
+    try:
+        node_client = await FullNodeRpcClient.create(
+            rpc_host, uint16(full_node_rpc_port), Path(DEFAULT_ROOT_PATH), config
+        )
+        wallet_client = await WalletRpcClient.create(
+            rpc_host, uint16(wallet_rpc_port), Path(DEFAULT_ROOT_PATH), config
+        )
+        log.warning("*" * 64)
+        log.warning(f"[{selected_network}] Masternode heartbeat {x} ")
+        fingerprint = await wallet_client.get_logged_in_fingerprint()
+        private_key = await wallet_client.get_private_key(fingerprint)
+        sk_data = binascii.unhexlify(private_key["sk"])
+        master_sk = PrivateKey.from_bytes(sk_data)
+
+        selected = config["selected_network"]
+        prefix = config["network_overrides"]["config"][selected]["address_prefix"]
+
+        result = {}
+        result['selected_network'] = selected_network
+        result['fingerprint'] = fingerprint
+        privateKey = _derive_path_unhardened(master_sk, [12381, 9699, 2, 0])
+        publicKey = privateKey.get_g1()
+        puzzle = puzzle_for_pk(bytes(publicKey))
+        puzzle_hash = puzzle.get_tree_hash()
+        first_address = encode_puzzle_hash(puzzle_hash, prefix)
+        result['first_address'] = first_address
+
+        # Standard wallet keys
+        privateKey = _derive_path_unhardened(master_sk, [12381, 9699, 2, 10])
+        publicKey = privateKey.get_g1()
+        puzzle = puzzle_for_pk(bytes(publicKey))
+        puzzle_hash = puzzle.get_tree_hash()
+        ReceivedAddress = encode_puzzle_hash(puzzle_hash, prefix)
+        result['ReceivedAddress'] = ReceivedAddress
+
+        # node id
+        blockchain_state = await node_client.get_blockchain_state()
+        if blockchain_state is not None and blockchain_state["sync"]["synced"] == True:
+            result['difficulty'] = blockchain_state["difficulty"]
+            result['node_id'] = blockchain_state["node_id"]
+            result['space'] = blockchain_state["space"]
+            result['sub_slot_iters'] = blockchain_state["sub_slot_iters"]
+
+        node_client.close()
+        wallet_client.close()
+
+        MasterNodeHeartBeat = json.dumps(result, indent=4, sort_keys=True)
 
         try:
-            node_client = await FullNodeRpcClient.create(
-                rpc_host, uint16(full_node_rpc_port), Path(DEFAULT_ROOT_PATH), config
-            )
-            wallet_client = await WalletRpcClient.create(
-                rpc_host, uint16(wallet_rpc_port), Path(DEFAULT_ROOT_PATH), config
-            )
-            log.warning("*" * 64)
-            log.warning(f"[{selected_network}] Masternode heartbeat {x} ")
-            fingerprint = await wallet_client.get_logged_in_fingerprint()
-            private_key = await wallet_client.get_private_key(fingerprint)
-            sk_data = binascii.unhexlify(private_key["sk"])
-            master_sk = PrivateKey.from_bytes(sk_data)
-
-            selected = config["selected_network"]
-            prefix = config["network_overrides"]["config"][selected]["address_prefix"]
-
-            result = {}
-            result['selected_network'] = selected_network
-            result['fingerprint'] = fingerprint
-            privateKey = _derive_path_unhardened(master_sk, [12381, 9699, 2, 0])
-            publicKey = privateKey.get_g1()
-            puzzle = puzzle_for_pk(bytes(publicKey))
-            puzzle_hash = puzzle.get_tree_hash()
-            first_address = encode_puzzle_hash(puzzle_hash, prefix)
-            result['first_address'] = first_address
-
-            # Standard wallet keys
-            privateKey = _derive_path_unhardened(master_sk, [12381, 9699, 2, 10])
-            publicKey = privateKey.get_g1()
-            puzzle = puzzle_for_pk(bytes(publicKey))
-            puzzle_hash = puzzle.get_tree_hash()
-            ReceivedAddress = encode_puzzle_hash(puzzle_hash, prefix)
-            result['ReceivedAddress'] = ReceivedAddress
-
-            # node id
-            blockchain_state = await node_client.get_blockchain_state()
-            if blockchain_state is not None and blockchain_state["sync"]["synced"] == True:
-                result['difficulty'] = blockchain_state["difficulty"]
-                result['node_id'] = blockchain_state["node_id"]
-                result['space'] = blockchain_state["space"]
-                result['sub_slot_iters'] = blockchain_state["sub_slot_iters"]
-
-            node_client.close()
-            wallet_client.close()
-
-            MasterNodeHeartBeat = json.dumps(result, indent=4, sort_keys=True)
-
-            try:
-                content = requests.post('https://community.chivescoin.org/masternode/',
-                                        data={'MasterNodeHeartBeat': MasterNodeHeartBeat}, timeout=3)
-                log.warning(content.text)
-            except requests.exceptions.ConnectionError:
-                log.warning('ConnectionError -- please wait 600 seconds............................')
-            except requests.exceptions.ChunkedEncodingError:
-                log.warning('ChunkedEncodingError -- please wait 600 seconds............................')
-            except:
-                log.warning('Unfortunitely -- An Unknow Error Happened, Please wait 600 seconds............................')
-
+            content = requests.post('https://community.chivescoin.org/masternode/',
+                                    data={'MasterNodeHeartBeat': MasterNodeHeartBeat}, timeout=3)
+            log.warning(content.text)
+        except requests.exceptions.ConnectionError:
+            log.warning('ConnectionError -- please wait 600 seconds............................')
+        except requests.exceptions.ChunkedEncodingError:
+            log.warning('ChunkedEncodingError -- please wait 600 seconds............................')
         except:
-            pass
+            log.warning('Unfortunitely -- An Unknow Error Happened, Please wait 600 seconds............................')
 
-        log.warning("begin sleep ***** " * 5)
-        time.sleep(600)
+    except:
+        log.warning('Unfortunitely -- An except Error Happened, Please wait 600 seconds............................')
+        pass
 
 
 def main():
-    time.sleep(60)
-    config = load_config_cli(DEFAULT_ROOT_PATH, "config.yaml", "seeder")
-    selected_network = config["selected_network"]
-    root_path = DEFAULT_ROOT_PATH
-    net_config = load_config(root_path, "config.yaml")
-    config = net_config["timelord_launcher"]
-    initialize_logging("masternode", config["logging"], DEFAULT_ROOT_PATH)
+    while True:
+        config = load_config_cli(DEFAULT_ROOT_PATH, "config.yaml", "seeder")
+        selected_network = config["selected_network"]
+        root_path = DEFAULT_ROOT_PATH
+        net_config = load_config(root_path, "config.yaml")
+        config = net_config["timelord_launcher"]
+        initialize_logging("masternode", config["logging"], DEFAULT_ROOT_PATH)
+        log = logging.getLogger(__name__)
 
-    log = logging.getLogger(__name__)
+        asyncio.run(masternode_update_status_interval(selected_network, config))
 
-    return asyncio.run(masternode_update_status_interval(selected_network, config))
+        log.warning("begin sleep 0208 ***** " * 5)
+        time.sleep(5)
 
 
 if __name__ == "__main__":
