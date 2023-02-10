@@ -1485,7 +1485,7 @@ class MasterNodeWallet:
                     try:
                         NftDataJson = json.loads(nft_data[1].decode("utf-8"))
                         # print(NftDataJson)
-                        if "ReceivedAddress" in NftDataJson and "StakingAddress" in NftDataJson and "StakingAmount" in NftDataJson and "NodeName" in NftDataJson:
+                        if NftDataJson is not None and "ReceivedAddress" in NftDataJson and "StakingAddress" in NftDataJson and "StakingAmount" in NftDataJson and "NodeName" in NftDataJson:
                             StakingData = await self.save_launcher(launcher_id, state[-1], eve_cr[0].spent_block_index, NftDataJson)
                             nft_item = {}
                             nft_item['launcher_id'] = launcher_id
@@ -1514,18 +1514,21 @@ class MasterNodeWallet:
                     StakingAmount += coin_record.coin.amount
         # print(f"StakingAmount:{StakingAmount}")
         # print(f"StakingAmount:{StakingData['StakingAddress']}")
+        StakingCheckStatus = 0
+
         cursor = await self.db_connection.execute(
-            "INSERT OR REPLACE INTO masternode_list (launcher_id, owner_pk, Height, ReceivedAddress, StakingAddress, StakingAmount, NodeName) VALUES (?,?,?,?,?,?,?)", (
+            "INSERT OR REPLACE INTO masternode_list (launcher_id, owner_pk, Height, ReceivedAddress, StakingAddress, StakingAmount, NodeName, StakingCheckStatus) VALUES (?,?,?,?,?,?,?,?)", (
                 str(bytes(launcher_id).hex()),
                 str(bytes(pk).hex()),
                 int(Height),
                 str(StakingData['ReceivedAddress']),
                 str(StakingData['StakingAddress']),
                 int(StakingAmount),
-                str(StakingData['NodeName'])
+                str(StakingData['NodeName']),
+                str(StakingCheckStatus)
             )
         )
-        # print(f"save_launcher:{StakingData}")
+        print(f"save_launcher:{StakingData}")
         await cursor.close()
         await self.db_connection.commit()
         StakingData['StakingAmount'] = StakingAmount
