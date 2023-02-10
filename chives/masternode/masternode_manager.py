@@ -1471,12 +1471,6 @@ class MasterNodeWallet:
         new_height = blockchain_state["peak"].height
         return new_height
 
-    async def filter_singletons(self, singletons: List):
-        # print(Path(DEFAULT_ROOT_PATH))
-        for cr in singletons:
-            await self.get_nft_by_launcher_id(cr.coin.name())
-        return (f"Updating {len(singletons)} Masternodes NFTs")
-
     async def get_nft_by_launcher_id(self, launcher_id: bytes32):
         eve_cr = await self.node_client.get_coin_records_by_parent_ids([launcher_id])
         assert len(eve_cr) > 0
@@ -1518,7 +1512,9 @@ class MasterNodeWallet:
 
     async def sync_masternode(self):
         all_nfts = await self.node_client.get_coin_records_by_puzzle_hash(LAUNCHER_PUZZLE_HASH)
-        return await self.filter_singletons(all_nfts)
+        for cr in all_nfts:
+            await self.get_nft_by_launcher_id(cr.coin.name())
+        return (f"Updating {len(all_nfts)} Masternodes NFTs")
 
     async def save_launcher(self, launcher_id, pk, Height, StakingData):
         if "StakingAddress" in StakingData and StakingData['StakingAddress'] is not None:
