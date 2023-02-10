@@ -1514,7 +1514,6 @@ class MasterNodeWallet:
                     StakingAmount += coin_record.coin.amount
         # print(f"StakingAmount:{StakingAmount}")
         # print(f"StakingAmount:{StakingData['StakingAddress']}")
-        StakingCheckStatus = 0
 
         cursor = await self.db_connection.execute(
             "INSERT OR REPLACE INTO masternode_list (launcher_id, owner_pk, Height, ReceivedAddress, StakingAddress, StakingAmount, NodeName, StakingCheckStatus) VALUES (?,?,?,?,?,?,?,?)", (
@@ -1525,10 +1524,10 @@ class MasterNodeWallet:
                 str(StakingData['StakingAddress']),
                 int(StakingAmount),
                 str(StakingData['NodeName']),
-                str(StakingCheckStatus)
+                str(StakingData['StakingPeriod'])
             )
         )
-        print(f"save_launcher:{StakingData}")
+        # print(f"save_launcher:{StakingData}")
         await cursor.close()
         await self.db_connection.commit()
         StakingData['StakingAmount'] = StakingAmount
