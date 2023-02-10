@@ -1248,6 +1248,33 @@ class MasterNodeManager:
                 StakingData = nft['StakingData']
                 if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod']) > 0 and int(StakingData['StakingAmount'] / self.mojo_per_unit) in self.allow_staking_amount:
                     get_all_masternodes.append(nft)
+        print(nft)
+        return get_all_masternodes
+
+    async def get_all_masternodes_from_db(self) -> List:
+        get_all_masternodes = []
+        query = "SELECT * FROM masternode_list order by Height desc"
+        cursor = await self.db_connection.execute(query)
+        rows = await cursor.fetchall()
+        await cursor.close()
+        for row in rows:
+            if row is not None:
+                StakingData = {}
+                StakingData['launcher_id'] = row[0]
+                StakingData['StakingHeight'] = row[2]
+                StakingData['StakingAmount'] = row[3]
+                StakingData['StakingAddress'] = row[4]
+                StakingData['ReceivedAddress'] = row[5]
+                StakingData['StakingPeriod'] = row[13]
+                nft_item = {}
+                nft_item['launcher_id'] = row[0]
+                nft_item['launcher_rec'] = None
+                nft_item['nft_data'] = StakingData
+                nft_item['StakingData'] = StakingData
+
+                StakingData = nft_item['StakingData']
+                if int(StakingData['StakingAmount'] / self.mojo_per_unit) in self.allow_staking_amount:
+                    get_all_masternodes.append(nft_item)
         return get_all_masternodes
 
     async def get_all_masternodes_count(self) -> List:
