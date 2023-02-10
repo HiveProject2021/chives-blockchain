@@ -1239,27 +1239,15 @@ class MasterNodeManager:
                 # print("Waiting for block (30s)")
                 await asyncio.sleep(3)
 
-    async def get_all_masternodes_from_blockchain(self) -> List:
-        launcher_ids = await self.masternode_wallet.get_all_nft_ids()
-        get_all_masternodes = []
-        for launcher_id in launcher_ids:
-            nft = await self.masternode_wallet.get_nft_by_launcher_id(hexstr_to_bytes(launcher_id))
-            StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod']) > 0 and int(StakingData['StakingAmount'] / self.mojo_per_unit) in self.allow_staking_amount:
-                get_all_masternodes.append(nft)
-        return get_all_masternodes
-
     async def get_all_masternodes(self) -> List:
-        query = "SELECT launcher_id FROM masternode_list order by Height desc"
-        cursor = await self.masternode_wallet.db_connection.execute(query)
-        rows = await cursor.fetchall()
-        await cursor.close()
-
+        all_nfts = await self.node_client.get_coin_records_by_puzzle_hash(LAUNCHER_PUZZLE_HASH)
         get_all_masternodes = []
-        for nft in rows:
-            StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod']) > 0 and int(StakingData['StakingAmount'] / self.mojo_per_unit) in self.allow_staking_amount:
-                get_all_masternodes.append(nft)
+        for cr in all_nfts:
+            nft = await self.masternode_wallet.get_nft_by_launcher_id(cr.coin.name())
+            if nft is not None:
+                StakingData = nft['StakingData']
+                if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod']) > 0 and int(StakingData['StakingAmount'] / self.mojo_per_unit) in self.allow_staking_amount:
+                    get_all_masternodes.append(nft)
         return get_all_masternodes
 
     async def get_all_masternodes_count(self) -> List:
