@@ -1251,9 +1251,10 @@ class MasterNodeManager:
 
     async def get_all_masternodes(self) -> List:
         query = "SELECT launcher_id FROM masternode_list order by Height desc"
-        cursor = await self.db_connection.execute(query)
+        cursor = await self.masternode_wallet.db_connection.execute(query)
         rows = await cursor.fetchall()
         await cursor.close()
+
         get_all_masternodes = []
         for nft in rows:
             StakingData = nft['StakingData']
