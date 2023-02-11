@@ -607,6 +607,7 @@ class MasterNodeManager:
         result['MasterNodeCount'] = MasterNodeCount
         result['MasterNodeStakingAmount'] = int(MasterNodeStakingAmount / 100000000)
         result['MasterNodeRewardPoolAmount'] = int(UnAssignCoin / 100000000)
+        result['MasterNodeRewardHaveSentAmount'] = 0
         result['MasterNodeOnlineCount'] = MasterNodeOnlineCount
         result['MyNodeOnlineStatus'] = jsonResult['dictResult']['StakingRegisterMasterNodeOnline']
         return result
