@@ -11,7 +11,7 @@ export type MasterNodeCardsProps = {
   StakingAmountTip?: ReactElement<any>;
   TotalNodesTip?: ReactElement<any>;
   OnlineNodesTip?: ReactElement<any>;
-  HaveSendAmountTip?: ReactElement<any>;
+  MyNodeOnlineStatusTip?: ReactElement<any>;
   RewardPoolAmount?: ReactElement<any>;
 };
 
@@ -29,11 +29,11 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
     StakingAmountTip,
     TotalNodesTip,
     OnlineNodesTip,
-    HaveSendAmountTip,
+    MyNodeOnlineStatusTip,
     RewardPoolAmount,
   } = props;
 
-  const { 
+  const {
     data: MasterNodeSummary
   } = useGetMasterNodeSummaryQuery({
     walletId,
@@ -46,25 +46,25 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
   const MasterNodeStakingAmount = MasterNodeSummary?.MasterNodeStakingAmount;
   const MasterNodeCount = MasterNodeSummary?.MasterNodeCount;
   const MasterNodeOnlineCount = MasterNodeSummary?.MasterNodeOnlineCount;
-  const MasterNodeRewardHaveSentAmount = MasterNodeSummary?.MasterNodeRewardHaveSentAmount;
   const MasterNodeRewardPoolAmount = MasterNodeSummary?.MasterNodeRewardPoolAmount;
+  const MyNodeOnlineStatus = MasterNodeSummary?.MyNodeOnlineStatus;
 
   return (
     <div>
       <Grid spacing={2} alignItems="stretch" container>
         <Grid xs={12} lg={4} item>
           <CardSimple
-          loading={isLoading}
-          title={<Trans>Staking Amount</Trans>}
-          tooltip={StakingAmountTip}
-          value={MasterNodeStakingAmount}
-          error={error}
-        >
-          <Flex flexGrow={1} />
-          <StyledGraphContainer>
-            <MasterNodeReceivedGraph walletId={walletId} height={80} />
-          </StyledGraphContainer>
-        </CardSimple>
+            loading={isLoading}
+            title={<Trans>Staking Amount</Trans>}
+            tooltip={StakingAmountTip}
+            value={MasterNodeStakingAmount}
+            error={error}
+          >
+            <Flex flexGrow={1} />
+            <StyledGraphContainer>
+              <MasterNodeReceivedGraph walletId={walletId} height={80} />
+            </StyledGraphContainer>
+          </CardSimple>
         </Grid>
         <Grid xs={12} lg={8} item>
           <Grid spacing={2} alignItems="stretch" container>
@@ -92,9 +92,9 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
               <CardSimple
                 loading={isLoading}
                 valueColor="secondary"
-                title={<Trans>Have Sent Amount</Trans>}
-                tooltip={HaveSendAmountTip}
-                value={MasterNodeRewardHaveSentAmount}
+                title={<Trans>My Node Status</Trans>}
+                tooltip={MyNodeOnlineStatusTip}
+                value={MyNodeOnlineStatus}
                 error={error}
               />
             </Grid>
@@ -119,6 +119,6 @@ MasterNodeCards.defaultProps = {
   StakingAmountTip: undefined,
   TotalNodesTip: undefined,
   OnlineNodesTip: undefined,
-  HaveSendAmountTip: undefined,
+  MyNodeOnlineStatusTip: undefined,
   RewardPoolAmount: undefined,
 };

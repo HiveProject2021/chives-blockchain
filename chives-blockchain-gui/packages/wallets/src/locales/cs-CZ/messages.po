@@ -1321,8 +1321,8 @@ msgid "Have Send Amount"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:95
-msgid "Have Sent Amount"
-msgstr ""
+#~ msgid "Have Sent Amount"
+#~ msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:60
 #~ msgid "Header Hash"
@@ -1766,6 +1766,10 @@ msgstr "Více podpisová peněženka"
 #: src/components/did/WalletDID.tsx:536
 msgid "My DID Wallet"
 msgstr "Má DID peněženka"
+
+#: src/components/MasterNodeCards.tsx:95
+msgid "My Node Status"
+msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:414
 msgid "My Pubkey"

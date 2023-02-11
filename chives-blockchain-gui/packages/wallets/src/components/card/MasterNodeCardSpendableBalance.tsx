@@ -11,7 +11,7 @@ type Props = {
 export default function MasterNodeCardSpendableBalance(props: Props) {
   const { walletId, tooltip } = props;
 
-  const { 
+  const {
     data: MasterNodeSummary
   } = useGetMasterNodeSummaryQuery({
     walletId,

@@ -1321,8 +1321,8 @@ msgid "Have Send Amount"
 msgstr "Have Send Amount"
 
 #: src/components/MasterNodeCards.tsx:95
-msgid "Have Sent Amount"
-msgstr "Have Sent Amount"
+#~ msgid "Have Sent Amount"
+#~ msgstr "Have Sent Amount"
 
 #: src/components/fullNode/FullNode.jsx:60
 #~ msgid "Header Hash"
@@ -1766,6 +1766,10 @@ msgstr "Multi Sig Wallet"
 #: src/components/did/WalletDID.tsx:536
 msgid "My DID Wallet"
 msgstr "My DID Wallet"
+
+#: src/components/MasterNodeCards.tsx:95
+msgid "My Node Status"
+msgstr "My Node Status"
 
 #: src/components/rateLimited/WalletRateLimited.jsx:414
 msgid "My Pubkey"

@@ -3,9 +3,9 @@ import { useGetMasterNodeListsQuery, useGetMasterNodeListsCountQuery } from '@ch
 import type { Transaction } from '@chives/api';
 
 export default function useWalletMasterNodeLists(
-  walletId: number, 
-  defaultRowsPerPage = 10, 
-  defaultPage = 0, 
+  walletId: number,
+  defaultRowsPerPage = 10,
+  defaultPage = 0,
   sortKey?: 'CONFIRMED_AT_HEIGHT' | 'RELEVANCE',
   reverse?: boolean,
 ): {
@@ -22,16 +22,18 @@ export default function useWalletMasterNodeLists(
 
   const { data: count, isLoading: isTransactionsCountLoading, error: transactionsCountError } = useGetMasterNodeListsCountQuery({
     walletId,
+  }, {
+    pollingInterval: 10000,
   });
 
   const all = rowsPerPage === -1;
 
-  const start = all 
-    ? 0 
+  const start = all
+    ? 0
     : page * rowsPerPage;
 
-  const end = all 
-    ? count ?? 0 
+  const end = all
+    ? count ?? 0
     : start + rowsPerPage;
 
   const { data: transactions, isLoading: isTransactionsLoading, error: transactionsError } = useGetMasterNodeListsQuery({
@@ -42,6 +44,7 @@ export default function useWalletMasterNodeLists(
     reverse,
   }, {
     skipToken: count === undefined,
+    pollingInterval: 10000,
   });
 
   const isLoading = isTransactionsLoading || isTransactionsCountLoading;
@@ -55,10 +58,10 @@ export default function useWalletMasterNodeLists(
     setPage(page);
   }
 
-  return { 
-    transactions: transactionsOrdered, 
+  return {
+    transactions: transactionsOrdered,
     count,
-    page, 
+    page,
     rowsPerPage,
     isLoading,
     error,

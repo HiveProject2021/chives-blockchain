@@ -820,17 +820,7 @@ export const walletApi = apiWithTag.injectEndpoints({
       },
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
         {
-          command: 'onCoinAdded',
-          service: Wallet,
-          endpoint: () => walletApi.endpoints.getMasterNodeLists,
-        },
-        {
-          command: 'onCoinRemoved',
-          service: Wallet,
-          endpoint: () => walletApi.endpoints.getMasterNodeLists,
-        },
-        {
-          command: 'onPendingTransaction',
+          command: 'onNewBlock',
           service: Wallet,
           endpoint: () => walletApi.endpoints.getMasterNodeLists,
         },
@@ -1002,21 +992,6 @@ export const walletApi = apiWithTag.injectEndpoints({
       providesTags: (result, _error, { walletId }) =>
         result ? [{ type: 'MasterNodeSummary', id: walletId }] : [],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
-        {
-          command: 'onCoinAdded',
-          service: Wallet,
-          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
-        },
-        {
-          command: 'onCoinRemoved',
-          service: Wallet,
-          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
-        },
-        {
-          command: 'onPendingTransaction',
-          service: Wallet,
-          endpoint: () => walletApi.endpoints.getMasterNodeSummary,
-        },
         {
           command: 'onNewBlock',
           service: Wallet,
