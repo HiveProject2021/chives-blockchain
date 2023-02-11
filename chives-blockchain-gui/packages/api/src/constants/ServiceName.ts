@@ -9,6 +9,7 @@ enum ServiceName {
   TIMELORD = 'chives_timelord',
   INTRODUCER = 'chives_introducer',
   EVENTS = 'wallet_ui',
+  MASTERNODE = 'chives_masternode',
 };
 
 export default ServiceName;
