@@ -49,7 +49,7 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   //const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();
 
   const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery({}, {
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   const { wallet } = useWallet(walletId);

@@ -19,7 +19,7 @@ export default function MasterNodeCardPendingBalance(props: Props) {
   } = useGetWalletBalanceQuery({
     walletId,
   }, {
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   const { wallet, unit = '', loading } = useWallet(walletId);

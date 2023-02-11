@@ -38,7 +38,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
   } = useGetMasterNodeSummaryQuery({
     walletId,
   }, {
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   const error = null;

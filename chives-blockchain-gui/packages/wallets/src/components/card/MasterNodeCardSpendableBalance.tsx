@@ -16,7 +16,7 @@ export default function MasterNodeCardSpendableBalance(props: Props) {
   } = useGetMasterNodeSummaryQuery({
     walletId,
   }, {
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   const error = null;

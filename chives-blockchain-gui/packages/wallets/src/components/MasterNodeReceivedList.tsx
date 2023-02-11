@@ -256,7 +256,7 @@ export default function MasterNodeReceivedList(props: Props) {
   const { walletId } = props;
 
   const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery({}, {
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
   const { wallet, loading: isWalletLoading, unit } = useWallet(walletId);
   const {

@@ -23,7 +23,7 @@ export default function useWalletMasterNodeLists(
   const { data: count, isLoading: isTransactionsCountLoading, error: transactionsCountError } = useGetMasterNodeListsCountQuery({
     walletId,
   }, {
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   const all = rowsPerPage === -1;
@@ -44,7 +44,7 @@ export default function useWalletMasterNodeLists(
     reverse,
   }, {
     skipToken: count === undefined,
-    pollingInterval: 10000,
+    pollingInterval: 60000,
   });
 
   const isLoading = isTransactionsLoading || isTransactionsCountLoading;
