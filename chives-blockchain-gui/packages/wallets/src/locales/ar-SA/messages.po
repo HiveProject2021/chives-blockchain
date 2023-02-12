@@ -1321,7 +1321,7 @@ msgid "Have Send Amount"
 msgstr ""
 
 #: src/components/MasterNodeCards.tsx:95
-msgid "Have Sent Amount"
+msgid "My Node Status"
 msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:60

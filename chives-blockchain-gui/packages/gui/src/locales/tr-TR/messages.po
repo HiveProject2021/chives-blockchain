@@ -472,12 +472,16 @@ msgstr "Havuzu Değiştir"
 #~ msgstr "Keybase'de Sohbet Et"
 
 #: src/components/offers/NFTOfferPreview.tsx:177
+msgid "Check Provenance on ChivesNFT"
+msgstr ""
+
+#: src/components/offers/NFTOfferPreview.tsx:177
 #~ msgid "Check Provenance on MintGarden"
 #~ msgstr ""
 
 #: src/components/offers/NFTOfferPreview.tsx:177
-msgid "Check Provenance on SkyNFT"
-msgstr ""
+#~ msgid "Check Provenance on SkyNFT"
+#~ msgstr ""
 
 #: src/components/offers/NFTOfferPreview.tsx:197
 #~ msgid "Check Provenance on Spacescan.io"
@@ -4084,6 +4088,10 @@ msgstr ""
 msgid "View an Offer"
 msgstr ""
 
+#: src/components/nfts/NFTContextualActions.tsx:563
+msgid "View on ChivesNFT"
+msgstr ""
+
 #: src/components/offers/OfferShareDialog.tsx:532
 msgid "View on Dexie"
 msgstr ""
@@ -4101,8 +4109,8 @@ msgid "View on OfferBin"
 msgstr ""
 
 #: src/components/nfts/NFTContextualActions.tsx:563
-msgid "View on SkyNFT"
-msgstr ""
+#~ msgid "View on SkyNFT"
+#~ msgstr ""
 
 #: src/components/nfts/NFTContextualActions.tsx:577
 #~ msgid "View on Spacescan.io"
