@@ -276,7 +276,7 @@ msgstr "你确定要使用 k={plotSize}？"
 msgid "Asset Type"
 msgstr ""
 
-#: src/components/app/AppState.tsx:151
+#: src/components/app/AppState.tsx:153
 msgid "Attempt {attempt}"
 msgstr "尝试 {attempt}"
 
@@ -472,12 +472,16 @@ msgstr "更换农业合作社"
 #~ msgstr "在Keybase上参与讨论"
 
 #: src/components/offers/NFTOfferPreview.tsx:177
+msgid "Check Provenance on ChivesNFT"
+msgstr ""
+
+#: src/components/offers/NFTOfferPreview.tsx:177
 #~ msgid "Check Provenance on MintGarden"
 #~ msgstr ""
 
 #: src/components/offers/NFTOfferPreview.tsx:177
-msgid "Check Provenance on SkyNFT"
-msgstr ""
+#~ msgid "Check Provenance on SkyNFT"
+#~ msgstr ""
 
 #: src/components/offers/NFTOfferPreview.tsx:197
 #~ msgid "Check Provenance on Spacescan.io"
@@ -551,7 +555,7 @@ msgstr "关闭"
 #~ msgid "Closing down node and server"
 #~ msgstr "Closing down node and server"
 
-#: src/components/app/AppState.tsx:98
+#: src/components/app/AppState.tsx:100
 msgid "Closing down services"
 msgstr "关闭服务"
 
@@ -682,8 +686,8 @@ msgstr "连接到农业合作社"
 msgid "Connected"
 msgstr "已连接"
 
-#: src/components/app/AppState.tsx:144
-#: src/components/app/AppState.tsx:148
+#: src/components/app/AppState.tsx:146
+#: src/components/app/AppState.tsx:150
 msgid "Connecting to daemon"
 msgstr "正在连接到进程"
 
@@ -1808,7 +1812,7 @@ msgstr "正在加载配置"
 msgid "Loading farming data"
 msgstr "正在加载农业数据"
 
-#: src/components/app/AppState.tsx:117
+#: src/components/app/AppState.tsx:119
 msgid "Loading keyring status"
 msgstr "正在载入密钥串状态"
 
@@ -3411,7 +3415,7 @@ msgstr "演说"
 #~ msgid "Spending Limit (chives per interval): {0}"
 #~ msgstr "Spending Limit (chives per interval): {0}"
 
-#: src/components/app/AppState.tsx:172
+#: src/components/app/AppState.tsx:174
 msgid "Starting services"
 msgstr "正在启动服务..."
 
@@ -4084,6 +4088,10 @@ msgstr "查看农业合作社登录地址"
 msgid "View an Offer"
 msgstr ""
 
+#: src/components/nfts/NFTContextualActions.tsx:563
+msgid "View on ChivesNFT"
+msgstr ""
+
 #: src/components/offers/OfferShareDialog.tsx:532
 msgid "View on Dexie"
 msgstr ""
@@ -4101,8 +4109,8 @@ msgid "View on OfferBin"
 msgstr ""
 
 #: src/components/nfts/NFTContextualActions.tsx:563
-msgid "View on SkyNFT"
-msgstr ""
+#~ msgid "View on SkyNFT"
+#~ msgstr ""
 
 #: src/components/nfts/NFTContextualActions.tsx:577
 #~ msgid "View on Spacescan.io"

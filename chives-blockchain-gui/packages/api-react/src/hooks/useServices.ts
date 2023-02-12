@@ -82,6 +82,11 @@ export default function useMonitorServices(
     getServiceOptions(ServiceName.INTRODUCER, services, options),
   );
 
+  const masternodeState = useService(
+    ServiceName.MASTERNODE,
+    getServiceOptions(ServiceName.MASTERNODE, services, options),
+  );
+
   const states = [
     walletState,
     fullNodeState,
@@ -91,6 +96,7 @@ export default function useMonitorServices(
     plotterState,
     timelordState,
     introducerState,
+    masternodeState,
   ];
 
   const isLoading = !!states.find((state) => state.isLoading);

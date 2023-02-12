@@ -16,7 +16,9 @@ const ALL_SERVICES = [
   ServiceName.FARMER,
   ServiceName.HARVESTER,
   ServiceName.SIMULATOR,
+  ServiceName.MASTERNODE,
 ];
+
 
 type Props = {
   children: ReactNode;

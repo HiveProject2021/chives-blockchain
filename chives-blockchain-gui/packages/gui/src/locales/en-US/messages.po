@@ -276,7 +276,7 @@ msgstr "Are you sure you want to use k={plotSize}?"
 msgid "Asset Type"
 msgstr "Asset Type"
 
-#: src/components/app/AppState.tsx:151
+#: src/components/app/AppState.tsx:153
 msgid "Attempt {attempt}"
 msgstr "Attempt {attempt}"
 
@@ -472,12 +472,16 @@ msgstr "Change Pool"
 #~ msgstr "Chat on KeyBase"
 
 #: src/components/offers/NFTOfferPreview.tsx:177
+msgid "Check Provenance on ChivesNFT"
+msgstr "Check Provenance on ChivesNFT"
+
+#: src/components/offers/NFTOfferPreview.tsx:177
 #~ msgid "Check Provenance on MintGarden"
 #~ msgstr "Check Provenance on MintGarden"
 
 #: src/components/offers/NFTOfferPreview.tsx:177
-msgid "Check Provenance on SkyNFT"
-msgstr "Check Provenance on SkyNFT"
+#~ msgid "Check Provenance on SkyNFT"
+#~ msgstr "Check Provenance on SkyNFT"
 
 #: src/components/offers/NFTOfferPreview.tsx:197
 #~ msgid "Check Provenance on Spacescan.io"
@@ -551,7 +555,7 @@ msgstr "Close"
 #~ msgid "Closing down node and server"
 #~ msgstr "Closing down node and server"
 
-#: src/components/app/AppState.tsx:98
+#: src/components/app/AppState.tsx:100
 msgid "Closing down services"
 msgstr "Closing down services"
 
@@ -682,8 +686,8 @@ msgstr "Connect to pool"
 msgid "Connected"
 msgstr "Connected"
 
-#: src/components/app/AppState.tsx:144
-#: src/components/app/AppState.tsx:148
+#: src/components/app/AppState.tsx:146
+#: src/components/app/AppState.tsx:150
 msgid "Connecting to daemon"
 msgstr "Connecting to daemon"
 
@@ -1812,7 +1816,7 @@ msgstr "Loading configuration"
 msgid "Loading farming data"
 msgstr "Loading farming data"
 
-#: src/components/app/AppState.tsx:117
+#: src/components/app/AppState.tsx:119
 msgid "Loading keyring status"
 msgstr "Loading keyring status"
 
@@ -3415,7 +3419,7 @@ msgstr "Speech"
 #~ msgid "Spending Limit (chives per interval): {0}"
 #~ msgstr "Spending Limit (chives per interval): {0}"
 
-#: src/components/app/AppState.tsx:172
+#: src/components/app/AppState.tsx:174
 msgid "Starting services"
 msgstr "Starting services"
 
@@ -4088,6 +4092,10 @@ msgstr "View Pool Login Link"
 msgid "View an Offer"
 msgstr "View an Offer"
 
+#: src/components/nfts/NFTContextualActions.tsx:563
+msgid "View on ChivesNFT"
+msgstr "View on ChivesNFT"
+
 #: src/components/offers/OfferShareDialog.tsx:532
 msgid "View on Dexie"
 msgstr "View on Dexie"
@@ -4105,8 +4113,8 @@ msgid "View on OfferBin"
 msgstr "View on OfferBin"
 
 #: src/components/nfts/NFTContextualActions.tsx:563
-msgid "View on SkyNFT"
-msgstr "View on SkyNFT"
+#~ msgid "View on SkyNFT"
+#~ msgstr "View on SkyNFT"
 
 #: src/components/nfts/NFTContextualActions.tsx:577
 #~ msgid "View on Spacescan.io"
