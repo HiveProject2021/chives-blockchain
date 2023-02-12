@@ -1317,12 +1317,8 @@ msgstr "A HD vagy hierarchikus determinisztikus kulcs egyfajta nyilvános kulcs 
 #~ msgstr ""
 
 #: src/components/masternode/MasterNodeStandardCards.tsx:31
-msgid "Have Send Amount"
-msgstr ""
-
-#: src/components/MasterNodeCards.tsx:95
-msgid "My Node Status"
-msgstr ""
+#~ msgid "Have Send Amount"
+#~ msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:60
 #~ msgid "Header Hash"
@@ -1763,6 +1759,10 @@ msgstr ""
 msgid "My DID Wallet"
 msgstr ""
 
+#: src/components/MasterNodeCards.tsx:102
+msgid "My Node Status"
+msgstr ""
+
 #: src/components/rateLimited/WalletRateLimited.jsx:414
 msgid "My Pubkey"
 msgstr "Publikus kulcsom"
@@ -1992,8 +1992,7 @@ msgstr "Az egyes tranzakciós blokkok között átlagosan egy perc van. Hacsak n
 msgid "One year"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:85
-#: src/components/masternode/MasterNodeStandardCards.tsx:26
+#: src/components/MasterNodeCards.tsx:92
 msgid "Online Nodes"
 msgstr ""
 
@@ -2658,6 +2657,14 @@ msgstr ""
 #~ msgid "Refresh Plots"
 #~ msgstr "Refresh Plots"
 
+#: src/components/masternode/MasterNodeStandardCards.tsx:16
+#: src/components/masternode/MasterNodeStandardCards.tsx:21
+#: src/components/masternode/MasterNodeStandardCards.tsx:26
+#: src/components/masternode/MasterNodeStandardCards.tsx:31
+#: src/components/masternode/MasterNodeStandardCards.tsx:36
+msgid "Refresh data every 20 minutes"
+msgstr ""
+
 #: src/components/pool/PoolInfo.tsx:32
 #~ msgid "Relative Lock Height"
 #~ msgstr "Relative Lock Height"
@@ -2714,8 +2721,7 @@ msgstr ""
 msgid "Retire"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:105
-#: src/components/masternode/MasterNodeStandardCards.tsx:36
+#: src/components/MasterNodeCards.tsx:112
 msgid "Reward Pool Amount"
 msgstr ""
 
@@ -3021,8 +3027,7 @@ msgstr ""
 msgid "Staking Address"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:58
-#: src/components/masternode/MasterNodeStandardCards.tsx:16
+#: src/components/MasterNodeCards.tsx:65
 msgid "Staking Amount"
 msgstr ""
 
@@ -3510,8 +3515,7 @@ msgstr "Teljes egyenleg"
 #~ msgid "Total Network Space"
 #~ msgstr "Total Network Space"
 
-#: src/components/MasterNodeCards.tsx:75
-#: src/components/masternode/MasterNodeStandardCards.tsx:21
+#: src/components/MasterNodeCards.tsx:82
 msgid "Total Nodes"
 msgstr ""
 
