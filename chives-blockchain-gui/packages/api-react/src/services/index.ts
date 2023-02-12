@@ -109,6 +109,7 @@ export const {
   useGetMasterNodeReceivedListsCountQuery,
   useGetMasterNodeMyCardQuery,
   useGetMasterNodeSummaryQuery,
+  useGetMasterNodeSyncingDataQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useTakeMasterNodeStakingMutation,

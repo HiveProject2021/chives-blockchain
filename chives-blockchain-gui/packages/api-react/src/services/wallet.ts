@@ -53,6 +53,7 @@ const apiWithTag = api.enhanceEndpoints({
     'MasterNode',
     'MasterNodeMyCard',
     'MasterNodeSummary',
+    'MasterNodeSyncingData',
   ],
 });
 
@@ -998,6 +999,22 @@ export const walletApi = apiWithTag.injectEndpoints({
           endpoint: () => walletApi.endpoints.getMasterNodeSummary,
         },
       ]),
+    }),
+
+    getMasterNodeSyncingData: build.query<
+      string,
+      {
+        walletId: number;
+      }
+    >({
+      query: ({ walletId }) => ({
+        command: 'getMasterNodeSyncingData',
+        service: Wallet,
+        args: [walletId, false],
+      }),
+      transformResponse: (response: any) => response?.result,
+      providesTags: (result, _error, { walletId }) =>
+        result ? [{ type: 'MasterNodeSyncingData', id: walletId }] : [],
     }),
 
     getCurrentAddress: build.query<
@@ -2431,6 +2448,7 @@ export const {
   useGetMasterNodeReceivedListsCountQuery,
   useGetMasterNodeMyCardQuery,
   useGetMasterNodeSummaryQuery,
+  useGetMasterNodeSyncingDataQuery,
   useGetCurrentAddressQuery,
   useGetNextAddressMutation,
   useTakeMasterNodeStakingMutation,
