@@ -1703,8 +1703,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/MasterNodeSyncingDataMemo.tsx:23
-msgid "Masternode Memo"
-msgstr ""
+#~ msgid "Masternode Memo"
+#~ msgstr ""
 
 #: src/components/MasterNodeReceivedList.tsx:172
 #: src/components/WalletHistory.tsx:172
@@ -2665,6 +2665,7 @@ msgstr "Obnovit peněženku"
 #~ msgid "Refresh Plots"
 #~ msgstr "Refresh Plots"
 
+#: src/components/MasterNodeSyncingDataMemo.tsx:20
 #: src/components/masternode/MasterNodeStandardCards.tsx:16
 #: src/components/masternode/MasterNodeStandardCards.tsx:21
 #: src/components/masternode/MasterNodeStandardCards.tsx:26

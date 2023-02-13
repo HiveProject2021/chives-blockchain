@@ -11,12 +11,12 @@ type Props = {
 export default function MasterNodeCardSpendableBalance(props: Props) {
   const { walletId, tooltip } = props;
 
-  const { 
+  const {
     data: MasterNodeSummary
   } = useGetMasterNodeSummaryQuery({
     walletId,
   }, {
-    pollingInterval: 60000,
+    pollingInterval: 30000,
   });
 
   const error = null;

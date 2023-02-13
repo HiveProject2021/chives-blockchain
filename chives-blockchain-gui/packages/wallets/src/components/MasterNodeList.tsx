@@ -168,7 +168,7 @@ export default function MasterNodeList(props: Props) {
   const { walletId } = props;
 
   const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery({}, {
-    pollingInterval: 60000,
+    pollingInterval: 10000,
   });
   const { wallet, loading: isWalletLoading, unit } = useWallet(walletId);
   const {
@@ -180,7 +180,7 @@ export default function MasterNodeList(props: Props) {
     pageChange,
   } = useWalletMasterNodeLists(walletId, 10, 0, 'RELEVANCE');
 
-  
+
 
   const feeUnit = useCurrencyCode();
   const [getOfferRecord] = useGetOfferRecordMutation();

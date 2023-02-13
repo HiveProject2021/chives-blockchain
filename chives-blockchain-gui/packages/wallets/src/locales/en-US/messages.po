@@ -1703,8 +1703,8 @@ msgstr "MasterNodeID"
 #~ msgstr "MasterNodeSummary"
 
 #: src/components/MasterNodeSyncingDataMemo.tsx:23
-msgid "Masternode Memo"
-msgstr "Masternode Memo"
+#~ msgid "Masternode Memo"
+#~ msgstr "Masternode Memo"
 
 #: src/components/MasterNodeReceivedList.tsx:172
 #: src/components/WalletHistory.tsx:172
@@ -2665,6 +2665,7 @@ msgstr "Recovery Wallet"
 #~ msgid "Refresh Plots"
 #~ msgstr "Refresh Plots"
 
+#: src/components/MasterNodeSyncingDataMemo.tsx:20
 #: src/components/masternode/MasterNodeStandardCards.tsx:16
 #: src/components/masternode/MasterNodeStandardCards.tsx:21
 #: src/components/masternode/MasterNodeStandardCards.tsx:26

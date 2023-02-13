@@ -33,12 +33,12 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
     RewardPoolAmount,
   } = props;
 
-  const { 
+  const {
     data: MasterNodeSummary
   } = useGetMasterNodeSummaryQuery({
     walletId,
   }, {
-    pollingInterval: 60000,
+    pollingInterval: 30000,
   });
 
   const error = null;
@@ -54,17 +54,17 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
       <Grid spacing={2} alignItems="stretch" container>
         <Grid xs={12} lg={4} item>
           <CardSimple
-          loading={isLoading}
-          title={<Trans>Staking Amount</Trans>}
-          tooltip={StakingAmountTip}
-          value={MasterNodeStakingAmount}
-          error={error}
-        >
-          <Flex flexGrow={1} />
-          <StyledGraphContainer>
-            <MasterNodeReceivedGraph walletId={walletId} height={80} />
-          </StyledGraphContainer>
-        </CardSimple>
+            loading={isLoading}
+            title={<Trans>Staking Amount</Trans>}
+            tooltip={StakingAmountTip}
+            value={MasterNodeStakingAmount}
+            error={error}
+          >
+            <Flex flexGrow={1} />
+            <StyledGraphContainer>
+              <MasterNodeReceivedGraph walletId={walletId} height={80} />
+            </StyledGraphContainer>
+          </CardSimple>
         </Grid>
         <Grid xs={12} lg={8} item>
           <Grid spacing={2} alignItems="stretch" container>

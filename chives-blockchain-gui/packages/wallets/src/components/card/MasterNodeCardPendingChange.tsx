@@ -13,14 +13,14 @@ type Props = {
 export default function MasterNodeCardPendingChange(props: Props) {
   const { walletId, tooltip } = props;
 
-  const { 
-    data: walletBalance, 
+  const {
+    data: walletBalance,
     isLoading: isLoadingWalletBalance,
     error,
   } = useGetWalletBalanceQuery({
     walletId,
   }, {
-    pollingInterval: 60000,
+    pollingInterval: 10000,
   });
 
   const { wallet, unit = '', loading } = useWallet(walletId);
