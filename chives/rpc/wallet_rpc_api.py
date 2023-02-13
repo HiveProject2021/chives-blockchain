@@ -270,6 +270,9 @@ class WalletRpcApi:
         return None, None
 
     async def get_private_key(self, request):
+        if "fingerprint" not in request:
+            return {"success": False, "private_key": {"fingerprint": None}}
+
         fingerprint = request["fingerprint"]
         sk, seed = await self._get_private_key(fingerprint)
         if sk is not None:
