@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Grid } from '@mui/material';
 import { useGetMasterNodeSummaryQuery } from '@chives/api-react';
-import { useGetMasterNodeSyncingDataQuery } from '@chives/api-react';
 import { Trans } from '@lingui/macro';
 import { CardSimple, Flex, TooltipIcon } from '@chives/core';
 import styled from 'styled-components';

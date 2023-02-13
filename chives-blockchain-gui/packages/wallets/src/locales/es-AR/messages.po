@@ -1698,6 +1698,10 @@ msgstr ""
 #~ msgid "MasterNodeSummary"
 #~ msgstr ""
 
+#: src/components/MasterNodeSyncingDataMemo.tsx:23
+msgid "Masternode Memo"
+msgstr ""
+
 #: src/components/MasterNodeReceivedList.tsx:172
 #: src/components/WalletHistory.tsx:172
 #: src/components/cat/WalletCATSend.tsx:231
@@ -1759,7 +1763,7 @@ msgstr ""
 msgid "My DID Wallet"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:102
+#: src/components/MasterNodeCards.tsx:95
 msgid "My Node Status"
 msgstr ""
 
@@ -1992,7 +1996,7 @@ msgstr "Por término medio, hay un minuto entre cada bloque de transacción. A m
 msgid "One year"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:92
+#: src/components/MasterNodeCards.tsx:85
 msgid "Online Nodes"
 msgstr ""
 
@@ -2662,8 +2666,16 @@ msgstr ""
 #: src/components/masternode/MasterNodeStandardCards.tsx:26
 #: src/components/masternode/MasterNodeStandardCards.tsx:31
 #: src/components/masternode/MasterNodeStandardCards.tsx:36
-msgid "Refresh data every 20 minutes"
+msgid "Refresh data every 10 minutes"
 msgstr ""
+
+#: src/components/masternode/MasterNodeStandardCards.tsx:16
+#: src/components/masternode/MasterNodeStandardCards.tsx:21
+#: src/components/masternode/MasterNodeStandardCards.tsx:26
+#: src/components/masternode/MasterNodeStandardCards.tsx:31
+#: src/components/masternode/MasterNodeStandardCards.tsx:36
+#~ msgid "Refresh data every 20 minutes"
+#~ msgstr ""
 
 #: src/components/pool/PoolInfo.tsx:32
 #~ msgid "Relative Lock Height"
@@ -2721,7 +2733,7 @@ msgstr ""
 msgid "Retire"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:112
+#: src/components/MasterNodeCards.tsx:105
 msgid "Reward Pool Amount"
 msgstr ""
 
@@ -3027,7 +3039,7 @@ msgstr ""
 msgid "Staking Address"
 msgstr ""
 
-#: src/components/MasterNodeCards.tsx:65
+#: src/components/MasterNodeCards.tsx:58
 msgid "Staking Amount"
 msgstr ""
 
@@ -3513,7 +3525,7 @@ msgstr "Balance Total"
 #~ msgid "Total Network Space"
 #~ msgstr "Total Network Space"
 
-#: src/components/MasterNodeCards.tsx:82
+#: src/components/MasterNodeCards.tsx:75
 msgid "Total Nodes"
 msgstr ""
 

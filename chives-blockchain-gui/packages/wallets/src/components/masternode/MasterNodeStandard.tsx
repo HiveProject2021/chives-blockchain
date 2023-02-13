@@ -9,6 +9,7 @@ import MasterNodeHeader from '../MasterNodeHeader';
 import MasterNodeStandardCards from './MasterNodeStandardCards';
 import MasterNodeStakingPanelForm from '../MasterNodeStakingPanelForm';
 import MasterNodeReceivedList from '../MasterNodeReceivedList';
+import MasterNodeSyncingDataMemo from '../MasterNodeSyncingDataMemo';
 
 type WalletMasterNodeProps = {
   walletId: number;
@@ -33,7 +34,8 @@ export default function WalletMasterNode(props: WalletMasterNodeProps) {
       <Box display={selectedTab === 'summary' ? 'block' : 'none'}>
         <Flex flexDirection="column" gap={4}>
           <MasterNodeStandardCards walletId={walletId} />    
-          <MasterNodeList walletId={walletId} />      
+          <MasterNodeList walletId={walletId} />     
+          <MasterNodeSyncingDataMemo walletId={walletId} />   
         </Flex>
       </Box>
       <Box display={selectedTab === 'staking' ? 'block' : 'none'}>
