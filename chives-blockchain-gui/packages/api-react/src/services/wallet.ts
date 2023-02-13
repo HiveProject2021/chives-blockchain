@@ -1015,6 +1015,13 @@ export const walletApi = apiWithTag.injectEndpoints({
       transformResponse: (response: any) => response?.result,
       providesTags: (result, _error, { walletId }) =>
         result ? [{ type: 'MasterNodeSyncingData', id: walletId }] : [],
+        onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [
+          {
+            command: 'onNewBlock',
+            service: Wallet,
+            endpoint: () => walletApi.endpoints.getMasterNodeSummary,
+          },
+        ]),
     }),
 
     getCurrentAddress: build.query<

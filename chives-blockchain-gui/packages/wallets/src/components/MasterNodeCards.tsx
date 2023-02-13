@@ -34,12 +34,6 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
     RewardPoolAmount,
   } = props;
 
-  useGetMasterNodeSyncingDataQuery({
-    walletId,
-  }, {
-    pollingInterval: 600000,
-  });
-
   const { 
     data: MasterNodeSummary
   } = useGetMasterNodeSummaryQuery({

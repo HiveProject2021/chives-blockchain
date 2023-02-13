@@ -14,27 +14,27 @@ export default function MasterNodeStandardCards(props: Props) {
       walletId={walletId}
       StakingAmountTip={
         <Trans>
-          Refresh data every 20 minutes
+          Refresh data every 10 minutes
         </Trans>
       }
       TotalNodesTip={
         <Trans>
-          Refresh data every 20 minutes
+          Refresh data every 10 minutes
         </Trans>
       }
       OnlineNodesTip={
         <Trans>
-          Refresh data every 20 minutes
+          Refresh data every 10 minutes
         </Trans>
       }
       MyNodeOnlineStatusTip={
         <Trans>
-          Refresh data every 20 minutes
+          Refresh data every 10 minutes
         </Trans>
       }
       RewardPoolAmount={
         <Trans>
-          Refresh data every 20 minutes
+          Refresh data every 10 minutes
         </Trans>
       }
     />
