@@ -37,7 +37,7 @@ export default function MasterNodeCards(props: MasterNodeCardsProps) {
   useGetMasterNodeSyncingDataQuery({
     walletId,
   }, {
-    pollingInterval: 1200000,
+    pollingInterval: 600000,
   });
 
   const { 
