@@ -385,7 +385,7 @@ class MasterNodeManager:
         StakingData['StakingCoinFirstTime'] = str(STAKING_COIN[0].coin.name())
         StakingData['NodeName'] = blockchain_state["node_id"]
         IsStakingCoin = False
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(STAKING_ADDRESS), False, 2600000)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(STAKING_ADDRESS), False, 2400000)
         for coin_record in all_staking_coins:
             StakingAmount = coin_record.coin.amount
             if int(coin_record.coin.amount / self.mojo_per_unit) in self.allow_staking_amount:
@@ -582,10 +582,10 @@ class MasterNodeManager:
                 MasterNodeStakingAmount += StakingData['StakingAmount']
                 MasterNodeCount += 1
                 # print(StakingData)
-                # all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingAddress),False,2600000)
+                # all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash(StakingAddress),False,2400000)
                 # print(all_staking_coins[0].coin.amount/100000000)
 
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash("txcc124dcndk6hawzk729j6cu84dalqkcptx57j33dnm3y4csufnwkgsqdkq0aa"), False, 2600000)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(decode_puzzle_hash("txcc124dcndk6hawzk729j6cu84dalqkcptx57j33dnm3y4csufnwkgsqdkq0aa"), False, 2400000)
         UnAssignCoin = 0
         for coin_record in all_staking_coins:
             UnAssignCoin += coin_record.coin.amount
@@ -1597,7 +1597,7 @@ class MasterNodeWallet:
         STAKING_ADDRESS = result['STAKING_ADDRESS_TEST']
         STAKING_PUZZLE = result['STAKING_PUZZLE_TEST']
         STAKING_PERIOD = 0
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2600000)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2400000)
         all_staking_coins_filter = None
         if all_staking_coins is not None and len(all_staking_coins) > 0:
             all_staking_coins_filter = []
@@ -1614,7 +1614,7 @@ class MasterNodeWallet:
             STAKING_ADDRESS = result['STAKING_ADDRESS_ONE_YEAR']
             STAKING_PUZZLE = result['STAKING_PUZZLE_ONE_YEAR']
             STAKING_PERIOD = 1
-            all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2600000)
+            all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2400000)
             all_staking_coins_filter = None
             if all_staking_coins is not None and len(all_staking_coins) > 0:
                 all_staking_coins_filter = []
@@ -1631,7 +1631,7 @@ class MasterNodeWallet:
                 STAKING_ADDRESS = result['STAKING_ADDRESS_TWO_YEAR']
                 STAKING_PUZZLE = result['STAKING_PUZZLE_TWO_YEAR']
                 STAKING_PERIOD = 2
-                all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2600000)
+                all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2400000)
                 all_staking_coins_filter = None
                 if all_staking_coins is not None and len(all_staking_coins) > 0:
                     all_staking_coins_filter = []
@@ -1771,7 +1771,7 @@ class MasterNodeWallet:
         # print(STAKING_ADDRESS)
         # print(STAKING_PUZZLE)
         # get all unspent staking coins
-        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2600000)
+        all_staking_coins = await self.node_client.get_coin_records_by_puzzle_hash(STAKING_PUZZLE_HASH, False, 2400000)
         # print(f"all_staking_coins:{all_staking_coins}")
         for coin_record in all_staking_coins:
             coin_record = await self.node_client.get_coin_record_by_name(coin_record.coin.name())
