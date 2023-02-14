@@ -30,6 +30,8 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   const { walletId } = props;
   const { data: MyCard } = useGetMasterNodeMyCardQuery({
     walletId,
+  }, {
+    pollingInterval: 20000,
   });
   const StakingAccountStatus: boolean = MyCard?.StakingAccountStatus;
   const stakingAmount: number = MyCard?.stakingAmount;
@@ -49,7 +51,7 @@ export default function MasterNodeStakingPanelForm(props: MasterNodeStakingPanel
   //const [takeMasterNodeRegister, { isLoading: isSendTransactionLoadingRegister }] = useTakeMasterNodeRegisterMutation();
 
   const { data: walletState, isLoading: isWalletSyncLoading } = useGetSyncStatusQuery({}, {
-    pollingInterval: 10000,
+    pollingInterval: 20000,
   });
 
   const { wallet } = useWallet(walletId);
