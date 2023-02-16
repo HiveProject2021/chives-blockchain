@@ -1094,7 +1094,6 @@ class MasterNodeManager:
         self.printJsonResult(jsonResult)
 
     async def masternode_mynode_json(self, args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
-
         mojo_per_unit = self.mojo_per_unit
         wallet_id: int = 1
         balances = await wallet_client.get_wallet_balance(wallet_id)
@@ -1870,47 +1869,68 @@ class MasterNodeWallet:
         StakingAmountAddition = {}
         StakingAmountAddition[100000] = 1.0
         StakingAmountAddition[300000] = 1.1
-        StakingAmountAddition[500000] = 1.2
-        StakingAmountAddition[1000000] = 1.3
+        StakingAmountAddition[500000] = 1.21
+        StakingAmountAddition[1000000] = 1.33
         TotalSendToAmount = 8640
-
+        
+        import redis
+        import time
+        pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
+        r = redis.Redis(connection_pool=pool)
+        MASTERNODE_ADDRESS_TIME = r.hgetall("CHIVES_MASTERNODE_mainnet")
+        OnlineStakingAddress = []
+        for ReceivedAddress,OnlineTime in MASTERNODE_ADDRESS_TIME.items():
+            if ( int(time.time()) - int(OnlineTime) ) < 3600:
+                OnlineStakingAddress.append(ReceivedAddress.decode("utf-8"))
+        print(len(OnlineStakingAddress))
+        
         MasterNumber = 0
         # 计算所有质押结点
         for nft in nfts:
             StakingData = nft['StakingData']
-            if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod']) > 0 :
-                ReceivedAddress = StakingData['ReceivedAddress']
-                StakingAddress = StakingData['StakingAddress']
-                StakingHeight = StakingData['StakingHeight']
-                StakingAmount = int(StakingData['StakingAmount'] / self.mojo_per_unit)
-                AddressToStakingAmount[ReceivedAddress] = StakingAmount
-                if int(StakingData['StakingPeriod']) == 2:
-                    AddressToStakingAmountAddition[ReceivedAddress] = int(
-                        StakingAmount * StakingAmountAddition[StakingAmount] * 1.1)
+            if StakingData['ReceivedAddress'] in OnlineStakingAddress:
+                if "StakingAmount" in StakingData and 'StakingPeriod' in StakingData and int(StakingData['StakingPeriod']) > 0 :
+                    ReceivedAddress = StakingData['ReceivedAddress']
+                    StakingAddress = StakingData['StakingAddress']
+                    StakingHeight = StakingData['StakingHeight']
+                    StakingAmount = int(StakingData['StakingAmount'] / self.mojo_per_unit)
+                    AddressToStakingAmount[ReceivedAddress] = StakingAmount
+                    if int(StakingData['StakingPeriod']) == 2:
+                        AddressToStakingAmountAddition[ReceivedAddress] = int(
+                            StakingAmount * StakingAmountAddition[StakingAmount] * 1.1)
+                    else:
+                        AddressToStakingAmountAddition[ReceivedAddress] = int(
+                            StakingAmount * StakingAmountAddition[StakingAmount])
+                    AddressToStakingAmountAdditionSum += AddressToStakingAmountAddition[ReceivedAddress]
+                    AddressToStakingPeriod[ReceivedAddress] = int(StakingData['StakingPeriod'])
+                    MasterNumber += 1
+                    # print(StakingData)
+                    # primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
                 else:
-                    AddressToStakingAmountAddition[ReceivedAddress] = int(
-                        StakingAmount * StakingAmountAddition[StakingAmount])
-                AddressToStakingAmountAdditionSum += AddressToStakingAmountAddition[ReceivedAddress]
-                AddressToStakingPeriod[ReceivedAddress] = int(StakingData['StakingPeriod'])
-                MasterNumber += 1
-                # print(StakingData)
-                # primaries.append({'puzzlehash':decode_puzzle_hash(ReceivedAddress),'amount':int(StakingAmount/1000)})
+                    print(
+                        f"ReceivedAddress:{StakingData['ReceivedAddress']} StakingAmount:{int(StakingData['StakingAmount']/self.mojo_per_unit)} For Test")
             else:
-                print(
-                    f"ReceivedAddress:{StakingData['ReceivedAddress']} StakingAmount:{int(StakingData['StakingAmount']/self.mojo_per_unit)} For Test")
-        # print(AddressToStakingAmountAddition)
+                print(f"Offline Address:{StakingData['ReceivedAddress']}")
+        #print(StakingData)
+        #print(AddressToStakingAmountAddition)
+        #return
+        
+        # 保存发送金额
+        ReceivedAddressAmountSave = {}
         # 计算加权系数
         if AddressToStakingAmountAdditionSum > 0:
             for ReceivedAddress, AmountAddition in AddressToStakingAmountAddition.items():
-                ShouldToBeSendAmount = int(TotalSendToAmount * AmountAddition / AddressToStakingAmountAdditionSum)
+                ShouldToBeSendAmount = int(TotalSendToAmount * AmountAddition * 100 / AddressToStakingAmountAdditionSum)/100
                 # print(ShouldToBeSendAmount)
                 counter += 1
                 print(
-                    f"counter:{counter} ReceivedAddress:{ReceivedAddress} AmountAddition:{AmountAddition} AmountAddition:{AmountAddition} Amount:{int(ShouldToBeSendAmount)} StakingPeriod:{AddressToStakingPeriod[ReceivedAddress]}")
+                    f"counter:{counter} ReceivedAddress:{ReceivedAddress} AmountAddition:{AmountAddition} Amount:{ShouldToBeSendAmount} StakingPeriod:{AddressToStakingPeriod[ReceivedAddress]}")
                 memos = 'MasterNode:' + str(MasterNumber)
                 memos = [memos.encode("utf-8")]
+                ReceivedAddressAmountSave[ReceivedAddress] = ShouldToBeSendAmount
                 primaries.append({'puzzlehash': decode_puzzle_hash(ReceivedAddress), 'amount': int(
                     ShouldToBeSendAmount * self.mojo_per_unit), 'memos': memos})
+        
         # 发送金额
         get_staking_address = self.init_pk_address(10, primaryKey)
         puzzle_hashes = []
@@ -1952,6 +1972,15 @@ class MasterNodeWallet:
             print(res)
             if res["success"] == True and res["status"] == "SUCCESS":
                 tx_id = await self.get_tx_from_mempool(spend_bundle.name())
+                
+                # Reward Amount into REDIS
+                import redis
+                import time
+                pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
+                r = redis.Redis(connection_pool=pool) 
+                r.set('Chives_Masternode_Rewards_Send_Data',json.dumps(ReceivedAddressAmountSave))
+                r.set('Chives_Masternode_Rewards_Send_Time',time.time())
+                
                 # print(f"\nSend address: {toAddress}")
                 print(f"\nSend Tx: {tx_id}")
                 print(f"\nChoose Coins Amount Sum: {int(totalAmount/100000000)}")
@@ -1964,7 +1993,7 @@ class MasterNodeWallet:
                 print(f"\nSend Coin Failed. res: {res}")
                 return res
         return None
-
+    
     async def get_tx_from_mempool(self, sb_name):
         # get mempool txn
         mempool_items = await self.node_client.get_all_mempool_items()

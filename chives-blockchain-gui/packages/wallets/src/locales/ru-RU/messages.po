@@ -2232,7 +2232,7 @@ msgstr "Пожалуйста, введите корректное имя кош�
 #~ msgid "Please enter your passphrase to proceed"
 #~ msgstr "Please enter your passphrase to proceed"
 
-#: src/components/MasterNodeStakingPanelForm.tsx:75
+#: src/components/MasterNodeStakingPanelForm.tsx:77
 #: src/components/MasterNodeStakingPanelStep4.tsx:38
 #: src/components/MasterNodeStakingPanelStep5.tsx:29
 #: src/components/WalletSend.tsx:90
